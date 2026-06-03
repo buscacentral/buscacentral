@@ -10,59 +10,6 @@ interface City {
   lon: number;
 }
 
-const CAPITALS: Record<string, [number, number]> = {
-  'São Paulo': [-23.5505, -46.6333],
-  'Rio de Janeiro': [-22.9068, -43.1729],
-  'Brasília': [-15.7975, -47.8919],
-  'Salvador': [-12.9714, -38.5124],
-  'Fortaleza': [-3.7172, -38.5433],
-  'Belo Horizonte': [-19.9167, -43.9345],
-  'Manaus': [-3.119, -60.0217],
-  'Curitiba': [-25.4284, -49.2733],
-  'Recife': [-8.0476, -34.877],
-  'Porto Alegre': [-30.0346, -51.2177],
-  'Belém': [-1.4558, -48.5024],
-  'Goiânia': [-16.6869, -49.2648],
-  'Guarulhos': [-23.4538, -46.5333],
-  'Campinas': [-22.9099, -47.0626],
-  'São Luís': [-2.5297, -44.2825],
-  'Maceió': [-9.6658, -35.7353],
-  'Campo Grande': [-20.4697, -54.6201],
-  'Teresina': [-5.0892, -42.8019],
-  'João Pessoa': [-7.1195, -34.845],
-  'Natal': [-5.7945, -35.211],
-  'Aracaju': [-10.9091, -37.0677],
-  'Cuiabá': [-15.601, -56.0974],
-  'Vitória': [-20.3155, -40.3128],
-  'Florianópolis': [-27.5954, -48.548],
-  'Rio Branco': [-9.9747, -67.8101],
-  'Porto Velho': [-8.7608, -63.9004],
-  'Macapá': [0.0349, -51.0694],
-  'Boa Vista': [2.8195, -60.6714],
-  'Palmas': [-10.1689, -48.3317],
-  'Uberlândia': [-18.9186, -48.2772],
-  'Uberaba': [-19.7484, -47.9319],
-  'Sorocaba': [-23.5015, -47.4526],
-  'Ribeirão Preto': [-21.1767, -47.8208],
-  'Joinville': [-26.3045, -48.8487],
-  'Londrina': [-23.3045, -51.1696],
-  'Juiz de Fora': [-21.7622, -43.3438],
-  'Niterói': [-22.8833, -43.1036],
-  'Ananindeua': [-1.3656, -48.3722],
-  'Santos': [-23.9608, -46.3336],
-  'São José dos Campos': [-23.1896, -45.8841],
-  'Osasco': [-23.5329, -46.7918],
-  'Ribeirão das Neves': [-19.7669, -44.0866],
-  'Santo André': [-23.6639, -46.5383],
-  'São Bernardo do Campo': [-23.6914, -46.5646],
-  'Pelotas': [-31.7654, -52.3376],
-  'Caxias do Sul': [-29.1634, -51.1797],
-  'Maringá': [-23.4253, -51.9387],
-  'Anápolis': [-16.3281, -48.9531],
-  'Montes Claros': [-16.7282, -43.8584],
-  'Betim': [-19.9672, -44.1986],
-};
-
 export default function DistanciaCidades() {
   const [cities, setCities] = useState<City[]>([]);
   const [filteredOrigin, setFilteredOrigin] = useState<City[]>([]);
@@ -77,6 +24,7 @@ export default function DistanciaCidades() {
   const [loadingCities, setLoadingCities] = useState(true);
   const [calculating, setCalculating] = useState(false);
   const [error, setError] = useState('');
+  const [loadProgress, setLoadProgress] = useState(0);
   const originRef = useRef<HTMLDivElement>(null);
   const destRef = useRef<HTMLDivElement>(null);
 
@@ -102,18 +50,47 @@ export default function DistanciaCidades() {
       const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios');
       const data = await response.json();
       
-      const citiesWithCoords: City[] = data
-        .map((city: { id: number; nome: string; microrregiao?: { mesorregiao?: { UF?: { sigla: string } } } }) => {
-          const uf = city.microrregiao?.mesorregiao?.UF?.sigla || '';
-          const coords = CAPITALS[city.nome];
-          if (coords) {
-            return { id: city.id, nome: city.nome, uf, lat: coords[0], lon: coords[1] };
-          }
-          return null;
-        })
-        .filter((c: City | null): c is City => c !== null);
+      const ufs = new Map<string, string>();
+      data.forEach((city: { id: number; nome: string; microrregiao?: { mesorregiao?: { UF?: { id: number; sigla: string } } } }) => {
+        const uf = city.microrregiao?.mesorregiao?.UF;
+        if (uf) ufs.set(city.id.toString(), uf.sigla);
+      });
+
+      const BATCH_SIZE = 100;
+      const allCities: City[] = [];
       
-      setCities(citiesWithCoords);
+      for (let i = 0; i < data.length; i += BATCH_SIZE) {
+        const batch = data.slice(i, i + BATCH_SIZE);
+        const promises = batch.map(async (city: { id: number; nome: string }) => {
+          try {
+            const geoResponse = await fetch(
+              `https://servicodados.ibge.gov.br/api/v2/malhas/municipios/${city.id}/metadados`
+            );
+            if (geoResponse.ok) {
+              const geoData = await geoResponse.json();
+              if (geoData.centroide) {
+                return {
+                  id: city.id,
+                  nome: city.nome,
+                  uf: ufs.get(city.id.toString()) || '',
+                  lat: geoData.centroide.latitude,
+                  lon: geoData.centroide.longitude,
+                };
+              }
+            }
+          } catch {}
+          return null;
+        });
+
+        const results = await Promise.all(promises);
+        results.forEach((r) => {
+          if (r && r.lat && r.lon) allCities.push(r);
+        });
+
+        setLoadProgress(Math.min(100, Math.round(((i + batch.length) / data.length) * 100)));
+      }
+
+      setCities(allCities);
     } catch {
       setError('Erro ao carregar cidades');
     } finally {
@@ -134,7 +111,7 @@ export default function DistanciaCidades() {
         const bStarts = b.nome.toLowerCase().startsWith(lower) ? 0 : 1;
         return aStarts - bStarts;
       })
-      .slice(0, 8);
+      .slice(0, 10);
   }, [cities]);
 
   const handleOriginSearch = (value: string) => {
@@ -230,22 +207,34 @@ export default function DistanciaCidades() {
 
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         {loadingCities ? (
-          <div className="space-y-4 animate-pulse">
-            <div className="h-12 bg-gray-200 rounded-lg" />
-            <div className="h-12 bg-gray-200 rounded-lg" />
-            <div className="h-12 bg-gray-200 rounded-lg" />
+          <div className="space-y-4">
+            <div className="text-center py-6">
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
+              <p className="text-gray-600 font-medium">Carregando todos os municípios do IBGE...</p>
+              <p className="text-sm text-gray-400 mt-1">Isso pode levar alguns segundos</p>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                style={{ width: `${loadProgress}%` }}
+              />
+            </div>
+            <p className="text-center text-sm text-gray-500">{loadProgress}% concluído</p>
           </div>
         ) : (
           <div className="space-y-4">
             <div ref={originRef} className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Cidade de Origem</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cidade de Origem
+                <span className="text-gray-400 font-normal ml-2">({cities.length.toLocaleString('pt-BR')} cidades)</span>
+              </label>
               <div className="relative">
                 <input
                   type="text"
                   value={originSearch}
                   onChange={(e) => handleOriginSearch(e.target.value)}
                   onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
-                  placeholder="Ex: São Paulo, Uberaba, Curitiba..."
+                  placeholder="Ex: São Paulo, Uberaba, Curitiba, Palmas..."
                   className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
                 {originCity && (
@@ -291,7 +280,7 @@ export default function DistanciaCidades() {
                   value={destSearch}
                   onChange={(e) => handleDestSearch(e.target.value)}
                   onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
-                  placeholder="Ex: Rio de Janeiro, Fortaleza..."
+                  placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus..."
                   className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
                 {destCity && (
@@ -396,8 +385,7 @@ export default function DistanciaCidades() {
             <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
               <p className="text-sm text-amber-800">
                 <strong>💡 Como calculamos:</strong> A distância em linha reta usa a fórmula de Haversine 
-                com coordenadas do IBGE. A estimativa rodoviária aplica um fator de 1.3x, representando 
-                o desvio médio das rodovias brasileiras.
+                com coordenadas oficiais do IBGE. A estimativa rodoviária aplica um fator de 1.3x.
               </p>
             </div>
           </div>
@@ -407,9 +395,9 @@ export default function DistanciaCidades() {
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>Sobre a ferramenta</h2>
         <p>
-          Esta ferramenta calcula a distância entre cidades brasileiras usando coordenadas geográficas 
-          oficiais do IBGE. A busca funciona para qualquer município cadastrado — basta digitar o nome 
-          ou a UF (ex: "Uberaba MG").
+          Esta ferramenta calcula a distância entre <strong>todos os {cities.length.toLocaleString('pt-BR')} municípios brasileiros</strong> usando 
+          coordenadas geográficas oficiais do IBGE (centroide de cada município). A busca funciona 
+          para qualquer cidade — basta digitar o nome ou a UF.
         </p>
       </article>
     </div>
