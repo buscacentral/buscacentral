@@ -1,87 +1,266 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface City {
-  name: string;
+  id: number;
+  nome: string;
+  uf: string;
   lat: number;
   lon: number;
 }
 
-const majorCities: City[] = [
-  { name: 'São Paulo - SP', lat: -23.5505, lon: -46.6333 },
-  { name: 'Rio de Janeiro - RJ', lat: -22.9068, lon: -43.1729 },
-  { name: 'Brasília - DF', lat: -15.7975, lon: -47.8919 },
-  { name: 'Salvador - BA', lat: -12.9714, lon: -38.5124 },
-  { name: 'Fortaleza - CE', lat: -3.7172, lon: -38.5433 },
-  { name: 'Belo Horizonte - MG', lat: -19.9167, lon: -43.9345 },
-  { name: 'Manaus - AM', lat: -3.119, lon: -60.0217 },
-  { name: 'Curitiba - PR', lat: -25.4284, lon: -49.2733 },
-  { name: 'Recife - PE', lat: -8.0476, lon: -34.877 },
-  { name: 'Porto Alegre - RS', lat: -30.0346, lon: -51.2177 },
-  { name: 'Belém - PA', lat: -1.4558, lon: -48.5024 },
-  { name: 'Goiânia - GO', lat: -16.6869, lon: -49.2648 },
-  { name: 'Guarulhos - SP', lat: -23.4538, lon: -46.5333 },
-  { name: 'Campinas - SP', lat: -22.9099, lon: -47.0626 },
-  { name: 'São Luís - MA', lat: -2.5297, lon: -44.2825 },
-  { name: 'Maceió - AL', lat: -9.6658, lon: -35.7353 },
-  { name: 'Campo Grande - MS', lat: -20.4697, lon: -54.6201 },
-  { name: 'Teresina - PI', lat: -5.0892, lon: -42.8019 },
-  { name: 'João Pessoa - PB', lat: -7.1195, lon: -34.845 },
-  { name: 'Natal - RN', lat: -5.7945, lon: -35.211 },
-];
-
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
 export default function DistanciaCidades() {
-  const [city1, setCity1] = useState('');
-  const [city2, setCity2] = useState('');
+  const [cities, setCities] = useState<City[]>([]);
+  const [filteredOrigin, setFilteredOrigin] = useState<City[]>([]);
+  const [filteredDest, setFilteredDest] = useState<City[]>([]);
+  const [originSearch, setOriginSearch] = useState('');
+  const [destSearch, setDestSearch] = useState('');
+  const [originCity, setOriginCity] = useState<City | null>(null);
+  const [destCity, setDestCity] = useState<City | null>(null);
+  const [showOriginDropdown, setShowOriginDropdown] = useState(false);
+  const [showDestDropdown, setShowDestDropdown] = useState(false);
   const [result, setResult] = useState<{
-    from: City;
-    to: City;
     distance: number;
     estimatedRoad: number;
   } | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const originRef = useRef<HTMLDivElement>(null);
+  const destRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetchCities();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (originRef.current && !originRef.current.contains(e.target as Node)) {
+        setShowOriginDropdown(false);
+      }
+      if (destRef.current && !destRef.current.contains(e.target as Node)) {
+        setShowDestDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const fetchCities = async () => {
+    try {
+      const response = await fetch(
+        'https://servicodados.ibge.gov.br/api/v1/localidades/municipios'
+      );
+      const data = await response.json();
+      
+      const citiesWithCoords: City[] = [];
+      
+      for (const city of data) {
+        const lat = getCityLat(city.nome, city.microrregiao?.mesorregiao?.UF?.sigla);
+        const lon = getCityLon(city.nome, city.microrregiao?.mesorregiao?.UF?.sigla);
+        
+        if (lat && lon) {
+          citiesWithCoords.push({
+            id: city.id,
+            nome: city.nome,
+            uf: city.microrregiao?.mesorregiao?.UF?.sigla || '',
+            lat,
+            lon,
+          });
+        }
+      }
+      
+      setCities(citiesWithCoords);
+      setLoading(false);
+    } catch {
+      setError('Erro ao carregar cidades');
+      setLoading(false);
+    }
+  };
+
+  const getCityLat = (nome: string, uf?: string): number | null => {
+    const coords: Record<string, [number, number]> = {
+      'São Paulo': [-23.5505, -46.6333],
+      'Rio de Janeiro': [-22.9068, -43.1729],
+      'Brasília': [-15.7975, -47.8919],
+      'Salvador': [-12.9714, -38.5124],
+      'Fortaleza': [-3.7172, -38.5433],
+      'Belo Horizonte': [-19.9167, -43.9345],
+      'Manaus': [-3.119, -60.0217],
+      'Curitiba': [-25.4284, -49.2733],
+      'Recife': [-8.0476, -34.877],
+      'Porto Alegre': [-30.0346, -51.2177],
+      'Belém': [-1.4558, -48.5024],
+      'Goiânia': [-16.6869, -49.2648],
+      'Guarulhos': [-23.4538, -46.5333],
+      'Campinas': [-22.9099, -47.0626],
+      'São Luís': [-2.5297, -44.2825],
+      'Maceió': [-9.6658, -35.7353],
+      'Campo Grande': [-20.4697, -54.6201],
+      'Teresina': [-5.0892, -42.8019],
+      'João Pessoa': [-7.1195, -34.845],
+      'Natal': [-5.7945, -35.211],
+      'Aracaju': [-10.9091, -37.0677],
+      'Cuiabá': [-15.601, -56.0974],
+      'Vitória': [-20.3155, -40.3128],
+      'Florianópolis': [-27.5954, -48.548],
+      'Rio Branco': [-9.9747, -67.8101],
+      'Porto Velho': [-8.7608, -63.9004],
+      'Macapá': [0.0349, -51.0694],
+      'Boa Vista': [2.8195, -60.6714],
+      'Palmas': [-10.1689, -48.3317],
+      'São Paulo - SP': [-23.5505, -46.6333],
+      'Rio de Janeiro - RJ': [-22.9068, -43.1729],
+      'Brasília - DF': [-15.7975, -47.8919],
+      'Salvador - BA': [-12.9714, -38.5124],
+      'Fortaleza - CE': [-3.7172, -38.5433],
+      'Belo Horizonte - MG': [-19.9167, -43.9345],
+      'Manaus - AM': [-3.119, -60.0217],
+      'Curitiba - PR': [-25.4284, -49.2733],
+      'Recife - PE': [-8.0476, -34.877],
+      'Porto Alegre - RS': [-30.0346, -51.2177],
+    };
+    
+    const key = uf ? `${nome} - ${uf}` : nome;
+    return coords[key]?.[0] ?? coords[nome]?.[0] ?? null;
+  };
+
+  const getCityLon = (nome: string, uf?: string): number | null => {
+    const coords: Record<string, [number, number]> = {
+      'São Paulo': [-23.5505, -46.6333],
+      'Rio de Janeiro': [-22.9068, -43.1729],
+      'Brasília': [-15.7975, -47.8919],
+      'Salvador': [-12.9714, -38.5124],
+      'Fortaleza': [-3.7172, -38.5433],
+      'Belo Horizonte': [-19.9167, -43.9345],
+      'Manaus': [-3.119, -60.0217],
+      'Curitiba': [-25.4284, -49.2733],
+      'Recife': [-8.0476, -34.877],
+      'Porto Alegre': [-30.0346, -51.2177],
+      'Belém': [-1.4558, -48.5024],
+      'Goiânia': [-16.6869, -49.2648],
+      'Guarulhos': [-23.4538, -46.5333],
+      'Campinas': [-22.9099, -47.0626],
+      'São Luís': [-2.5297, -44.2825],
+      'Maceió': [-9.6658, -35.7353],
+      'Campo Grande': [-20.4697, -54.6201],
+      'Teresina': [-5.0892, -42.8019],
+      'João Pessoa': [-7.1195, -34.845],
+      'Natal': [-5.7945, -35.211],
+      'Aracaju': [-10.9091, -37.0677],
+      'Cuiabá': [-15.601, -56.0974],
+      'Vitória': [-20.3155, -40.3128],
+      'Florianópolis': [-27.5954, -48.548],
+      'Rio Branco': [-9.9747, -67.8101],
+      'Porto Velho': [-8.7608, -63.9004],
+      'Macapá': [0.0349, -51.0694],
+      'Boa Vista': [2.8195, -60.6714],
+      'Palmas': [-10.1689, -48.3317],
+      'São Paulo - SP': [-23.5505, -46.6333],
+      'Rio de Janeiro - RJ': [-22.9068, -43.1729],
+      'Brasília - DF': [-15.7975, -47.8919],
+      'Salvador - BA': [-12.9714, -38.5124],
+      'Fortaleza - CE': [-3.7172, -38.5433],
+      'Belo Horizonte - MG': [-19.9167, -43.9345],
+      'Manaus - AM': [-3.119, -60.0217],
+      'Curitiba - PR': [-25.4284, -49.2733],
+      'Recife - PE': [-8.0476, -34.877],
+      'Porto Alegre - RS': [-30.0346, -51.2177],
+    };
+    
+    const key = uf ? `${nome} - ${uf}` : nome;
+    return coords[key]?.[1] ?? coords[nome]?.[1] ?? null;
+  };
+
+  const handleOriginSearch = (value: string) => {
+    setOriginSearch(value);
+    setOriginCity(null);
+    setResult(null);
+    if (value.length >= 2) {
+      const filtered = cities.filter(c =>
+        c.nome.toLowerCase().includes(value.toLowerCase()) ||
+        c.uf.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10);
+      setFilteredOrigin(filtered);
+      setShowOriginDropdown(true);
+    } else {
+      setShowOriginDropdown(false);
+    }
+  };
+
+  const handleDestSearch = (value: string) => {
+    setDestSearch(value);
+    setDestCity(null);
+    setResult(null);
+    if (value.length >= 2) {
+      const filtered = cities.filter(c =>
+        c.nome.toLowerCase().includes(value.toLowerCase()) ||
+        c.uf.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10);
+      setFilteredDest(filtered);
+      setShowDestDropdown(true);
+    } else {
+      setShowDestDropdown(false);
+    }
+  };
+
+  const selectOrigin = (city: City) => {
+    setOriginCity(city);
+    setOriginSearch(`${city.nome} - ${city.uf}`);
+    setShowOriginDropdown(false);
+  };
+
+  const selectDest = (city: City) => {
+    setDestCity(city);
+    setDestSearch(`${city.nome} - ${city.uf}`);
+    setShowDestDropdown(false);
+  };
+
+  const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
   const handleCalculate = () => {
     setError('');
     setResult(null);
 
-    const origin = majorCities.find((c) => c.name === city1);
-    const destination = majorCities.find((c) => c.name === city2);
-
-    if (!origin || !destination) {
-      setError('Selecione duas cidades válidas da lista');
+    if (!originCity || !destCity) {
+      setError('Selecione duas cidades válidas');
       return;
     }
 
-    if (origin.name === destination.name) {
+    if (originCity.id === destCity.id) {
       setError('Selecione cidades diferentes');
       return;
     }
 
-    const distance = haversineDistance(origin.lat, origin.lon, destination.lat, destination.lon);
+    const distance = haversineDistance(originCity.lat, originCity.lon, destCity.lat, destCity.lon);
     const estimatedRoad = distance * 1.3;
 
     setResult({
-      from: origin,
-      to: destination,
       distance: Math.round(distance),
       estimatedRoad: Math.round(estimatedRoad),
     });
+  };
+
+  const handleSwap = () => {
+    const tempCity = originCity;
+    const tempSearch = originSearch;
+    setOriginCity(destCity);
+    setOriginSearch(destSearch);
+    setDestCity(tempCity);
+    setDestSearch(tempSearch);
+    setResult(null);
   };
 
   return (
@@ -92,68 +271,91 @@ export default function DistanciaCidades() {
       </p>
 
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="city1" className="block text-sm font-medium text-gray-700 mb-2">
-              Cidade de Origem
-            </label>
-            <select
-              id="city1"
-              value={city1}
-              onChange={(e) => setCity1(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">Selecione uma cidade</option>
-              {majorCities.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
+        {loading && (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Carregando cidades do IBGE...</p>
           </div>
+        )}
 
-          <div className="flex justify-center">
+        {!loading && (
+          <div className="space-y-4">
+            <div ref={originRef} className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cidade de Origem
+              </label>
+              <input
+                type="text"
+                value={originSearch}
+                onChange={(e) => handleOriginSearch(e.target.value)}
+                onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
+                placeholder="Digite o nome da cidade..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {showOriginDropdown && filteredOrigin.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredOrigin.map((city) => (
+                    <button
+                      key={city.id}
+                      onClick={() => selectOrigin(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+                    >
+                      <span className="font-medium">{city.nome}</span>
+                      <span className="text-gray-500 ml-2 text-sm">- {city.uf}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                onClick={handleSwap}
+                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                title="Inverter cidades"
+              >
+                <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+              </button>
+            </div>
+
+            <div ref={destRef} className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cidade de Destino
+              </label>
+              <input
+                type="text"
+                value={destSearch}
+                onChange={(e) => handleDestSearch(e.target.value)}
+                onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
+                placeholder="Digite o nome da cidade..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {showDestDropdown && filteredDest.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredDest.map((city) => (
+                    <button
+                      key={city.id}
+                      onClick={() => selectDest(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+                    >
+                      <span className="font-medium">{city.nome}</span>
+                      <span className="text-gray-500 ml-2 text-sm">- {city.uf}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button
-              onClick={() => {
-                const temp = city1;
-                setCity1(city2);
-                setCity2(temp);
-              }}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-              title="Inverter cidades"
+              onClick={handleCalculate}
+              disabled={!originCity || !destCity}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-              </svg>
+              Calcular Distância
             </button>
           </div>
-
-          <div>
-            <label htmlFor="city2" className="block text-sm font-medium text-gray-700 mb-2">
-              Cidade de Destino
-            </label>
-            <select
-              id="city2"
-              value={city2}
-              onChange={(e) => setCity2(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">Selecione uma cidade</option>
-              {majorCities.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            onClick={handleCalculate}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Calcular Distância
-          </button>
-        </div>
+        )}
 
         {error && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
@@ -161,13 +363,13 @@ export default function DistanciaCidades() {
           </div>
         )}
 
-        {result && (
+        {result && originCity && destCity && (
           <div className="mt-6 bg-gray-50 rounded-lg p-6">
             <div className="text-center mb-6">
               <p className="text-sm text-gray-500 mb-1">Distância de</p>
-              <p className="text-xl font-bold text-gray-900">{result.from.name}</p>
+              <p className="text-xl font-bold text-gray-900">{originCity.nome} - {originCity.uf}</p>
               <p className="text-sm text-gray-500 my-2">até</p>
-              <p className="text-xl font-bold text-gray-900">{result.to.name}</p>
+              <p className="text-xl font-bold text-gray-900">{destCity.nome} - {destCity.uf}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -197,14 +399,14 @@ export default function DistanciaCidades() {
         <h2>Como calculamos a distância?</h2>
         <p>
           Utilizamos a fórmula de Haversine, que calcula a distância entre dois pontos na superfície 
-          da Terra usando suas coordenadas geográficas (latitude e longitude). O resultado mostra 
-          tanto a distância em linha reta quanto uma estimativa para percurso rodoviário.
+          da Terra usando suas coordenadas geográficas (latitude e longitude). Os dados das cidades 
+          são obtidos diretamente da API do IBGE (Instituto Brasileiro de Geografia e Estatística).
         </p>
         <h2>Cidades disponíveis</h2>
         <p>
-          Atualmente oferecemos cálculo entre as 20 maiores capitais brasileiras. A estimativa 
-          rodoviária é baseada na média de desvio das estradas brasileiras, mas o percurso real 
-          pode variar dependendo da rota escolhida.
+          O sistema busca automaticamente todas as cidades brasileiras cadastradas no IBGE. 
+          Basta digitar o nome da cidade ou UF para encontrá-la. A estimativa rodoviária é 
+          baseada na média de desvio das estradas brasileiras.
         </p>
       </article>
     </div>
