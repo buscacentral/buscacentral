@@ -49,6 +49,12 @@ const tools = [
     href: '/financeiro/rescisao-trabalhista',
     icon: '📋',
   },
+  {
+    title: 'Simulador de Investimentos',
+    description: 'Compare CDB, Tesouro Selic e Poupança.',
+    href: '/financeiro/simulador-investimentos',
+    icon: '💰',
+  },
 ];
 
 export default function FinanceiroPage() {
