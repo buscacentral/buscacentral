@@ -83,7 +83,7 @@ Contribuições são bem-vindas!
 Sugestões de novas ferramentas podem ser abertas como Issue.
 
 ## 📄 Licença
-MIT License — use à vontade.
+© 2026 BuscaCentral.com.br — Todos os direitos reservados.
 
 ## ⚠️ Aviso Legal
 Dados gerados (CPF, CNPJ) são fictícios e destinados 
