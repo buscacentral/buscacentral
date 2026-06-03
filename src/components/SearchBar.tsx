@@ -34,6 +34,7 @@ const tools = [
   { name: 'Seletor de Cores', path: '/utilidades/seletor-cores', category: 'Utilidades', keywords: ['cor', 'hex', 'rgb', 'paleta'] },
   { name: 'Extrator de Emails', path: '/utilidades/extrator-emails', category: 'Utilidades', keywords: ['email', 'extrair', 'contato'] },
   { name: 'Dias Úteis', path: '/utilidades/dias-uteis', category: 'Utilidades', keywords: ['dias', 'úteis', 'data', 'feriado', 'prazo', 'calendário'] },
+  { name: 'Formatador JSON XML', path: '/utilidades/formatador-codigo', category: 'Utilidades', keywords: ['json', 'xml', 'formatar', 'minificar', 'validar', 'código'] },
 ];
 
 export default function SearchBar() {

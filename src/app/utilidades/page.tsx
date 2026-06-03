@@ -22,6 +22,7 @@ const tools = [
   { title: 'Extrator de Emails', description: 'Extraia emails de qualquer texto ou documento.', href: '/utilidades/extrator-emails', icon: '📧' },
   { title: 'Gerador de Link WhatsApp', description: 'Crie links e QR Codes para WhatsApp.', href: '/utilidades/whatsapp-link', icon: '💬' },
   { title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre duas datas com feriados.', href: '/utilidades/dias-uteis', icon: '📅' },
+  { title: 'Formatador de JSON e XML', description: 'Formate, minifique e valide JSON e XML.', href: '/utilidades/formatador-codigo', icon: '💻' },
 ];
 
 export default function UtilidadesPage() {
