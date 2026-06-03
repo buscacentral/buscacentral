@@ -17,7 +17,7 @@ export default function Header() {
             <Link href="/localizacao/busca-cep" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Localização
             </Link>
-            <Link href="#" className="text-gray-400 cursor-not-allowed font-medium">
+            <Link href="/financeiro/cotacao" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Financeiro
             </Link>
             <Link href="/utilidades/gerador-qr-code" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">

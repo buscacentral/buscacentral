@@ -10,6 +10,8 @@ const tools = [
   { name: 'Validador de CNPJ', path: '/documentos/validador-cnpj', category: 'Documentos' },
   { name: 'Busca de CEP', path: '/localizacao/busca-cep', category: 'Localização' },
   { name: 'Distância entre Cidades', path: '/localizacao/distancia-cidades', category: 'Localização' },
+  { name: 'Cotação de Moedas', path: '/financeiro/cotacao', category: 'Financeiro' },
+  { name: 'Tabela FIPE', path: '/financeiro/tabela-fipe', category: 'Financeiro' },
   { name: 'Gerador de QR Code', path: '/utilidades/gerador-qr-code', category: 'Utilidades' },
   { name: 'Gerador de Senha', path: '/utilidades/gerador-senha', category: 'Utilidades' },
   { name: 'Gerador de UUID', path: '/utilidades/gerador-uuid', category: 'Utilidades' },
