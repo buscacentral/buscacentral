@@ -44,7 +44,9 @@ Consultas rápidas, sem cadastro e sem custo.
 
 ## 🚀 Stack
 
-- HTML5 + CSS3 + JavaScript puro (zero framework)
+- Next.js 15 (React)
+- TypeScript
+- Tailwind CSS
 - Hospedagem: Vercel
 - Deploy automático via GitHub
 
@@ -59,14 +61,14 @@ Consultas rápidas, sem cadastro e sem custo.
 
 ## 💡 Como rodar localmente
 
-Clone o repositório e abra o index.html no navegador.
-Não há dependências, build ou configuração necessária.
-
 ```bash
 git clone https://github.com/buscacentral/busca-central.git
 cd busca-central
-# Abra o index.html no navegador
+npm install
+npm run dev
 ```
+
+Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
 ## 🤝 Contribuindo
 
