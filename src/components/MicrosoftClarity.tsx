@@ -1,11 +1,14 @@
 'use client';
 
 import Script from 'next/script';
+import { useCookieConsent } from './CookieBanner';
 
 const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID || '';
 
 export default function MicrosoftClarity() {
-  if (!CLARITY_ID) return null;
+  const { consent } = useCookieConsent();
+
+  if (!CLARITY_ID || consent !== 'accepted') return null;
 
   return (
     <Script id="microsoft-clarity" strategy="afterInteractive">

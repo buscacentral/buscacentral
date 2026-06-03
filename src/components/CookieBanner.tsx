@@ -1,23 +1,50 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
+
+interface CookieContextType {
+  consent: 'accepted' | 'rejected' | null;
+}
+
+const CookieContext = createContext<CookieContextType>({ consent: null });
+
+export function useCookieConsent() {
+  return useContext(CookieContext);
+}
+
+export function CookieProvider({ children }: { children: React.ReactNode }) {
+  const [consent, setConsent] = useState<'accepted' | 'rejected' | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('cookie-consent');
+    if (stored === 'accepted' || stored === 'rejected') {
+      setConsent(stored);
+    }
+  }, []);
+
+  return (
+    <CookieContext.Provider value={{ consent }}>
+      {children}
+    </CookieContext.Provider>
+  );
+}
 
 export default function CookieBanner() {
   const [show, setShow] = useState(false);
+  const { consent } = useCookieConsent();
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookie-consent');
-    if (!consent) setShow(true);
-  }, []);
+    if (consent === null) setShow(true);
+  }, [consent]);
 
   const handleAccept = () => {
     localStorage.setItem('cookie-consent', 'accepted');
-    setShow(false);
+    window.location.reload();
   };
 
   const handleReject = () => {
     localStorage.setItem('cookie-consent', 'rejected');
-    setShow(false);
+    window.location.reload();
   };
 
   if (!show) return null;
