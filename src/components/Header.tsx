@@ -20,7 +20,7 @@ export default function Header() {
             <Link href="#" className="text-gray-400 cursor-not-allowed font-medium">
               Financeiro
             </Link>
-            <Link href="#" className="text-gray-400 cursor-not-allowed font-medium">
+            <Link href="/utilidades/gerador-qr-code" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Utilidades
             </Link>
           </nav>

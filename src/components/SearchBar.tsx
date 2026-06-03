@@ -10,6 +10,13 @@ const tools = [
   { name: 'Validador de CNPJ', path: '/documentos/validador-cnpj', category: 'Documentos' },
   { name: 'Busca de CEP', path: '/localizacao/busca-cep', category: 'Localização' },
   { name: 'Distância entre Cidades', path: '/localizacao/distancia-cidades', category: 'Localização' },
+  { name: 'Gerador de QR Code', path: '/utilidades/gerador-qr-code', category: 'Utilidades' },
+  { name: 'Gerador de Senha', path: '/utilidades/gerador-senha', category: 'Utilidades' },
+  { name: 'Gerador de UUID', path: '/utilidades/gerador-uuid', category: 'Utilidades' },
+  { name: 'Codificador Base64', path: '/utilidades/base64', category: 'Utilidades' },
+  { name: 'Contador de Caracteres', path: '/utilidades/contador-caracteres', category: 'Utilidades' },
+  { name: 'PIX Copia e Cola', path: '/utilidades/pix-copia-cola', category: 'Utilidades' },
+  { name: 'Conversor de Timestamp', path: '/utilidades/timestamp', category: 'Utilidades' },
 ];
 
 export default function SearchBar() {

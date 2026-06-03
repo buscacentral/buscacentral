@@ -44,6 +44,55 @@ const tools = [
     icon: '🗺️',
     color: 'green' as const,
   },
+  {
+    title: 'Gerador de QR Code',
+    description: 'Gere QR Codes a partir de textos ou URLs.',
+    href: '/utilidades/gerador-qr-code',
+    icon: '📱',
+    color: 'purple' as const,
+  },
+  {
+    title: 'Gerador de Senha',
+    description: 'Gere senhas seguras e aleatórias.',
+    href: '/utilidades/gerador-senha',
+    icon: '🔐',
+    color: 'orange' as const,
+  },
+  {
+    title: 'Gerador de UUID',
+    description: 'Gere UUIDs v4 aleatórios.',
+    href: '/utilidades/gerador-uuid',
+    icon: '🆔',
+    color: 'blue' as const,
+  },
+  {
+    title: 'Codificador Base64',
+    description: 'Codifique ou decodifique textos em Base64.',
+    href: '/utilidades/base64',
+    icon: '🔄',
+    color: 'green' as const,
+  },
+  {
+    title: 'Contador de Caracteres',
+    description: 'Conte caracteres, palavras e linhas.',
+    href: '/utilidades/contador-caracteres',
+    icon: '🔢',
+    color: 'purple' as const,
+  },
+  {
+    title: 'PIX Copia e Cola',
+    description: 'Gere códigos PIX no padrão EMV.',
+    href: '/utilidades/pix-copia-cola',
+    icon: '💳',
+    color: 'orange' as const,
+  },
+  {
+    title: 'Conversor de Timestamp',
+    description: 'Converta entre timestamp Unix e data/hora.',
+    href: '/utilidades/timestamp',
+    icon: '⏰',
+    color: 'blue' as const,
+  },
 ];
 
 export default function Home() {

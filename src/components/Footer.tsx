@@ -21,6 +21,9 @@ export default function Footer() {
               <li><Link href="/documentos/validador-cnpj" className="hover:text-white transition-colors">Validador de CNPJ</Link></li>
               <li><Link href="/localizacao/busca-cep" className="hover:text-white transition-colors">Busca de CEP</Link></li>
               <li><Link href="/localizacao/distancia-cidades" className="hover:text-white transition-colors">Distância entre Cidades</Link></li>
+              <li><Link href="/utilidades/gerador-qr-code" className="hover:text-white transition-colors">Gerador de QR Code</Link></li>
+              <li><Link href="/utilidades/gerador-senha" className="hover:text-white transition-colors">Gerador de Senha</Link></li>
+              <li><Link href="/utilidades/pix-copia-cola" className="hover:text-white transition-colors">PIX Copia e Cola</Link></li>
             </ul>
           </div>
           
