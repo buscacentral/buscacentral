@@ -41,3 +41,13 @@ body {
   margin-bottom: 0.5rem;
   color: #374151;
 }
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px;
+  }
+}
