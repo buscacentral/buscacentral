@@ -43,6 +43,12 @@ const tools = [
     href: '/financeiro/financiamento-carro',
     icon: '🚙',
   },
+  {
+    title: 'Calculadora de Rescisão Trabalhista',
+    description: 'Calcule valores de rescisão para todos os tipos de demissão.',
+    href: '/financeiro/rescisao-trabalhista',
+    icon: '📋',
+  },
 ];
 
 export default function FinanceiroPage() {
