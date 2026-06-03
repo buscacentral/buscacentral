@@ -1,5 +1,6 @@
 import SearchBar from '@/components/SearchBar';
 import ToolCard from '@/components/ToolCard';
+import AdPlaceholder from '@/components/AdPlaceholder';
 
 const mainTools = [
   { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
@@ -22,22 +23,6 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
-      {/* Bloco de Anúncio Superior */}
-      <div style={{
-        maxWidth: '1200px',
-        margin: '1.5rem auto',
-        padding: '1rem',
-        background: '#f8fafc',
-        border: '1px dashed #e2e8f0',
-        borderRadius: '8px',
-        textAlign: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-      }}>
-        Anúncio Publicitário - Google AdSense
-      </div>
-
-      {/* Seção de Boas-vindas e Busca */}
       <section style={{
         textAlign: 'center',
         margin: '3rem auto 4rem auto',
@@ -63,7 +48,6 @@ export default function Home() {
         <SearchBar />
       </section>
 
-      {/* Título das Ferramentas */}
       <h2 style={{
         textAlign: 'center',
         fontSize: '1.8rem',
@@ -74,7 +58,6 @@ export default function Home() {
         Ferramentas Populares
       </h2>
 
-      {/* Grid de Cards */}
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
@@ -88,7 +71,8 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Links para Categorias */}
+      <AdPlaceholder position="middle" />
+
       <section style={{
         maxWidth: '1200px',
         margin: '0 auto 4rem',
@@ -117,7 +101,7 @@ export default function Home() {
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 4 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 4 },
-              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 12 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 13 },
             ].map((cat) => (
               <a
                 key={cat.href}
@@ -145,21 +129,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Bloco de Anúncio Inferior */}
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto 2rem',
-        padding: '1rem',
-        background: '#f8fafc',
-        border: '1px dashed #e2e8f0',
-        borderRadius: '8px',
-        textAlign: 'center',
-        color: '#94a3b8',
-        fontSize: '0.875rem',
-      }}>
-        Anúncio Publicitário - Google AdSense
-      </div>
     </main>
   );
 }
