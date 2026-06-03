@@ -6,7 +6,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis
+## 🛠️ Ferramentas disponíveis (31)
 
 ### 📋 Documentos
 - Gerador de CPF
@@ -17,7 +17,7 @@ Consultas rápidas, sem cadastro e sem custo.
 
 ### 📍 Localização
 - Busca de CEP
-- Busca reversa (rua → CEP)
+- Distância entre Cidades
 
 ### 💰 Financeiro
 - Cotação de Moedas em tempo real
@@ -27,20 +27,27 @@ Consultas rápidas, sem cadastro e sem custo.
 - Conversor CLT → PJ
 - Calculadora de Financiamento de Carro
 - Calculadora de Rescisão Trabalhista
-- Simulador CDB / Tesouro Direto
+- Simulador de Investimentos (CDB / Tesouro Direto)
 
 ### 🔧 Utilidades
 - Gerador de QR Code
 - Gerador de Senha
+- Gerador de UUID
 - Comparador de Textos
 - Conversor de Imagens
+- Conversor de Caixa (maiúsculo/minúsculo)
 - Seletor de Cores
 - Extrator de Emails
+- Contador de Caracteres
 - Link WhatsApp
 - PIX Copia e Cola
 - Formatador JSON/XML
+- Formatador de Código
 - Calculadora de IMC
 - Dias Úteis entre Datas
+- Conversor de Timestamp
+- Removedor de Duplicatas
+- Codificador/Decodificador Base64
 
 ## 🚀 Stack
 
