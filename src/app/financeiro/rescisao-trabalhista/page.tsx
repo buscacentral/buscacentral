@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 
 const parseBRL = (v: string) => parseFloat(v.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
 const formatCurrency = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-const formatDateBR = (d: Date) => d.toLocaleDateString('pt-BR');
 
 type TipoRescisao = 'sem-justa-causa' | 'pedido-demissao' | 'justa-causa' | 'acordo-mutuo';
 type TipoAviso = 'trabalhado' | 'indenizado';
@@ -51,10 +50,6 @@ function diasNoMes(d: Date): number {
   return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
 }
 
-function diasTrabalhados(dDemissao: Date): number {
-  return dDemissao.getDate();
-}
-
 function calcularAvisoPrevio(mesesTrabalho: number): number {
   let dias = 30;
   if (mesesTrabalho > 12) dias += Math.floor((mesesTrabalho - 12) / 3) * 3;
@@ -73,6 +68,7 @@ interface Resultado {
   descontos: number;
   totalLiquido: number;
   fgtsSaque: number;
+  fgtsTotal: number;
   temSeguroDesemprego: boolean;
 }
 
@@ -93,16 +89,21 @@ export default function RescisaoTrabalhista() {
     if (isNaN(admissao.getTime()) || isNaN(demissao.getTime()) || demissao <= admissao) return null;
 
     const mesesTrab = mesesEntre(admissao, demissao);
-    const anosTrab = mesesTrab / 12;
-    const diasTrab = diasTrabalhados(demissao);
+    const diasTrab = demissao.getDate();
     const diasMes = diasNoMes(demissao);
+    const mesesNoAno = demissao.getMonth() + 1;
+    const mesesParaFerias = mesesTrab % 12 || 12;
+
     const saldoSalario = (sal / diasMes) * diasTrab;
     const avisoDias = calcularAvisoPrevio(mesesTrab);
     const avisoPrevio = (sal / 30) * avisoDias;
-    const decimoTerceiro = (sal / 12) * (demissao.getMonth() + 1);
-    const feriasProporcionais = (sal / 12) * ((mesesTrab % 12) || 12 > 12 ? mesesTrab % 12 : mesesTrab % 12);
-    const feriasVenc = parseBRL(feriasVencidas) > 0 ? sal : 0;
-    const umTercoFerias = feriasProporcionais / 3 + feriasVenc / 3;
+    const decimoTerceiro = (sal / 12) * mesesNoAno;
+    const feriasProporcionais = (sal / 12) * mesesParaFerias;
+    const umTercoFerias = feriasProporcionais / 3;
+    const feriasVencValor = parseBRL(feriasVencidas) > 0 ? sal : 0;
+    const umTercoFeriasVenc = feriasVencValor / 3;
+
+    const fgtsTotal = sal * mesesTrab * 0.08;
 
     const verbas: Verba[] = [];
     let totalBruto = 0;
@@ -113,30 +114,29 @@ export default function RescisaoTrabalhista() {
       const vals: Verba[] = [
         { nome: 'Saldo de Salário', valor: saldoSalario, descricao: `${diasTrab} dias` },
         { nome: 'Aviso Prévio Indenizado', valor: avisoPrevio, descricao: `${avisoDias} dias` },
-        { nome: '13º Salário Proporcional', valor: decimoTerceiro, descricao: `${demissao.getMonth() + 1}/12 avos` },
-        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + feriasProporcionais / 3, descricao: `${mesesTrab % 12 || 12} meses` },
+        { nome: '13º Salário Proporcional', valor: decimoTerceiro, descricao: `${mesesNoAno}/12 avos` },
+        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + umTercoFerias, descricao: `${mesesParaFerias} meses` },
       ];
-      if (feriasVenc > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVenc + feriasVenc / 3 });
-      const fgtsBase = saldoSalario + avisoPrevio + decimoTerceiro;
-      const multaFgts = fgtsBase * 0.4;
-      vals.push({ nome: 'Multa FGTS (40%)', valor: multaFgts });
-      vals.push({ nome: 'FGTS Depositado', valor: sal * mesesTrab * 0.08, descricao: '8% sobre salários' });
+      if (feriasVencValor > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVencValor + umTercoFeriasVenc });
+      vals.push({ nome: 'Multa FGTS (40%)', valor: fgtsTotal * 0.4, descricao: 'sobre FGTS depositado' });
+      vals.push({ nome: 'FGTS Depositado', valor: fgtsTotal, descricao: '8% × salários' });
 
       for (const v of vals) totalBruto += v.valor;
-      fgtsSaque = sal * mesesTrab * 0.08;
+      fgtsSaque = fgtsTotal;
       temSeguroDesemprego = true;
       verbas.push(...vals);
     } else if (tipo === 'pedido-demissao') {
       const vals: Verba[] = [
         { nome: 'Saldo de Salário', valor: saldoSalario, descricao: `${diasTrab} dias` },
-        { nome: '13º Salário Proporcional', valor: decimoTerceiro, descricao: `${demissao.getMonth() + 1}/12 avos` },
-        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + feriasProporcionais / 3 },
+        { nome: '13º Salário Proporcional', valor: decimoTerceiro, descricao: `${mesesNoAno}/12 avos` },
+        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + umTercoFerias },
       ];
-      if (feriasVenc > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVenc + feriasVenc / 3 });
+      if (feriasVencValor > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVencValor + umTercoFeriasVenc });
       if (aviso === 'indenizado') {
         vals.push({ nome: 'Desconto Aviso Prévio', valor: -avisoPrevio, descricao: 'Não cumprido' });
       }
-      vals.push({ nome: 'FGTS (sem multa)', valor: sal * mesesTrab * 0.08 });
+      vals.push({ nome: 'FGTS (sem multa)', valor: fgtsTotal, descricao: 'depositado' });
+
       for (const v of vals) totalBruto += v.valor;
       fgtsSaque = 0;
       temSeguroDesemprego = false;
@@ -145,7 +145,7 @@ export default function RescisaoTrabalhista() {
       const vals: Verba[] = [
         { nome: 'Saldo de Salário', valor: saldoSalario, descricao: `${diasTrab} dias` },
       ];
-      if (feriasVenc > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVenc + feriasVenc / 3 });
+      if (feriasVencValor > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVencValor + umTercoFeriasVenc });
       for (const v of vals) totalBruto += v.valor;
       fgtsSaque = 0;
       temSeguroDesemprego = false;
@@ -154,21 +154,20 @@ export default function RescisaoTrabalhista() {
       const vals: Verba[] = [
         { nome: 'Saldo de Salário', valor: saldoSalario, descricao: `${diasTrab} dias` },
         { nome: 'Aviso Prévio (50%)', valor: avisoPrevio * 0.5, descricao: `${avisoDias} dias × 50%` },
-        { nome: '13º Salário Proporcional', valor: decimoTerceiro },
-        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + feriasProporcionais / 3 },
+        { nome: '13º Salário Proporcional', valor: decimoTerceiro, descricao: `${mesesNoAno}/12 avos` },
+        { nome: 'Férias Proporcionais + 1/3', valor: feriasProporcionais + umTercoFerias },
       ];
-      if (feriasVenc > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVenc + feriasVenc / 3 });
-      const fgtsBase = saldoSalario + avisoPrevio * 0.5 + decimoTerceiro;
-      vals.push({ nome: 'Multa FGTS (20%)', valor: fgtsBase * 0.2 });
+      if (feriasVencValor > 0) vals.push({ nome: 'Férias Vencidas + 1/3', valor: feriasVencValor + umTercoFeriasVenc });
+      vals.push({ nome: 'Multa FGTS (20%)', valor: fgtsTotal * 0.2, descricao: 'sobre FGTS depositado' });
       for (const v of vals) totalBruto += v.valor;
-      fgtsSaque = sal * mesesTrab * 0.08 * 0.8;
+      fgtsSaque = fgtsTotal * 0.8;
       temSeguroDesemprego = false;
       verbas.push(...vals);
     }
 
-    const baseDesconto = Math.max(totalBruto, 0);
-    const inss = calcularINSS(baseDesconto);
-    const irrf = calcularIRRF(baseDesconto - inss);
+    const baseTributavel = saldoSalario + avisoPrevio;
+    const inss = calcularINSS(baseTributavel);
+    const irrf = calcularIRRF(baseTributavel - inss);
     const descontos = inss + irrf;
 
     return {
@@ -177,6 +176,7 @@ export default function RescisaoTrabalhista() {
       descontos,
       totalLiquido: totalBruto - descontos,
       fgtsSaque,
+      fgtsTotal,
       temSeguroDesemprego,
     };
   }, [salario, dataAdmissao, dataDemissao, tipo, feriasVencidas, aviso]);
@@ -286,6 +286,7 @@ export default function RescisaoTrabalhista() {
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
                 <h3 className="text-sm font-semibold text-blue-800 mb-2">Informações Adicionais</h3>
                 <ul className="text-sm text-blue-700 space-y-1">
+                  <li>FGTS total depositado: {formatCurrency(resultado.fgtsTotal)}</li>
                   {resultado.fgtsSaque > 0 && <li>FGTS disponível para saque: {formatCurrency(resultado.fgtsSaque)}</li>}
                   <li>Seguro-desemprego: {resultado.temSeguroDesemprego ? 'Sim ✅' : 'Não disponível'}</li>
                   {tipo === 'acordo-mutuo' && <li>Saque de 80% do FGTS permitido</li>}
