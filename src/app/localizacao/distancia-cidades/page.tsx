@@ -3,9 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface City {
-  id: number;
-  nome: string;
-  uf: string;
+  n: string;
+  u: string;
   lat: number;
   lon: number;
 }
@@ -21,15 +20,16 @@ export default function DistanciaCidades() {
   const [showOriginDropdown, setShowOriginDropdown] = useState(false);
   const [showDestDropdown, setShowDestDropdown] = useState(false);
   const [result, setResult] = useState<{ distance: number; estimatedRoad: number } | null>(null);
-  const [loadingCities, setLoadingCities] = useState(true);
   const [calculating, setCalculating] = useState(false);
   const [error, setError] = useState('');
-  const [loadProgress, setLoadProgress] = useState(0);
   const originRef = useRef<HTMLDivElement>(null);
   const destRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetchCities();
+    fetch('/localizacao/distancia-cidades/cidades.json')
+      .then(res => res.json())
+      .then((data: City[]) => setCities(data))
+      .catch(() => setError('Erro ao carregar cidades'));
   }, []);
 
   useEffect(() => {
@@ -45,70 +45,17 @@ export default function DistanciaCidades() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const fetchCities = async () => {
-    try {
-      const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios');
-      const data = await response.json();
-      
-      const ufs = new Map<string, string>();
-      data.forEach((city: { id: number; nome: string; microrregiao?: { mesorregiao?: { UF?: { id: number; sigla: string } } } }) => {
-        const uf = city.microrregiao?.mesorregiao?.UF;
-        if (uf) ufs.set(city.id.toString(), uf.sigla);
-      });
-
-      const BATCH_SIZE = 100;
-      const allCities: City[] = [];
-      
-      for (let i = 0; i < data.length; i += BATCH_SIZE) {
-        const batch = data.slice(i, i + BATCH_SIZE);
-        const promises = batch.map(async (city: { id: number; nome: string }) => {
-          try {
-            const geoResponse = await fetch(
-              `https://servicodados.ibge.gov.br/api/v2/malhas/municipios/${city.id}/metadados`
-            );
-            if (geoResponse.ok) {
-              const geoData = await geoResponse.json();
-              if (geoData.centroide) {
-                return {
-                  id: city.id,
-                  nome: city.nome,
-                  uf: ufs.get(city.id.toString()) || '',
-                  lat: geoData.centroide.latitude,
-                  lon: geoData.centroide.longitude,
-                };
-              }
-            }
-          } catch {}
-          return null;
-        });
-
-        const results = await Promise.all(promises);
-        results.forEach((r) => {
-          if (r && r.lat && r.lon) allCities.push(r);
-        });
-
-        setLoadProgress(Math.min(100, Math.round(((i + batch.length) / data.length) * 100)));
-      }
-
-      setCities(allCities);
-    } catch {
-      setError('Erro ao carregar cidades');
-    } finally {
-      setLoadingCities(false);
-    }
-  };
-
   const filterCities = useCallback((search: string) => {
     if (search.length < 2) return [];
     const lower = search.toLowerCase();
     return cities
       .filter(c =>
-        c.nome.toLowerCase().includes(lower) ||
-        c.uf.toLowerCase() === lower
+        c.n.toLowerCase().includes(lower) ||
+        c.u.toLowerCase() === lower
       )
       .sort((a, b) => {
-        const aStarts = a.nome.toLowerCase().startsWith(lower) ? 0 : 1;
-        const bStarts = b.nome.toLowerCase().startsWith(lower) ? 0 : 1;
+        const aStarts = a.n.toLowerCase().startsWith(lower) ? 0 : 1;
+        const bStarts = b.n.toLowerCase().startsWith(lower) ? 0 : 1;
         return aStarts - bStarts;
       })
       .slice(0, 10);
@@ -132,13 +79,13 @@ export default function DistanciaCidades() {
 
   const selectOrigin = (city: City) => {
     setOriginCity(city);
-    setOriginSearch(`${city.nome} - ${city.uf}`);
+    setOriginSearch(`${city.n} - ${city.u}`);
     setShowOriginDropdown(false);
   };
 
   const selectDest = (city: City) => {
     setDestCity(city);
-    setDestSearch(`${city.nome} - ${city.uf}`);
+    setDestSearch(`${city.n} - ${city.u}`);
     setShowDestDropdown(false);
   };
 
@@ -174,13 +121,13 @@ export default function DistanciaCidades() {
       return;
     }
 
-    if (originCity.id === destCity.id) {
+    if (originCity.n === destCity.n && originCity.u === destCity.u) {
       setError('Selecione cidades diferentes');
       return;
     }
 
     setCalculating(true);
-    await new Promise(resolve => setTimeout(resolve, 600));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     const distance = haversineDistance(originCity.lat, originCity.lon, destCity.lat, destCity.lon);
     setResult({
@@ -192,9 +139,9 @@ export default function DistanciaCidades() {
 
   const handleSwap = () => {
     setOriginCity(destCity);
-    setOriginSearch(destCity ? `${destCity.nome} - ${destCity.uf}` : '');
+    setOriginSearch(destCity ? `${destCity.n} - ${destCity.u}` : '');
     setDestCity(originCity);
-    setDestSearch(originCity ? `${originCity.nome} - ${originCity.uf}` : '');
+    setDestSearch(originCity ? `${originCity.n} - ${originCity.u}` : '');
     setResult(null);
   };
 
@@ -206,125 +153,108 @@ export default function DistanciaCidades() {
       </p>
 
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        {loadingCities ? (
-          <div className="space-y-4">
-            <div className="text-center py-6">
-              <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
-              <p className="text-gray-600 font-medium">Carregando todos os municípios do IBGE...</p>
-              <p className="text-sm text-gray-400 mt-1">Isso pode levar alguns segundos</p>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div
-                className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                style={{ width: `${loadProgress}%` }}
+        <div className="space-y-4">
+          <div ref={originRef} className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Cidade de Origem
+              <span className="text-gray-400 font-normal ml-2">({cities.length} cidades)</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={originSearch}
+                onChange={(e) => handleOriginSearch(e.target.value)}
+                onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
+                placeholder="Ex: São Paulo, Uberaba, Curitiba..."
+                className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               />
+              {originCity && (
+                <span className="absolute right-3 top-3.5 text-green-500">✓</span>
+              )}
             </div>
-            <p className="text-center text-sm text-gray-500">{loadProgress}% concluído</p>
+            {showOriginDropdown && filteredOrigin.length > 0 && (
+              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                {filteredOrigin.map((city, idx) => (
+                  <button
+                    key={`${city.n}-${city.u}-${idx}`}
+                    onClick={() => selectOrigin(city)}
+                    className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
+                  >
+                    <span>
+                      <span className="font-medium">{highlightMatch(city.n, originSearch)}</span>
+                      <span className="text-gray-400 ml-1 text-sm">- {city.u}</span>
+                    </span>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.u}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="space-y-4">
-            <div ref={originRef} className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cidade de Origem
-                <span className="text-gray-400 font-normal ml-2">({cities.length.toLocaleString('pt-BR')} cidades)</span>
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={originSearch}
-                  onChange={(e) => handleOriginSearch(e.target.value)}
-                  onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
-                  placeholder="Ex: São Paulo, Uberaba, Curitiba, Palmas..."
-                  className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                />
-                {originCity && (
-                  <span className="absolute right-3 top-3.5 text-green-500">✓</span>
-                )}
-              </div>
-              {showOriginDropdown && filteredOrigin.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
-                  {filteredOrigin.map((city) => (
-                    <button
-                      key={city.id}
-                      onClick={() => selectOrigin(city)}
-                      className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
-                    >
-                      <span>
-                        <span className="font-medium">{highlightMatch(city.nome, originSearch)}</span>
-                        <span className="text-gray-400 ml-1 text-sm">- {city.uf}</span>
-                      </span>
-                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.uf}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
 
-            <div className="flex justify-center">
-              <button
-                onClick={handleSwap}
-                className="p-2.5 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                title="Inverter cidades"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                </svg>
-              </button>
-            </div>
-
-            <div ref={destRef} className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Cidade de Destino</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={destSearch}
-                  onChange={(e) => handleDestSearch(e.target.value)}
-                  onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
-                  placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus..."
-                  className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                />
-                {destCity && (
-                  <span className="absolute right-3 top-3.5 text-green-500">✓</span>
-                )}
-              </div>
-              {showDestDropdown && filteredDest.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
-                  {filteredDest.map((city) => (
-                    <button
-                      key={city.id}
-                      onClick={() => selectDest(city)}
-                      className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
-                    >
-                      <span>
-                        <span className="font-medium">{highlightMatch(city.nome, destSearch)}</span>
-                        <span className="text-gray-400 ml-1 text-sm">- {city.uf}</span>
-                      </span>
-                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.uf}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
+          <div className="flex justify-center">
             <button
-              onClick={handleCalculate}
-              disabled={!originCity || !destCity || calculating}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              onClick={handleSwap}
+              className="p-2.5 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
+              title="Inverter cidades"
             >
-              {calculating ? (
-                <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Calculando...
-                </>
-              ) : (
-                'Calcular Distância'
-              )}
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
             </button>
           </div>
-        )}
+
+          <div ref={destRef} className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Cidade de Destino</label>
+            <div className="relative">
+              <input
+                type="text"
+                value={destSearch}
+                onChange={(e) => handleDestSearch(e.target.value)}
+                onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
+                placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus..."
+                className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+              {destCity && (
+                <span className="absolute right-3 top-3.5 text-green-500">✓</span>
+              )}
+            </div>
+            {showDestDropdown && filteredDest.length > 0 && (
+              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                {filteredDest.map((city, idx) => (
+                  <button
+                    key={`${city.n}-${city.u}-${idx}`}
+                    onClick={() => selectDest(city)}
+                    className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
+                  >
+                    <span>
+                      <span className="font-medium">{highlightMatch(city.n, destSearch)}</span>
+                      <span className="text-gray-400 ml-1 text-sm">- {city.u}</span>
+                    </span>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.u}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handleCalculate}
+            disabled={!originCity || !destCity || calculating}
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {calculating ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Calculando...
+              </>
+            ) : (
+              'Calcular Distância'
+            )}
+          </button>
+        </div>
 
         {error && (
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-center gap-2">
@@ -349,17 +279,13 @@ export default function DistanciaCidades() {
           <div className="mt-6">
             <div className="text-center mb-6">
               <p className="text-sm text-gray-500 mb-1">Distância calculada</p>
-              <p className="text-lg font-bold text-gray-900">
-                {originCity.nome} - {originCity.uf}
-              </p>
+              <p className="text-lg font-bold text-gray-900">{originCity.n} - {originCity.u}</p>
               <div className="flex items-center justify-center gap-2 my-2">
                 <div className="h-px w-12 bg-gray-300" />
                 <span className="text-gray-400">→</span>
                 <div className="h-px w-12 bg-gray-300" />
               </div>
-              <p className="text-lg font-bold text-gray-900">
-                {destCity.nome} - {destCity.uf}
-              </p>
+              <p className="text-lg font-bold text-gray-900">{destCity.n} - {destCity.u}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -395,9 +321,8 @@ export default function DistanciaCidades() {
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>Sobre a ferramenta</h2>
         <p>
-          Esta ferramenta calcula a distância entre <strong>todos os {cities.length.toLocaleString('pt-BR')} municípios brasileiros</strong> usando 
-          coordenadas geográficas oficiais do IBGE (centroide de cada município). A busca funciona 
-          para qualquer cidade — basta digitar o nome ou a UF.
+          Esta ferramenta calcula a distância entre <strong>{cities.length} municípios brasileiros</strong> usando 
+          coordenadas geográficas oficiais do IBGE. Basta digitar o nome da cidade ou UF para encontrá-la.
         </p>
       </article>
     </div>
