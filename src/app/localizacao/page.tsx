@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const tools = [
   { title: 'Busca de CEP', description: 'Consulte endereços por CEP ou busque CEPs por endereço.', href: '/localizacao/busca-cep', icon: '📍' },
   { title: 'Distância entre Cidades', description: 'Calcule a distância entre cidades brasileiras.', href: '/localizacao/distancia-cidades', icon: '🗺️' },
-  { title: 'Gerador de Link WhatsApp', description: 'Crie links e QR Codes para WhatsApp.', href: '/localizacao/whatsapp-link', icon: '💬' },
+  { 
 ];
 
 export default function LocalizacaoPage() {
