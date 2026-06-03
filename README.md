@@ -1,5 +1,11 @@
 # BuscaCentral.com.br
 
+![Vercel](https://img.shields.io/badge/Vercel-deployed-black)
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)
+![License](https://img.shields.io/badge/license-proprietária-red)
+
 Central brasileira de ferramentas online gratuitas.
 Consultas rápidas, sem cadastro e sem custo.
 
