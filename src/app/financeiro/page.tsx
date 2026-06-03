@@ -31,6 +31,12 @@ const tools = [
     href: '/financeiro/juros-compostos',
     icon: '📈',
   },
+  {
+    title: 'Conversor CLT para PJ',
+    description: 'Descubra quanto cobrar como PJ para equivaler ao salário CLT.',
+    href: '/financeiro/conversor-clt-pj',
+    icon: '💼',
+  },
 ];
 
 export default function FinanceiroPage() {
