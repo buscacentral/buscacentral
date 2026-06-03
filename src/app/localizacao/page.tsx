@@ -3,13 +3,13 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Central de Localização',
-  description: 'Ferramentas de localização: busca de CEP, distância entre cidades e links para WhatsApp.',
+  description: 'Ferramentas de localização: busca de CEP e distância entre cidades.',
 };
 
 const tools = [
   { title: 'Busca de CEP', description: 'Consulte endereços por CEP ou busque CEPs por endereço.', href: '/localizacao/busca-cep', icon: '📍' },
   { title: 'Distância entre Cidades', description: 'Calcule a distância entre cidades brasileiras.', href: '/localizacao/distancia-cidades', icon: '🗺️' },
-  { 
+];
 ];
 
 export default function LocalizacaoPage() {
