@@ -111,50 +111,143 @@ const tools = [
 
 export default function Home() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <section className="text-center mb-16">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-          Busca<span className="text-blue-600">Central</span>
+    <main>
+      {/* Bloco de Anúncio Superior (AdSense) */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '1.5rem auto',
+        padding: '1rem',
+        background: '#f8fafc',
+        border: '1px dashed #e2e8f0',
+        borderRadius: '8px',
+        textAlign: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+      }}>
+        Anúncio Publicitário - Google AdSense
+      </div>
+
+      {/* Seção de Boas-vindas e Busca Global Interna */}
+      <section style={{
+        textAlign: 'center',
+        margin: '3rem auto 4rem auto',
+        maxWidth: '600px',
+        padding: '0 1rem',
+      }}>
+        <h1 style={{
+          fontSize: '2.5rem',
+          marginBottom: '0.75rem',
+          color: '#0f172a',
+          fontWeight: 700,
+        }}>
+          O que você deseja buscar ou gerar?
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Central de ferramentas online gratuitas do Brasil. Consultas rápidas, sem cadastro, sem custo.
+        <p style={{
+          color: '#64748b',
+          marginBottom: '2rem',
+          fontSize: '1.1rem',
+        }}>
+          Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
+        
         <SearchBar />
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-          Ferramentas Disponíveis
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {tools.map((tool) => (
-            <ToolCard key={tool.href} {...tool} />
-          ))}
+      {/* Título das Ferramentas */}
+      <h2 style={{
+        textAlign: 'center',
+        fontSize: '1.8rem',
+        marginBottom: '2.5rem',
+        color: '#0f172a',
+        fontWeight: 700,
+      }}>
+        Ferramentas Disponíveis
+      </h2>
+
+      {/* Grid de Cards */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '0 1rem 4rem',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+        gap: '1.5rem',
+      }}>
+        {tools.map((tool) => (
+          <ToolCard key={tool.href} {...tool} />
+        ))}
+      </div>
+
+      {/* Seção Por que usar */}
+      <section style={{
+        maxWidth: '1200px',
+        margin: '0 auto 4rem',
+        padding: '0 1rem',
+      }}>
+        <div style={{
+          background: '#f8fafc',
+          borderRadius: '16px',
+          padding: '3rem 2rem',
+        }}>
+          <h2 style={{
+            fontSize: '1.8rem',
+            fontWeight: 700,
+            color: '#0f172a',
+            textAlign: 'center',
+            marginBottom: '2.5rem',
+          }}>
+            Por que usar o BuscaCentral?
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '2rem',
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚡</div>
+              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
+                Rápido e Simples
+              </h3>
+              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                Resultados instantâneos sem cadastro ou espera.
+              </p>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔒</div>
+              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
+                100% Seguro
+              </h3>
+              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                Ferramentas rodam no navegador. Seus dados nunca saem do seu computador.
+              </p>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>💰</div>
+              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
+                Totalmente Gratuito
+              </h3>
+              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                Sem planos pagos, sem limites, sem pegadinhas.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="mt-16 bg-gray-50 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-          Por que usar o BuscaCentral?
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="text-center">
-            <div className="text-4xl mb-3">⚡</div>
-            <h3 className="font-semibold text-lg mb-2">Rápido e Simples</h3>
-            <p className="text-gray-600 text-sm">Resultados instantâneos sem cadastro ou espera.</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-3">🔒</div>
-            <h3 className="font-semibold text-lg mb-2">100% Seguro</h3>
-            <p className="text-gray-600 text-sm">Ferramentas rodam no navegador. Seus dados nunca saem do seu computador.</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-3">💰</div>
-            <h3 className="font-semibold text-lg mb-2">Totalmente Gratuito</h3>
-            <p className="text-gray-600 text-sm">Sem planos pagos, sem limites, sem pegadinhas.</p>
-          </div>
-        </div>
-      </section>
-    </div>
+      {/* Bloco de Anúncio Inferior (AdSense) */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto 2rem',
+        padding: '1rem',
+        background: '#f8fafc',
+        border: '1px dashed #e2e8f0',
+        borderRadius: '8px',
+        textAlign: 'center',
+        color: '#94a3b8',
+        fontSize: '0.875rem',
+      }}>
+        Anúncio Publicitário - Google AdSense
+      </div>
+    </main>
   );
 }
