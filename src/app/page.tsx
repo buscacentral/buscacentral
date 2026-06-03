@@ -30,6 +30,20 @@ const tools = [
     icon: '🔍',
     color: 'orange' as const,
   },
+  {
+    title: 'Busca de CEP',
+    description: 'Consulte endereços por CEP ou busque CEPs por endereço.',
+    href: '/localizacao/busca-cep',
+    icon: '📍',
+    color: 'blue' as const,
+  },
+  {
+    title: 'Distância entre Cidades',
+    description: 'Calcule a distância entre cidades brasileiras.',
+    href: '/localizacao/distancia-cidades',
+    icon: '🗺️',
+    color: 'green' as const,
+  },
 ];
 
 export default function Home() {

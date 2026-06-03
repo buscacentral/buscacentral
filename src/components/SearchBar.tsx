@@ -8,6 +8,8 @@ const tools = [
   { name: 'Validador de CPF', path: '/documentos/validador-cpf', category: 'Documentos' },
   { name: 'Gerador de CNPJ', path: '/documentos/gerador-cnpj', category: 'Documentos' },
   { name: 'Validador de CNPJ', path: '/documentos/validador-cnpj', category: 'Documentos' },
+  { name: 'Busca de CEP', path: '/localizacao/busca-cep', category: 'Localização' },
+  { name: 'Distância entre Cidades', path: '/localizacao/distancia-cidades', category: 'Localização' },
 ];
 
 export default function SearchBar() {

@@ -14,7 +14,7 @@ export default function Header() {
             <Link href="/documentos/gerador-cpf" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Documentos
             </Link>
-            <Link href="#" className="text-gray-400 cursor-not-allowed font-medium">
+            <Link href="/localizacao/busca-cep" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Localização
             </Link>
             <Link href="#" className="text-gray-400 cursor-not-allowed font-medium">

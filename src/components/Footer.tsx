@@ -19,6 +19,8 @@ export default function Footer() {
               <li><Link href="/documentos/validador-cpf" className="hover:text-white transition-colors">Validador de CPF</Link></li>
               <li><Link href="/documentos/gerador-cnpj" className="hover:text-white transition-colors">Gerador de CNPJ</Link></li>
               <li><Link href="/documentos/validador-cnpj" className="hover:text-white transition-colors">Validador de CNPJ</Link></li>
+              <li><Link href="/localizacao/busca-cep" className="hover:text-white transition-colors">Busca de CEP</Link></li>
+              <li><Link href="/localizacao/distancia-cidades" className="hover:text-white transition-colors">Distância entre Cidades</Link></li>
             </ul>
           </div>
           
