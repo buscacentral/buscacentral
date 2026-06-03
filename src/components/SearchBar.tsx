@@ -8,6 +8,7 @@ const tools = [
   { name: 'Validador de CPF', path: '/documentos/validador-cpf', category: 'Documentos', keywords: ['cpf', 'validar', 'documento'] },
   { name: 'Gerador de CNPJ', path: '/documentos/gerador-cnpj', category: 'Documentos', keywords: ['cnpj', 'gerar', 'empresa'] },
   { name: 'Validador de CNPJ', path: '/documentos/validador-cnpj', category: 'Documentos', keywords: ['cnpj', 'validar', 'empresa'] },
+  { name: 'Consulta CNPJ', path: '/documentos/consulta-cnpj', category: 'Documentos', keywords: ['cnpj', 'consulta', 'receita', 'empresa', 'razão social'] },
   { name: 'Busca de CEP', path: '/localizacao/busca-cep', category: 'Localização', keywords: ['cep', 'endereço', 'buscar'] },
   { name: 'Distância entre Cidades', path: '/localizacao/distancia-cidades', category: 'Localização', keywords: ['distância', 'cidades', 'km'] },
   { name: 'Link WhatsApp', path: '/utilidades/whatsapp-link', category: 'Utilidades', keywords: ['whatsapp', 'link', 'wa.me'] },

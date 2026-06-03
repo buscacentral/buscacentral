@@ -11,6 +11,7 @@ const tools = [
   { title: 'Validador de CPF', description: 'Verifique se um CPF é válido.', href: '/documentos/validador-cpf', icon: '✅' },
   { title: 'Gerador de CNPJ', description: 'Gere CNPJs válidos para testes.', href: '/documentos/gerador-cnpj', icon: '🏢' },
   { title: 'Validador de CNPJ', description: 'Valide CNPJs com verificação oficial.', href: '/documentos/validador-cnpj', icon: '🔍' },
+  { title: 'Consulta CNPJ', description: 'Consulte dados da Receita Federal de qualquer empresa.', href: '/documentos/consulta-cnpj', icon: '🔎' },
 ];
 
 export default function DocumentosPage() {
