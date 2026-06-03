@@ -1,14 +1,19 @@
 'use client';
 
 import Script from 'next/script';
-import { useCookieConsent } from './CookieBanner';
+import { useState, useEffect } from 'react';
 
 const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID || '';
 
 export default function MicrosoftClarity() {
-  const { consent } = useCookieConsent();
+  const [consent, setConsent] = useState(false);
 
-  if (!CLARITY_ID || consent !== 'accepted') return null;
+  useEffect(() => {
+    const stored = localStorage.getItem('cookie-consent');
+    if (stored === 'accepted') setConsent(true);
+  }, []);
+
+  if (!CLARITY_ID || !consent) return null;
 
   return (
     <Script id="microsoft-clarity" strategy="afterInteractive">

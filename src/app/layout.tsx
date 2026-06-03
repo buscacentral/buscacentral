@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdPlaceholder from "@/components/AdPlaceholder";
-import { CookieProvider } from "@/components/CookieBanner";
 import CookieBanner from "@/components/CookieBanner";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
@@ -51,17 +50,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${geist.variable} h-full antialiased`}>
+      <GoogleAnalytics />
+      <MicrosoftClarity />
       <body className="min-h-full flex flex-col bg-white text-gray-900">
-        <CookieProvider>
-          <GoogleAnalytics />
-          <MicrosoftClarity />
-          <Header />
-          <AdPlaceholder position="top" />
-          <main className="flex-1">{children}</main>
-          <AdPlaceholder position="bottom" />
-          <Footer />
-          <CookieBanner />
-        </CookieProvider>
+        <Header />
+        <AdPlaceholder position="top" />
+        <main className="flex-1">{children}</main>
+        <AdPlaceholder position="bottom" />
+        <Footer />
+        <CookieBanner />
       </body>
     </html>
   );
