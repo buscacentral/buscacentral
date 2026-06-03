@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "ferramentas online",
   ],
   icons: {
-    icon: "/icon.png",
+    icon: "/favicon.ico",
   },
   openGraph: {
     title: "BuscaCentral — Ferramentas Online Gratuitas",
