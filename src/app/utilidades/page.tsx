@@ -23,6 +23,7 @@ const tools = [
   { title: 'Gerador de Link WhatsApp', description: 'Crie links e QR Codes para WhatsApp.', href: '/utilidades/whatsapp-link', icon: '💬' },
   { title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre duas datas com feriados.', href: '/utilidades/dias-uteis', icon: '📅' },
   { title: 'Formatador de JSON e XML', description: 'Formate, minifique e valide JSON e XML.', href: '/utilidades/formatador-codigo', icon: '💻' },
+  { title: 'Calculadora de IMC', description: 'Calcule seu IMC e veja a classificação da OMS.', href: '/utilidades/calculadora-imc', icon: '⚖️' },
 ];
 
 export default function UtilidadesPage() {
