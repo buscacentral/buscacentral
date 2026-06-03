@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     "cotação dólar",
     "ferramentas online",
   ],
+  icons: {
+    icon: "/icon.png",
+  },
   openGraph: {
     title: "BuscaCentral — Ferramentas Online Gratuitas",
     description:
