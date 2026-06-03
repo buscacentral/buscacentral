@@ -1,118 +1,28 @@
 import SearchBar from '@/components/SearchBar';
 import ToolCard from '@/components/ToolCard';
 
-const tools = [
-  {
-    title: 'Gerador de CPF',
-    description: 'Gere CPFs válidos e formatados para testes e desenvolvimento.',
-    href: '/documentos/gerador-cpf',
-    icon: '📄',
-    color: 'blue' as const,
-  },
-  {
-    title: 'Validador de CPF',
-    description: 'Verifique se um CPF é válido usando o algoritmo oficial.',
-    href: '/documentos/validador-cpf',
-    icon: '✅',
-    color: 'green' as const,
-  },
-  {
-    title: 'Gerador de CNPJ',
-    description: 'Gere CNPJs válidos para testes de sistemas.',
-    href: '/documentos/gerador-cnpj',
-    icon: '🏢',
-    color: 'purple' as const,
-  },
-  {
-    title: 'Validador de CNPJ',
-    description: 'Valide CNPJs com verificação de dígitos verificadores.',
-    href: '/documentos/validador-cnpj',
-    icon: '🔍',
-    color: 'orange' as const,
-  },
-  {
-    title: 'Busca de CEP',
-    description: 'Consulte endereços por CEP ou busque CEPs por endereço.',
-    href: '/localizacao/busca-cep',
-    icon: '📍',
-    color: 'blue' as const,
-  },
-  {
-    title: 'Distância entre Cidades',
-    description: 'Calcule a distância entre cidades brasileiras.',
-    href: '/localizacao/distancia-cidades',
-    icon: '🗺️',
-    color: 'green' as const,
-  },
-  {
-    title: 'Cotação de Moedas',
-    description: 'Cotações em tempo real: USD, EUR, GBP, ARS, BTC.',
-    href: '/financeiro/cotacao',
-    icon: '💱',
-    color: 'purple' as const,
-  },
-  {
-    title: 'Tabela FIPE',
-    description: 'Consulte preços médios de veículos.',
-    href: '/financeiro/tabela-fipe',
-    icon: '🚗',
-    color: 'orange' as const,
-  },
-  {
-    title: 'Gerador de QR Code',
-    description: 'Gere QR Codes a partir de textos ou URLs.',
-    href: '/utilidades/gerador-qr-code',
-    icon: '📱',
-    color: 'blue' as const,
-  },
-  {
-    title: 'Gerador de Senha',
-    description: 'Gere senhas seguras e aleatórias.',
-    href: '/utilidades/gerador-senha',
-    icon: '🔐',
-    color: 'green' as const,
-  },
-  {
-    title: 'Gerador de UUID',
-    description: 'Gere UUIDs v4 aleatórios.',
-    href: '/utilidades/gerador-uuid',
-    icon: '🆔',
-    color: 'purple' as const,
-  },
-  {
-    title: 'Codificador Base64',
-    description: 'Codifique ou decodifique textos em Base64.',
-    href: '/utilidades/base64',
-    icon: '🔄',
-    color: 'orange' as const,
-  },
-  {
-    title: 'Contador de Caracteres',
-    description: 'Conte caracteres, palavras e linhas.',
-    href: '/utilidades/contador-caracteres',
-    icon: '🔢',
-    color: 'blue' as const,
-  },
-  {
-    title: 'PIX Copia e Cola',
-    description: 'Gere códigos PIX no padrão EMV.',
-    href: '/utilidades/pix-copia-cola',
-    icon: '💳',
-    color: 'green' as const,
-  },
-  {
-    title: 'Conversor de Timestamp',
-    description: 'Converta entre timestamp Unix e data/hora.',
-    href: '/utilidades/timestamp',
-    icon: '⏰',
-    color: 'purple' as const,
-  },
+const mainTools = [
+  { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
+  { title: 'Validador de CPF', description: 'Verifique se um CPF é válido.', href: '/documentos/validador-cpf', icon: '✅', color: 'green' as const },
+  { title: 'Gerador de CNPJ', description: 'Gere CNPJs válidos para testes.', href: '/documentos/gerador-cnpj', icon: '🏢', color: 'purple' as const },
+  { title: 'Busca de CEP', description: 'Consulte endereços por CEP.', href: '/localizacao/busca-cep', icon: '📍', color: 'blue' as const },
+  { title: 'Cotação de Moedas', description: 'USD, EUR, GBP, BTC em tempo real.', href: '/financeiro/cotacao', icon: '💱', color: 'green' as const },
+  { title: 'Criptomoedas', description: 'Top 10 crypto com variação 24h.', href: '/financeiro/criptomoedas', icon: '🪙', color: 'purple' as const },
+  { title: 'Tabela FIPE', description: 'Preços médios de veículos.', href: '/financeiro/tabela-fipe', icon: '🚗', color: 'orange' as const },
+  { title: 'Juros Compostos', description: 'Simule seus investimentos.', href: '/financeiro/juros-compostos', icon: '📈', color: 'blue' as const },
+  { title: 'Gerador de QR Code', description: 'Gere QR Codes e baixe em PNG.', href: '/utilidades/gerador-qr-code', icon: '📱', color: 'green' as const },
+  { title: 'Gerador de Senha', description: 'Senhas seguras e aleatórias.', href: '/utilidades/gerador-senha', icon: '🔐', color: 'purple' as const },
+  { title: 'Comparador de Textos', description: 'Compare textos e veja diferenças.', href: '/utilidades/comparador-textos', icon: '📝', color: 'orange' as const },
+  { title: 'Conversor de Imagens', description: 'WebP, PNG e JPG localmente.', href: '/utilidades/conversor-imagens', icon: '🖼️', color: 'blue' as const },
+  { title: 'Link WhatsApp', description: 'Crie links e QR Code para WhatsApp.', href: '/localizacao/whatsapp-link', icon: '💬', color: 'green' as const },
+  { title: 'PIX Copia e Cola', description: 'Gere códigos PIX EMV.', href: '/utilidades/pix-copia-cola', icon: '💳', color: 'purple' as const },
+  { title: 'Seletor de Cores', description: 'Cores em HEX, RGB e HSL.', href: '/utilidades/seletor-cores', icon: '🎨', color: 'orange' as const },
 ];
 
 export default function Home() {
   return (
     <main>
-      {/* Bloco de Anúncio Superior (AdSense) */}
+      {/* Bloco de Anúncio Superior */}
       <div style={{
         maxWidth: '1200px',
         margin: '1.5rem auto',
@@ -127,7 +37,7 @@ export default function Home() {
         Anúncio Publicitário - Google AdSense
       </div>
 
-      {/* Seção de Boas-vindas e Busca Global Interna */}
+      {/* Seção de Boas-vindas e Busca */}
       <section style={{
         textAlign: 'center',
         margin: '3rem auto 4rem auto',
@@ -161,7 +71,7 @@ export default function Home() {
         color: '#0f172a',
         fontWeight: 700,
       }}>
-        Ferramentas Disponíveis
+        Ferramentas Populares
       </h2>
 
       {/* Grid de Cards */}
@@ -170,15 +80,15 @@ export default function Home() {
         margin: '0 auto',
         padding: '0 1rem 4rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
         gap: '1.5rem',
       }}>
-        {tools.map((tool) => (
+        {mainTools.map((tool) => (
           <ToolCard key={tool.href} {...tool} />
         ))}
       </div>
 
-      {/* Seção Por que usar */}
+      {/* Links para Categorias */}
       <section style={{
         maxWidth: '1200px',
         margin: '0 auto 4rem',
@@ -187,54 +97,56 @@ export default function Home() {
         <div style={{
           background: '#f8fafc',
           borderRadius: '16px',
-          padding: '3rem 2rem',
+          padding: '2rem',
         }}>
           <h2 style={{
-            fontSize: '1.8rem',
+            fontSize: '1.5rem',
             fontWeight: 700,
             color: '#0f172a',
             textAlign: 'center',
-            marginBottom: '2.5rem',
+            marginBottom: '1.5rem',
           }}>
-            Por que usar o BuscaCentral?
+            Explore por Categoria
           </h2>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '2rem',
+            gap: '1rem',
           }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚡</div>
-              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
-                Rápido e Simples
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
-                Resultados instantâneos sem cadastro ou espera.
-              </p>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔒</div>
-              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
-                100% Seguro
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
-                Ferramentas rodam no navegador. Seus dados nunca saem do seu computador.
-              </p>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>💰</div>
-              <h3 style={{ fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#0f172a' }}>
-                Totalmente Gratuito
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
-                Sem planos pagos, sem limites, sem pegadinhas.
-              </p>
-            </div>
+            {[
+              { name: 'Documentos', href: '/documentos', icon: '📄', count: 4 },
+              { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
+              { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 4 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 12 },
+            ].map((cat) => (
+              <a
+                key={cat.href}
+                href={cat.href}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '1rem',
+                  background: 'white',
+                  borderRadius: '12px',
+                  border: '1px solid #e2e8f0',
+                  textDecoration: 'none',
+                  color: '#1e293b',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
+                <div>
+                  <p style={{ fontWeight: 600 }}>{cat.name}</p>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b' }}>{cat.count} ferramentas</p>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Bloco de Anúncio Inferior (AdSense) */}
+      {/* Bloco de Anúncio Inferior */}
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto 2rem',

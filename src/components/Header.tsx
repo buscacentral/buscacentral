@@ -11,16 +11,16 @@ export default function Header() {
           </Link>
           
           <nav className="hidden md:flex space-x-8">
-            <Link href="/documentos/gerador-cpf" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/documentos" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Documentos
             </Link>
-            <Link href="/localizacao/busca-cep" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/localizacao" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Localização
             </Link>
-            <Link href="/financeiro/cotacao" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/financeiro" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Financeiro
             </Link>
-            <Link href="/utilidades/gerador-qr-code" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/utilidades" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Utilidades
             </Link>
           </nav>
