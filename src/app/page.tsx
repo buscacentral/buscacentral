@@ -15,7 +15,7 @@ const mainTools = [
   { title: 'Gerador de Senha', description: 'Senhas seguras e aleatórias.', href: '/utilidades/gerador-senha', icon: '🔐', color: 'purple' as const },
   { title: 'Comparador de Textos', description: 'Compare textos e veja diferenças.', href: '/utilidades/comparador-textos', icon: '📝', color: 'orange' as const },
   { title: 'Conversor de Imagens', description: 'WebP, PNG e JPG localmente.', href: '/utilidades/conversor-imagens', icon: '🖼️', color: 'blue' as const },
-  { title: 'Link WhatsApp', description: 'Crie links e QR Code para WhatsApp.', href: '/localizacao/whatsapp-link', icon: '💬', color: 'green' as const },
+  { title: 'Link WhatsApp', description: 'Crie links e QR Code para WhatsApp.', href: '/utilidades/whatsapp-link', icon: '💬', color: 'green' as const },
   { title: 'PIX Copia e Cola', description: 'Gere códigos PIX EMV.', href: '/utilidades/pix-copia-cola', icon: '💳', color: 'purple' as const },
   { title: 'Seletor de Cores', description: 'Cores em HEX, RGB e HSL.', href: '/utilidades/seletor-cores', icon: '🎨', color: 'orange' as const },
 ];
@@ -99,9 +99,9 @@ export default function Home() {
           }}>
             {[
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 4 },
-              { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
+              { name: 'Localização', href: '/localizacao', icon: '📍', count: 2 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 4 },
-              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 13 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 14 },
             ].map((cat) => (
               <a
                 key={cat.href}
