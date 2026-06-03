@@ -33,7 +33,7 @@ export default function Footer() {
               <li><Link href="/utilidades/conversor-imagens" className="hover:text-white transition-colors">Conversor de Imagens</Link></li>
               <li><Link href="/utilidades/seletor-cores" className="hover:text-white transition-colors">Seletor de Cores</Link></li>
               <li><Link href="/utilidades/extrator-emails" className="hover:text-white transition-colors">Extrator de Emails</Link></li>
-              <li><Link href="/localizacao/whatsapp-link" className="hover:text-white transition-colors">Link WhatsApp</Link></li>
+              <li><Link href="/utilidades/whatsapp-link" className="hover:text-white transition-colors">Link WhatsApp</Link></li>
             </ul>
           </div>
           
