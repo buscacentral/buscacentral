@@ -37,6 +37,12 @@ const tools = [
     href: '/financeiro/conversor-clt-pj',
     icon: '💼',
   },
+  {
+    title: 'Simulador de Financiamento de Carro',
+    description: 'Simule parcelas pelos sistemas Price e SAC.',
+    href: '/financeiro/financiamento-carro',
+    icon: '🚙',
+  },
 ];
 
 export default function FinanceiroPage() {
