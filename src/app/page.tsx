@@ -6,6 +6,7 @@ const mainTools = [
   { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
   { title: 'Validador de CPF', description: 'Verifique se um CPF é válido.', href: '/documentos/validador-cpf', icon: '✅', color: 'green' as const },
   { title: 'Gerador de CNPJ', description: 'Gere CNPJs válidos para testes.', href: '/documentos/gerador-cnpj', icon: '🏢', color: 'purple' as const },
+  { title: 'Validador de CNPJ', description: 'Verifique se um CNPJ é válido.', href: '/documentos/validador-cnpj', icon: '🔎', color: 'orange' as const },
   { title: 'Busca de CEP', description: 'Consulte endereços por CEP.', href: '/localizacao/busca-cep', icon: '📍', color: 'blue' as const },
   { title: 'Cotação de Moedas', description: 'USD, EUR, GBP, BTC em tempo real.', href: '/financeiro/cotacao', icon: '💱', color: 'green' as const },
   { title: 'Criptomoedas', description: 'Top 10 crypto com variação 24h.', href: '/financeiro/criptomoedas', icon: '🪙', color: 'purple' as const },
