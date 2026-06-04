@@ -12,7 +12,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis (31)
+## 🛠️ Ferramentas disponíveis (33)
 
 ### 📋 Documentos
 - Gerador de CPF
@@ -50,6 +50,7 @@ Consultas rápidas, sem cadastro e sem custo.
 - Formatador JSON/XML
 - Formatador de Código
 - Calculadora de IMC
+- Tabela de Calorias (TACO/IBGE)
 - Dias Úteis entre Datas
 - Conversor de Timestamp
 - Removedor de Duplicatas
