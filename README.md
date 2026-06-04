@@ -12,7 +12,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis (33)
+## 🛠️ Ferramentas disponíveis (34)
 
 ### 📋 Documentos
 - Gerador de CPF
@@ -56,6 +56,9 @@ Consultas rápidas, sem cadastro e sem custo.
 - Removedor de Duplicatas
 - Codificador/Decodificador Base64
 
+### 🛒 Compras
+- Busca de Produtos (Mercado Livre)
+
 ## 🚀 Stack
 
 - Next.js 15 (React)
@@ -72,6 +75,7 @@ Consultas rápidas, sem cadastro e sem custo.
 | AwesomeAPI | Cotação de moedas | Gratuita |
 | CNPJ.ws | Consulta CNPJ | Gratuita |
 | parallelum.com.br | Tabela FIPE | Gratuita |
+| Mercado Livre | Busca de Produtos | Gratuita |
 
 ## 💡 Como rodar localmente
 

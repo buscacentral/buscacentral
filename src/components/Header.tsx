@@ -28,6 +28,9 @@ export default function Header() {
             <Link href="/utilidades" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Utilidades
             </Link>
+            <Link href="/produtos" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              Produtos
+            </Link>
           </nav>
 
           <button 
@@ -79,6 +82,13 @@ export default function Header() {
               className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
             >
               Utilidades
+            </Link>
+            <Link 
+              href="/produtos" 
+              onClick={() => setMenuOpen(false)}
+              className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+            >
+              Produtos
             </Link>
           </nav>
         </div>

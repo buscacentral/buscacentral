@@ -4,7 +4,7 @@
  * Configuração global para todos os testes Vitest.
  */
 
-import { vi } from 'vitest';
+import { vi, beforeEach, afterAll } from 'vitest';
 
 // Mock do fetch global
 global.fetch = vi.fn();
