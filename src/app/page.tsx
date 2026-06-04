@@ -116,7 +116,6 @@ export default function Home() {
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 2 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 8 },
               { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 18 },
-              { name: 'Compras', href: '/produtos', icon: '🛒', count: 1 },
             ].map((cat) => (
               <a
                 key={cat.href}
