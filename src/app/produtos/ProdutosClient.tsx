@@ -43,7 +43,7 @@ function formatCurrency(value: number): string {
 }
 
 function getImageUrl(thumbnail: string): string {
-  if (!thumbnail) return '/placeholder-product.png';
+  if (!thumbnail) return '/placeholder-product.svg';
   return thumbnail
     .replace('-I.jpg', '-O.jpg')
     .replace('http://', 'https://');
@@ -106,7 +106,7 @@ function ProductCard({ product }: { product: Product }) {
           className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder-product.png';
+            (e.target as HTMLImageElement).src = '/placeholder-product.svg';
           }}
         />
         <div className="absolute top-2 left-2 flex flex-col gap-1">
