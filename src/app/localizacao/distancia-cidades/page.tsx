@@ -22,6 +22,8 @@ export default function DistanciaCidades() {
   const [result, setResult] = useState<{ distance: number; estimatedRoad: number } | null>(null);
   const [calculating, setCalculating] = useState(false);
   const [error, setError] = useState('');
+  const [consumo, setConsumo] = useState('10');
+  const [precoGasolina, setPrecoGasolina] = useState('6.00');
   const originRef = useRef<HTMLDivElement>(null);
   const destRef = useRef<HTMLDivElement>(null);
 
@@ -306,6 +308,89 @@ export default function DistanciaCidades() {
                 </p>
                 <p className="text-sm text-green-500 mt-1">quilômetros (× 1.3)</p>
               </div>
+            </div>
+
+            {/* Tempo estimado de viagem */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-5 text-center">
+                <div className="text-3xl mb-2">🚗</div>
+                <p className="text-sm font-medium text-purple-700 mb-1">De Carro (80 km/h)</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {Math.floor(result.estimatedRoad / 80)}h {Math.round((result.estimatedRoad % 80) * 60 / 80)}min
+                </p>
+                <p className="text-sm text-purple-500 mt-1">tempo estimado</p>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-5 text-center">
+                <div className="text-3xl mb-2">🚌</div>
+                <p className="text-sm font-medium text-orange-700 mb-1">De Ônibus (60 km/h)</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {Math.floor(result.estimatedRoad / 60)}h {Math.round((result.estimatedRoad % 60) * 60 / 60)}min
+                </p>
+                <p className="text-sm text-orange-500 mt-1">tempo estimado</p>
+              </div>
+            </div>
+
+            {/* Calculadora de combustível */}
+            <div className="mt-4 bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">⛽ Calculadora de Combustível</h3>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Consumo (km/l)</label>
+                  <input
+                    type="number"
+                    value={consumo}
+                    onChange={(e) => setConsumo(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    min="1"
+                    step="0.5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Gasolina (R$/litro)</label>
+                  <input
+                    type="number"
+                    value={precoGasolina}
+                    onChange={(e) => setPrecoGasolina(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    min="0.01"
+                    step="0.10"
+                  />
+                </div>
+              </div>
+              {(() => {
+                const consumoNum = parseFloat(consumo) || 10;
+                const precoNum = parseFloat(precoGasolina) || 6;
+                const litros = result.estimatedRoad / consumoNum;
+                const custoTotal = litros * precoNum;
+                return (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-amber-50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-amber-600 mb-1">Litros Necessários</p>
+                      <p className="text-xl font-bold text-amber-700">{litros.toFixed(1)}L</p>
+                    </div>
+                    <div className="bg-red-50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-red-600 mb-1">Custo Total</p>
+                      <p className="text-xl font-bold text-red-700">R$ {custoTotal.toFixed(2)}</p>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Botão Google Maps */}
+            <div className="mt-4">
+              <a
+                href={`https://maps.google.com/maps?saddr=${encodeURIComponent(originCity.n + ' - ' + originCity.u)}&daddr=${encodeURIComponent(destCity.n + ' - ' + destCity.u)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 px-6 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Ver rota no Google Maps
+              </a>
             </div>
 
             <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
