@@ -1,173 +1,21 @@
-'use client';
+import type { Metadata } from 'next';
+import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
+import JurosCompostosClient from './JurosCompostosClient';
 
-import { useState, useMemo } from 'react';
+export const metadata: Metadata = generateToolMetadata(
+  'Calculadora de Juros Compostos',
+  'Simule investimentos com juros compostos. Calcule o rendimento do seu dinheiro ao longo do tempo.',
+  '/financeiro/juros-compostos'
+);
 
 export default function JurosCompostos() {
-  const [aporteInicial, setAporteInicial] = useState('1000');
-  const [aporteMensal, setAporteMensal] = useState('200');
-  const [taxaJuros, setTaxaJuros] = useState('1');
-  const [tempo, setTempo] = useState('12');
-  const [tipoTempo, setTipoTempo] = useState<'meses' | 'anos'>('meses');
-
-  const resultado = useMemo(() => {
-    const inicial = parseFloat(aporteInicial.replace(',', '.')) || 0;
-    const mensal = parseFloat(aporteMensal.replace(',', '.')) || 0;
-    const taxa = (parseFloat(taxaJuros.replace(',', '.')) || 0) / 100;
-    const meses = tipoTempo === 'anos' ? (parseInt(tempo) || 0) * 12 : parseInt(tempo) || 0;
-
-    if (meses === 0 || taxa === 0) return null;
-
-    const pontos: { mes: number; total: number; investido: number; juros: number }[] = [];
-    let saldo = inicial;
-    let totalInvestido = inicial;
-
-    for (let i = 1; i <= meses; i++) {
-      saldo = saldo * (1 + taxa) + mensal;
-      totalInvestido += mensal;
-      const jurosAcumulados = saldo - totalInvestido;
-      pontos.push({
-        mes: i,
-        total: saldo,
-        investido: totalInvestido,
-        juros: jurosAcumulados,
-      });
-    }
-
-    const ultimoPonto = pontos[pontos.length - 1];
-    return {
-      montanteFinal: ultimoPonto.total,
-      totalInvestido: ultimoPonto.investido,
-      totalJuros: ultimoPonto.juros,
-      pontos,
-    };
-  }, [aporteInicial, aporteMensal, taxaJuros, tempo, tipoTempo]);
-
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  };
-
-  const maximoGrafico = resultado ? resultado.montanteFinal : 1;
-
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Simulador de Juros Compostos</h1>
-      <p className="text-gray-600 mb-8">
-        Simule o crescimento dos seus investimentos com aportes mensais e juros compostos.
-      </p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Parâmetros</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Aporte Inicial (R$)</label>
-              <input
-                type="text"
-                value={aporteInicial}
-                onChange={(e) => setAporteInicial(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Aporte Mensal (R$)</label>
-              <input
-                type="text"
-                value={aporteMensal}
-                onChange={(e) => setAporteMensal(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Taxa de Juros (% ao mês)</label>
-              <input
-                type="text"
-                value={taxaJuros}
-                onChange={(e) => setTaxaJuros(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tempo</label>
-                <input
-                  type="number"
-                  value={tempo}
-                  onChange={(e) => setTempo(e.target.value)}
-                  min="1"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">&nbsp;</label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setTipoTempo('meses')}
-                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-                      tipoTempo === 'meses' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    Meses
-                  </button>
-                  <button
-                    onClick={() => setTipoTempo('anos')}
-                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${
-                      tipoTempo === 'anos' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    Anos
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Resultado</h2>
-          {resultado ? (
-            <div className="space-y-4">
-              <div className="bg-green-50 rounded-lg p-4 text-center">
-                <p className="text-sm text-green-600 mb-1">Montante Final</p>
-                <p className="text-3xl font-bold text-green-700">{formatCurrency(resultado.montanteFinal)}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-gray-500 mb-1">Total Investido</p>
-                  <p className="text-xl font-bold text-gray-900">{formatCurrency(resultado.totalInvestido)}</p>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-blue-600 mb-1">Total em Juros</p>
-                  <p className="text-xl font-bold text-blue-700">{formatCurrency(resultado.totalJuros)}</p>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Evolução</h3>
-                <div className="h-48 flex items-end gap-1">
-                  {resultado.pontos.filter((_, i) => i % Math.max(1, Math.floor(resultado.pontos.length / 24)) === 0 || i === resultado.pontos.length - 1).map((ponto) => {
-                    const altura = (ponto.total / maximoGrafico) * 100;
-                    const alturaInvestido = (ponto.investido / maximoGrafico) * 100;
-                    return (
-                      <div key={ponto.mes} className="flex-1 flex flex-col items-center justify-end h-full" title={`Mês ${ponto.mes}: ${formatCurrency(ponto.total)}`}>
-                        <div className="w-full relative" style={{ height: `${altura}%` }}>
-                          <div className="absolute bottom-0 w-full bg-blue-200 rounded-t" style={{ height: `${(alturaInvestido / altura) * 100}%` }} />
-                          <div className="absolute bottom-0 w-full bg-blue-500 rounded-t" style={{ height: '100%' }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>Início</span>
-                  <span>{tipoTempo === 'anos' ? `${tempo} anos` : `${tempo} meses`}</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center py-8">Preencha os parâmetros para ver o resultado.</p>
-          )}
-        </div>
-      </div>
+    <ToolPageLayout
+      title="Simulador de Juros Compostos"
+      description="Simule o crescimento dos seus investimentos com aportes mensais e juros compostos."
+      ariaLabel="Calculadora de juros compostos interativa"
+    >
+      <JurosCompostosClient />
 
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>O que são juros compostos?</h2>
@@ -183,6 +31,6 @@ export default function JurosCompostos() {
           aposentadoria, compra de imóveis ou qualquer objetivo financeiro.
         </p>
       </article>
-    </div>
+    </ToolPageLayout>
   );
 }
