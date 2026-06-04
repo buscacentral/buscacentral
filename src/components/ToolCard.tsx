@@ -19,7 +19,7 @@ export default function ToolCard({ title, description, href, icon, color = 'blue
   return (
     <Link
       href={href}
-      className={group block p-8 sm:p-10 rounded-2xl border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl }
+      className={`group block p-8 sm:p-10 rounded-2xl border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${colorClasses[color]}`}
     >
       <div className="text-7xl sm:text-8xl mb-6 transition-transform duration-300 group-hover:scale-110">{icon}</div>
       <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3">{title}</h3>
