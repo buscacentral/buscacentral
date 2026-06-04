@@ -187,7 +187,7 @@ export default function ProdutosClient() {
 
     try {
       const response = await fetch(
-        `https://api.mercadolivre.com/sites/MLB/search?q=${encodeURIComponent(trimmedQuery)}&limit=20`
+        `/api/produtos?q=${encodeURIComponent(trimmedQuery)}&limit=20`
       );
 
       if (!response.ok) {
