@@ -99,10 +99,10 @@ export default function Home() {
             gap: '1rem',
           }}>
             {[
-              { name: 'Documentos', href: '/documentos', icon: '📄', count: 4 },
+              { name: 'Documentos', href: '/documentos', icon: '📄', count: 5 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 2 },
-              { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 4 },
-              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 14 },
+              { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 8 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 18 },
             ].map((cat) => (
               <a
                 key={cat.href}
