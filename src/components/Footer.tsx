@@ -34,6 +34,7 @@ export default function Footer() {
                 <li><Link href="/utilidades/gerador-qr-code" className="hover:text-white transition-colors">Gerador de QR Code</Link></li>
                 <li><Link href="/utilidades/calculadora-imc" className="hover:text-white transition-colors">Calculadora de IMC</Link></li>
                 <li><Link href="/utilidades/tabela-calorias" className="hover:text-white transition-colors">Tabela de Calorias</Link></li>
+                <li><Link href="/produtos" className="hover:text-white transition-colors">Busca de Produtos</Link></li>
               </ul>
             </div>
 
