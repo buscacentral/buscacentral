@@ -49,13 +49,20 @@ function getImageUrl(thumbnail: string): string {
     .replace('http://', 'https://');
 }
 
-function getAffiliateUrl(permalink: string): string {
+function getAffiliateUrl(permalink: string, title?: string): string {
   try {
     const url = new URL(permalink);
     const path = url.pathname;
+    
+    if (path.includes('/lista')) {
+      const searchQuery = title ? encodeURIComponent(title) : '';
+      return `https://lista.mercadolivre.com.br/${searchQuery}?matt_tool=${TOOL_ID}&matt_word=&matt_source=google&matt_campaign=mlb_afiliados`;
+    }
+    
     return `https://www.mercadolivre.com.br${path}?matt_tool=${TOOL_ID}&matt_word=&matt_source=google&matt_campaign=mlb_afiliados`;
   } catch {
-    return permalink;
+    const searchQuery = title ? encodeURIComponent(title) : '';
+    return `https://lista.mercadolivre.com.br/${searchQuery}?matt_tool=${TOOL_ID}`;
   }
 }
 
@@ -99,7 +106,7 @@ function SkeletonCard() {
 
 function ProductCard({ product }: { product: Product }) {
   const imageUrl = getImageUrl(product.thumbnail);
-  const affiliateUrl = getAffiliateUrl(product.permalink);
+  const affiliateUrl = getAffiliateUrl(product.permalink, product.title);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
