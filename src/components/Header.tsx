@@ -8,24 +8,24 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center">
-            <Image src="/logo.png" alt="BuscaCentral" width={180} height={40} priority />
+        <div className="flex justify-between items-center h-20">
+          <Link href="/" className="flex items-center transition-transform hover:scale-105">
+            <Image src="/logo.png" alt="BuscaCentral" width={220} height={48} priority />
           </Link>
           
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/documentos" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+          <nav className="hidden md:flex space-x-10">
+            <Link href="/documentos" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
               Documentos
             </Link>
-            <Link href="/localizacao" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/localizacao" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
               Localização
             </Link>
-            <Link href="/financeiro" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/financeiro" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
               Financeiro
             </Link>
-            <Link href="/utilidades" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <Link href="/utilidades" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
               Utilidades
             </Link>
           </nav>
@@ -55,28 +55,28 @@ export default function Header() {
             <Link 
               href="/documentos" 
               onClick={() => setMenuOpen(false)}
-              className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+              className="block py-4 px-5 text-gray-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-semibold text-lg"
             >
               Documentos
             </Link>
             <Link 
               href="/localizacao" 
               onClick={() => setMenuOpen(false)}
-              className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+              className="block py-4 px-5 text-gray-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-semibold text-lg"
             >
               Localização
             </Link>
             <Link 
               href="/financeiro" 
               onClick={() => setMenuOpen(false)}
-              className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+              className="block py-4 px-5 text-gray-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-semibold text-lg"
             >
               Financeiro
             </Link>
             <Link 
               href="/utilidades" 
               onClick={() => setMenuOpen(false)}
-              className="block py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+              className="block py-4 px-5 text-gray-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-semibold text-lg"
             >
               Utilidades
             </Link>

@@ -65,7 +65,7 @@ export default function SearchBar() {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
+    <div className="relative w-full max-w-2xl mx-auto group">
       <input
         ref={inputRef}
         type="text"
@@ -77,45 +77,16 @@ export default function SearchBar() {
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}
-        style={{
-          width: '100%',
-          padding: '1.1rem 1.5rem 1.1rem 3rem',
-          border: '1px solid #e2e8f0',
-          borderRadius: '50px',
-          fontSize: '1.1rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          outline: 'none',
-          transition: 'border 0.2s',
-        }}
+        className="w-full py-4 pl-14 pr-6 border-2 border-slate-200 rounded-full text-lg shadow-sm outline-none transition-all duration-300 focus:border-blue-500 focus:shadow-md focus:ring-4 focus:ring-blue-50"
       />
-      <span style={{
-        position: 'absolute',
-        left: '1.2rem',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        color: '#94a3b8',
-        fontSize: '1.2rem',
-      }}>
+      <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors duration-300 group-focus-within:text-blue-500">
         🔍
       </span>
       
       {isOpen && filtered.length > 0 && (
         <div
           ref={resultsRef}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            background: 'white',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            textAlign: 'left',
-            display: 'block',
-            zIndex: 100,
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-            marginTop: '0.5rem',
-            maxHeight: '300px',
-            overflowY: 'auto',
-          }}
+          className="absolute w-full bg-white border border-slate-200 rounded-2xl text-left block z-50 shadow-xl mt-3 max-h-[400px] overflow-y-auto divide-y divide-slate-100"
         >
           {filtered.map((tool) => (
             <Link
@@ -125,30 +96,12 @@ export default function SearchBar() {
                 setIsOpen(false);
                 setQuery('');
               }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0.875rem 1.25rem',
-                textDecoration: 'none',
-                color: '#1e293b',
-                borderBottom: '1px solid #f1f5f9',
-                transition: 'background 0.15s',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#f8fafc')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'white')}
+              className="flex items-center px-6 py-4 hover:bg-slate-50 transition-colors text-slate-800"
             >
-              <span style={{
-                fontSize: '0.75rem',
-                color: '#64748b',
-                background: '#f1f5f9',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '4px',
-                marginRight: '0.75rem',
-                fontWeight: 500,
-              }}>
+              <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full mr-4 tracking-wide uppercase">
                 {tool.category}
               </span>
-              <span style={{ fontWeight: 500 }}>{tool.name}</span>
+              <span className="font-semibold text-base">{tool.name}</span>
             </Link>
           ))}
         </div>

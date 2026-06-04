@@ -16,61 +16,25 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
-      <section style={{
-        textAlign: 'center',
-        margin: '3rem auto 4rem auto',
-        maxWidth: '600px',
-        padding: '0 1rem',
-      }}>
-        <h1 style={{
-          fontSize: '2.5rem',
-          marginBottom: '0.75rem',
-          color: '#0f172a',
-          fontWeight: 700,
-        }}>
+      <section className="text-center mx-auto mt-12 mb-16 max-w-3xl px-6">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
           O que você deseja buscar ou gerar?
         </h1>
-        <p style={{
-          color: '#64748b',
-          marginBottom: '1rem',
-          fontSize: '1.1rem',
-        }}>
+        <p className="text-slate-500 mb-6 text-lg md:text-xl max-w-2xl mx-auto">
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
-        <p style={{
-          background: '#eff6ff',
-          color: '#2563eb',
-          display: 'inline-block',
-          padding: '0.5rem 1.25rem',
-          borderRadius: '50px',
-          fontSize: '0.9rem',
-          fontWeight: 600,
-          marginBottom: '2rem',
-        }}>
+        <p className="bg-blue-50 text-blue-600 inline-block px-6 py-2 rounded-full text-sm md:text-base font-bold mb-10 shadow-sm border border-blue-100">
           34 ferramentas gratuitas
         </p>
         
         <SearchBar />
       </section>
 
-      <h2 style={{
-        textAlign: 'center',
-        fontSize: '1.8rem',
-        marginBottom: '2.5rem',
-        color: '#0f172a',
-        fontWeight: 700,
-      }}>
+      <h2 className="text-center text-3xl md:text-4xl font-extrabold text-slate-900 mb-10 tracking-tight">
         Ferramentas Populares
       </h2>
 
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 1rem 4rem',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.5rem',
-      }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {mainTools.map((tool) => (
           <ToolCard key={tool.href} {...tool} />
         ))}
@@ -78,39 +42,15 @@ export default function Home() {
 
       <AdPlaceholder position="middle" />
 
-      <section style={{
-        maxWidth: '1200px',
-        margin: '0 auto 4rem',
-        padding: '0 1rem',
-      }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #f0f9ff 0%, #eff6ff 50%, #f0fdf4 100%)',
-          borderRadius: '20px',
-          padding: '2.5rem',
-          border: '1px solid #e0f2fe',
-        }}>
-          <h2 style={{
-            fontSize: '1.8rem',
-            fontWeight: 700,
-            color: '#0f172a',
-            textAlign: 'center',
-            marginBottom: '0.5rem',
-          }}>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-8 md:p-12 border border-blue-100 shadow-sm">
+          <h2 className="text-3xl font-extrabold text-slate-900 text-center mb-3">
             Explore por Categoria
           </h2>
-          <p style={{
-            textAlign: 'center',
-            color: '#64748b',
-            marginBottom: '2rem',
-            fontSize: '1rem',
-          }}>
+          <p className="text-center text-slate-500 mb-10 text-lg">
             Encontre a ferramenta ideal para cada necessidade
           </p>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '1rem',
-          }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {[
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 5 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 2 },
@@ -120,23 +60,12 @@ export default function Home() {
               <a
                 key={cat.href}
                 href={cat.href}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '1rem',
-                  background: 'white',
-                  borderRadius: '12px',
-                  border: '1px solid #e2e8f0',
-                  textDecoration: 'none',
-                  color: '#1e293b',
-                  transition: 'all 0.2s',
-                }}
+                className="group flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
-                <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
+                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
                 <div>
-                  <p style={{ fontWeight: 600 }}>{cat.name}</p>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b' }}>{cat.count} ferramentas</p>
+                  <p className="font-bold text-slate-900 text-lg">{cat.name}</p>
+                  <p className="text-sm text-slate-500 font-medium">{cat.count} ferramentas</p>
                 </div>
               </a>
             ))}

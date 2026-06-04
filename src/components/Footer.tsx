@@ -9,40 +9,40 @@ export default function Footer() {
         <nav aria-label="Rodapé - Navegação principal">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h2 className="text-white font-bold text-lg mb-4">BuscaCentral</h2>
-              <p className="text-sm text-gray-400">
+              <h2 className="text-white font-bold text-xl mb-6">BuscaCentral</h2>
+              <p className="text-base text-gray-400 leading-relaxed">
                 Central de ferramentas online gratuitas do Brasil. Consultas rápidas sem cadastro.
               </p>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-4">Documentos</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/documentos/gerador-cpf" className="hover:text-white transition-colors">Gerador de CPF</Link></li>
-                <li><Link href="/documentos/validador-cpf" className="hover:text-white transition-colors">Validador de CPF</Link></li>
-                <li><Link href="/documentos/gerador-cnpj" className="hover:text-white transition-colors">Gerador de CNPJ</Link></li>
-                <li><Link href="/documentos/consulta-cnpj" className="hover:text-white transition-colors">Consulta CNPJ</Link></li>
+              <h3 className="text-white font-semibold mb-6 text-lg">Documentos</h3>
+              <ul className="space-y-4 text-base">
+                <li><Link href="/documentos/gerador-cpf" className="text-gray-400 hover:text-white transition-colors block">Gerador de CPF</Link></li>
+                <li><Link href="/documentos/validador-cpf" className="text-gray-400 hover:text-white transition-colors block">Validador de CPF</Link></li>
+                <li><Link href="/documentos/gerador-cnpj" className="text-gray-400 hover:text-white transition-colors block">Gerador de CNPJ</Link></li>
+                <li><Link href="/documentos/consulta-cnpj" className="text-gray-400 hover:text-white transition-colors block">Consulta CNPJ</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-4">Ferramentas</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/localizacao/busca-cep" className="hover:text-white transition-colors">Busca de CEP</Link></li>
-                <li><Link href="/financeiro/cotacao" className="hover:text-white transition-colors">Cotação de Moedas</Link></li>
-                <li><Link href="/financeiro/tabela-fipe" className="hover:text-white transition-colors">Tabela FIPE</Link></li>
-                <li><Link href="/utilidades/gerador-qr-code" className="hover:text-white transition-colors">Gerador de QR Code</Link></li>
-                <li><Link href="/utilidades/calculadora-imc" className="hover:text-white transition-colors">Calculadora de IMC</Link></li>
-                <li><Link href="/utilidades/tabela-calorias" className="hover:text-white transition-colors">Tabela de Calorias</Link></li>
+              <h3 className="text-white font-semibold mb-6 text-lg">Ferramentas</h3>
+              <ul className="space-y-4 text-base">
+                <li><Link href="/localizacao/busca-cep" className="text-gray-400 hover:text-white transition-colors block">Busca de CEP</Link></li>
+                <li><Link href="/financeiro/cotacao" className="text-gray-400 hover:text-white transition-colors block">Cotação de Moedas</Link></li>
+                <li><Link href="/financeiro/tabela-fipe" className="text-gray-400 hover:text-white transition-colors block">Tabela FIPE</Link></li>
+                <li><Link href="/utilidades/gerador-qr-code" className="text-gray-400 hover:text-white transition-colors block">Gerador de QR Code</Link></li>
+                <li><Link href="/utilidades/calculadora-imc" className="text-gray-400 hover:text-white transition-colors block">Calculadora de IMC</Link></li>
+                <li><Link href="/utilidades/tabela-calorias" className="text-gray-400 hover:text-white transition-colors block">Tabela de Calorias</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-4">Institucional</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/sobre" className="hover:text-white transition-colors">Sobre Nós</Link></li>
-                <li><Link href="/privacidade" className="hover:text-white transition-colors">Política de Privacidade</Link></li>
-                <li><Link href="/termos" className="hover:text-white transition-colors">Termos de Uso</Link></li>
+              <h3 className="text-white font-semibold mb-6 text-lg">Institucional</h3>
+              <ul className="space-y-4 text-base">
+                <li><Link href="/sobre" className="text-gray-400 hover:text-white transition-colors block">Sobre Nós</Link></li>
+                <li><Link href="/privacidade" className="text-gray-400 hover:text-white transition-colors block">Política de Privacidade</Link></li>
+                <li><Link href="/termos" className="text-gray-400 hover:text-white transition-colors block">Termos de Uso</Link></li>
               </ul>
             </div>
           </div>

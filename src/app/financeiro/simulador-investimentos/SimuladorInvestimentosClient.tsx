@@ -163,19 +163,19 @@ export default function SimuladorInvestimentosClient() {
             <>
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Comparativo</h2>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {resultado.investimentos.map((inv) => {
                     const isVencedor = inv.nome === resultado.vencedor.nome;
                     return (
-                      <div key={inv.nome} className={`rounded-lg p-4 text-center border ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200' : 'bg-gray-50 border-gray-200'}`}>
-                        <p className="text-lg mb-1">{inv.icon}</p>
-                        <p className="text-xs font-semibold text-gray-500 mb-1">{inv.nome}</p>
-                        <p className="text-lg font-bold text-gray-900">{formatCurrency(inv.valorLiquido)}</p>
-                        <p className={`text-xs font-medium mt-1 ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <div key={inv.nome} className={`rounded-xl p-5 text-center border ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200 shadow-sm' : 'bg-gray-50 border-gray-200'}`}>
+                        <p className="text-2xl mb-2">{inv.icon}</p>
+                        <p className="text-sm font-semibold text-gray-500 mb-2">{inv.nome}</p>
+                        <p className="text-xl font-bold text-gray-900">{formatCurrency(inv.valorLiquido)}</p>
+                        <p className={`text-sm font-medium mt-1 ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {formatCurrency(inv.rendimentoLiquido)}
                         </p>
-                        <p className="text-xs text-gray-400">{formatPercent(inv.rendimentoPercentual)}</p>
-                        {isVencedor && <p className="text-xs text-green-600 font-bold mt-2">VENCEDOR</p>}
+                        <p className="text-sm text-gray-400">{formatPercent(inv.rendimentoPercentual)}</p>
+                        {isVencedor && <p className="text-sm text-green-600 font-bold mt-3">VENCEDOR</p>}
                       </div>
                     );
                   })}
@@ -208,48 +208,50 @@ export default function SimuladorInvestimentosClient() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Detalhes</h2>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-2 text-gray-500 font-medium"></th>
-                      {resultado.investimentos.map((inv) => (
-                        <th key={inv.nome} className="text-right py-2 text-gray-500 font-medium">{inv.nome}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-50">
-                      <td className="py-2 text-gray-500">Investido</td>
-                      {resultado.investimentos.map((inv) => (
-                        <td key={inv.nome} className="py-2 text-right text-gray-900 font-mono">{formatCurrency(resultado.totalInvestido)}</td>
-                      ))}
-                    </tr>
-                    <tr className="border-b border-gray-50">
-                      <td className="py-2 text-gray-500">Bruto</td>
-                      {resultado.investimentos.map((inv) => (
-                        <td key={inv.nome} className="py-2 text-right text-gray-900 font-mono">{formatCurrency(inv.valorBruto)}</td>
-                      ))}
-                    </tr>
-                    <tr className="border-b border-gray-50">
-                      <td className="py-2 text-red-500">IR</td>
-                      {resultado.investimentos.map((inv) => (
-                        <td key={inv.nome} className="py-2 text-right text-red-600 font-mono">{inv.ir > 0 ? `- ${formatCurrency(inv.ir)}` : '—'}</td>
-                      ))}
-                    </tr>
-                    <tr className="border-b border-gray-200 font-bold">
-                      <td className="py-2 text-gray-900">Líquido</td>
-                      {resultado.investimentos.map((inv) => (
-                        <td key={inv.nome} className={`py-2 text-right font-mono ${inv.nome === resultado.vencedor.nome ? 'text-green-700' : 'text-gray-900'}`}>{formatCurrency(inv.valorLiquido)}</td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <td className="py-2 text-gray-500">Rendimento</td>
-                      {resultado.investimentos.map((inv) => (
-                        <td key={inv.nome} className={`py-2 text-right font-medium ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`}>{formatPercent(inv.rendimentoPercentual)}</td>
-                      ))}
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm min-w-[500px]">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 text-gray-500 font-medium"></th>
+                        {resultado.investimentos.map((inv) => (
+                          <th key={inv.nome} className="text-right py-2 text-gray-500 font-medium whitespace-nowrap px-2">{inv.nome}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-50">
+                        <td className="py-3 text-gray-500 whitespace-nowrap">Investido</td>
+                        {resultado.investimentos.map((inv) => (
+                          <td key={inv.nome} className="py-3 px-2 text-right text-gray-900 font-mono whitespace-nowrap">{formatCurrency(resultado.totalInvestido)}</td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-gray-50">
+                        <td className="py-3 text-gray-500 whitespace-nowrap">Bruto</td>
+                        {resultado.investimentos.map((inv) => (
+                          <td key={inv.nome} className="py-3 px-2 text-right text-gray-900 font-mono whitespace-nowrap">{formatCurrency(inv.valorBruto)}</td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-gray-50">
+                        <td className="py-3 text-red-500 whitespace-nowrap">IR</td>
+                        {resultado.investimentos.map((inv) => (
+                          <td key={inv.nome} className="py-3 px-2 text-right text-red-600 font-mono whitespace-nowrap">{inv.ir > 0 ? `- ${formatCurrency(inv.ir)}` : '—'}</td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-gray-200 font-bold">
+                        <td className="py-3 text-gray-900 whitespace-nowrap">Líquido</td>
+                        {resultado.investimentos.map((inv) => (
+                          <td key={inv.nome} className={`py-3 px-2 text-right font-mono whitespace-nowrap ${inv.nome === resultado.vencedor.nome ? 'text-green-700' : 'text-gray-900'}`}>{formatCurrency(inv.valorLiquido)}</td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="py-3 text-gray-500 whitespace-nowrap">Rendimento</td>
+                        {resultado.investimentos.map((inv) => (
+                          <td key={inv.nome} className={`py-3 px-2 text-right font-medium whitespace-nowrap ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`}>{formatPercent(inv.rendimentoPercentual)}</td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <p className="text-xs text-gray-400 text-center">
