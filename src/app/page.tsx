@@ -60,12 +60,12 @@ export default function Home() {
               <a
                 key={cat.href}
                 href={cat.href}
-                className="group flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                className="group flex items-center gap-6 p-6 bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
-                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
+                <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
                 <div>
-                  <p className="font-bold text-slate-900 text-lg">{cat.name}</p>
-                  <p className="text-sm text-slate-500 font-medium">{cat.count} ferramentas</p>
+                  <p className="font-bold text-slate-900 text-xl mb-1">{cat.name}</p>
+                  <p className="text-base text-slate-500 font-medium">{cat.count} ferramentas</p>
                 </div>
               </a>
             ))}

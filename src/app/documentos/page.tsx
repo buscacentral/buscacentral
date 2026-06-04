@@ -22,8 +22,8 @@ const sugestoes = [
 
 export default function DocumentosPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Central de Documentos</h1>
+    <div className="max-w-7xl mx-auto px-4 py-16">
+      <h1 className="text-4xl font-bold text-gray-900 mb-4">Central de Documentos</h1>
       <p className="text-gray-600 mb-4">
         Ferramentas para geração e validação de documentos brasileiros.
         Gere CPFs e CNPJs válidos para testes ou consulte dados reais de empresas pela Receita Federal.
@@ -32,16 +32,16 @@ export default function DocumentosPage() {
         Todos os CPFs e CNPJs gerados são fictícios e destinados exclusivamente a testes e desenvolvimento.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {tools.map((tool) => (
           <Link
             key={tool.href}
             href={tool.href}
-            className={`block p-6 rounded-xl border-2 hover:shadow-lg transition-all ${tool.color}`}
+            className={`group block p-10 rounded-2xl border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${tool.color}`}
           >
-            <div className="text-4xl mb-3">{tool.icon}</div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{tool.title}</h3>
-            <p className="text-sm text-gray-600">{tool.description}</p>
+            <div className="text-7xl mb-6 transition-transform duration-300 group-hover:scale-110">{tool.icon}</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">{tool.title}</h3>
+            <p className="text-base text-gray-600 leading-relaxed">{tool.description}</p>
           </Link>
         ))}
       </div>
