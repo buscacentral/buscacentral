@@ -81,7 +81,7 @@ export default function JurosCompostosClient() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tempo</label>
                 <input
@@ -97,7 +97,7 @@ export default function JurosCompostosClient() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setTipoTempo('meses')}
-                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-colors ${
                       tipoTempo === 'meses' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
                     }`}
                   >
@@ -105,7 +105,7 @@ export default function JurosCompostosClient() {
                   </button>
                   <button
                     onClick={() => setTipoTempo('anos')}
-                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-colors ${
                       tipoTempo === 'anos' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
                     }`}
                   >
@@ -125,7 +125,7 @@ export default function JurosCompostosClient() {
                 <p className="text-sm text-green-600 mb-1">Montante Final</p>
                 <p className="text-3xl font-bold text-green-700">{formatCurrency(resultado.montanteFinal)}</p>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
                   <p className="text-sm text-gray-500 mb-1">Total Investido</p>
                   <p className="text-xl font-bold text-gray-900">{formatCurrency(resultado.totalInvestido)}</p>
