@@ -24,6 +24,7 @@ const tools = [
   { title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre duas datas com feriados.', href: '/utilidades/dias-uteis', icon: '📅' },
   { title: 'Formatador de JSON e XML', description: 'Formate, minifique e valide JSON e XML.', href: '/utilidades/formatador-codigo', icon: '💻' },
   { title: 'Calculadora de IMC', description: 'Calcule seu IMC e veja a classificação da OMS.', href: '/utilidades/calculadora-imc', icon: '⚖️' },
+  { title: 'Tabela de Calorias', description: 'Consulte calorias e nutrientes de 200 alimentos (TACO/IBGE).', href: '/utilidades/tabela-calorias', icon: '🍎' },
 ];
 
 export default function UtilidadesPage() {
