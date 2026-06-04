@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-const TOOL_ID = '38524122';
+const TOOL_ID = '60275712';
 
 const BUSCAS_POPULARES = [
   'iPhone', 'Samsung', 'Notebook', 'Tênis',
@@ -49,21 +49,10 @@ function getImageUrl(thumbnail: string): string {
     .replace('http://', 'https://');
 }
 
-function getAffiliateUrl(permalink: string, title?: string): string {
-  try {
-    const url = new URL(permalink);
-    const path = url.pathname;
-    
-    if (path.includes('/lista')) {
-      const searchQuery = title ? encodeURIComponent(title) : '';
-      return `https://lista.mercadolivre.com.br/${searchQuery}?matt_tool=${TOOL_ID}&matt_word=&matt_source=google&matt_campaign=mlb_afiliados`;
-    }
-    
-    return `https://www.mercadolivre.com.br${path}?matt_tool=${TOOL_ID}&matt_word=&matt_source=google&matt_campaign=mlb_afiliados`;
-  } catch {
-    const searchQuery = title ? encodeURIComponent(title) : '';
-    return `https://lista.mercadolivre.com.br/${searchQuery}?matt_tool=${TOOL_ID}`;
-  }
+function getAffiliateUrl(permalink: string): string {
+  if (!permalink) return '#';
+  const separator = permalink.includes('?') ? '&' : '?';
+  return `${permalink}${separator}matt_tool=${TOOL_ID}&matt_word=buscacentral`;
 }
 
 function StarRating({ rating, total }: { rating: number; total: number }) {
@@ -106,7 +95,7 @@ function SkeletonCard() {
 
 function ProductCard({ product }: { product: Product }) {
   const imageUrl = getImageUrl(product.thumbnail);
-  const affiliateUrl = getAffiliateUrl(product.permalink, product.title);
+  const affiliateUrl = getAffiliateUrl(product.permalink);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
