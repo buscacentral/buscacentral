@@ -36,8 +36,23 @@ export default function CalculadoraIMC() {
     const pesoIdeal = 22 * a * a;
     const posicao = getBarPosition(imc);
 
-    return { imc, classificacao, pesoMinimo, pesoMaximo, pesoIdeal, posicao, alturaM: a };
-  }, [peso, altura]);
+    const diffParaIdeal = p - pesoIdeal;
+    const textoDiff = diffParaIdeal > 0
+      ? `Acima do ideal em ${diffParaIdeal.toFixed(1)} kg`
+      : `Abaixo do ideal em ${Math.abs(diffParaIdeal).toFixed(1)} kg`;
+
+    let tmb = 0;
+    const idadeNum = parseInt(idade) || 0;
+    if (sexo && idadeNum > 0) {
+      if (sexo === 'Masculino') {
+        tmb = 88.362 + (13.397 * p) + (4.799 * (a * 100)) - (5.677 * idadeNum);
+      } else {
+        tmb = 447.593 + (9.247 * p) + (3.098 * (a * 100)) - (4.330 * idadeNum);
+      }
+    }
+
+    return { imc, classificacao, pesoMinimo, pesoMaximo, pesoIdeal, posicao, alturaM: a, diffParaIdeal, textoDiff, tmb };
+  }, [peso, altura, sexo, idade]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
@@ -150,6 +165,21 @@ export default function CalculadoraIMC() {
               <p className="text-xs text-gray-400 mt-1">IMC 18,5 a 24,9</p>
             </div>
           </div>
+
+          <div className={`rounded-xl p-5 text-center border ${resultado.diffParaIdeal > 0 ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'}`}>
+            <p className="text-sm text-gray-600 mb-1">Para atingir o peso ideal</p>
+            <p className={`text-xl font-bold ${resultado.diffParaIdeal > 0 ? 'text-orange-700' : 'text-blue-700'}`}>
+              {resultado.textoDiff}
+            </p>
+          </div>
+
+          {resultado.tmb > 0 && (
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm text-center">
+              <p className="text-sm text-gray-500 mb-1">Taxa Metabólica Basal (TMB)</p>
+              <p className="text-2xl font-bold text-purple-700">{resultado.tmb.toFixed(0)} kcal/dia</p>
+              <p className="text-xs text-gray-400 mt-1">Fórmula de Harris-Benedict — calorias que seu corpo em repouso</p>
+            </div>
+          )}
 
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Classificação OMS</h3>
