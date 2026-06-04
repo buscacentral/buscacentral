@@ -16,16 +16,16 @@ export default function Header() {
           </Link>
           
           <nav className="hidden md:flex space-x-10">
-            <Link href="/documentos" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
+            <Link href="/documentos" className="text-gray-700 hover:text-blue-700 font-extrabold text-xl transition-colors">
               Documentos
             </Link>
-            <Link href="/localizacao" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
+            <Link href="/localizacao" className="text-gray-700 hover:text-blue-700 font-extrabold text-xl transition-colors">
               Localização
             </Link>
-            <Link href="/financeiro" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
+            <Link href="/financeiro" className="text-gray-700 hover:text-blue-700 font-extrabold text-xl transition-colors">
               Financeiro
             </Link>
-            <Link href="/utilidades" className="text-gray-700 hover:text-blue-700 font-semibold text-lg transition-colors">
+            <Link href="/utilidades" className="text-gray-700 hover:text-blue-700 font-extrabold text-xl transition-colors">
               Utilidades
             </Link>
           </nav>

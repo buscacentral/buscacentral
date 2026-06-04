@@ -16,11 +16,11 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
-      <section className="text-center mx-auto mt-12 mb-16 max-w-3xl px-6">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
+      <section className="text-center mx-auto mt-12 mb-16 max-w-4xl px-6">
+        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
           O que você deseja buscar ou gerar?
         </h1>
-        <p className="text-slate-500 mb-6 text-lg md:text-xl max-w-2xl mx-auto">
+        <p className="text-slate-500 mb-6 text-xl md:text-2xl max-w-3xl mx-auto">
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
         <p className="bg-blue-50 text-blue-600 inline-block px-6 py-2 rounded-full text-sm md:text-base font-bold mb-10 shadow-sm border border-blue-100">
