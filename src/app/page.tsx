@@ -3,22 +3,14 @@ import ToolCard from '@/components/ToolCard';
 import AdPlaceholder from '@/components/AdPlaceholder';
 
 const mainTools = [
-  { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
-  { title: 'Validador de CPF', description: 'Verifique se um CPF é válido.', href: '/documentos/validador-cpf', icon: '✅', color: 'green' as const },
-  { title: 'Gerador de CNPJ', description: 'Gere CNPJs válidos para testes.', href: '/documentos/gerador-cnpj', icon: '🏢', color: 'purple' as const },
-  { title: 'Validador de CNPJ', description: 'Verifique se um CNPJ é válido.', href: '/documentos/validador-cnpj', icon: '🔎', color: 'orange' as const },
-  { title: 'Busca de CEP', description: 'Consulte endereços por CEP.', href: '/localizacao/busca-cep', icon: '📍', color: 'blue' as const },
-  { title: 'Cotação de Moedas', description: 'USD, EUR, GBP, BTC em tempo real.', href: '/financeiro/cotacao', icon: '💱', color: 'green' as const },
-  { title: 'Criptomoedas', description: 'Top 10 crypto com variação 24h.', href: '/financeiro/criptomoedas', icon: '🪙', color: 'purple' as const },
-  { title: 'Tabela FIPE', description: 'Preços médios de veículos.', href: '/financeiro/tabela-fipe', icon: '🚗', color: 'orange' as const },
-  { title: 'Juros Compostos', description: 'Simule seus investimentos.', href: '/financeiro/juros-compostos', icon: '📈', color: 'blue' as const },
-  { title: 'Gerador de QR Code', description: 'Gere QR Codes e baixe em PNG.', href: '/utilidades/gerador-qr-code', icon: '📱', color: 'green' as const },
-  { title: 'Gerador de Senha', description: 'Senhas seguras e aleatórias.', href: '/utilidades/gerador-senha', icon: '🔐', color: 'purple' as const },
-  { title: 'Comparador de Textos', description: 'Compare textos e veja diferenças.', href: '/utilidades/comparador-textos', icon: '📝', color: 'orange' as const },
-  { title: 'Conversor de Imagens', description: 'WebP, PNG e JPG localmente.', href: '/utilidades/conversor-imagens', icon: '🖼️', color: 'blue' as const },
-  { title: 'Link WhatsApp', description: 'Crie links e QR Code para WhatsApp.', href: '/utilidades/whatsapp-link', icon: '💬', color: 'green' as const },
-  { title: 'PIX Copia e Cola', description: 'Gere códigos PIX EMV.', href: '/utilidades/pix-copia-cola', icon: '💳', color: 'purple' as const },
-  { title: 'Seletor de Cores', description: 'Cores em HEX, RGB e HSL.', href: '/utilidades/seletor-cores', icon: '🎨', color: 'orange' as const },
+  { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes e desenvolvimento.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
+  { title: 'Busca de CEP', description: 'Consulte endereços completos por CEP em tempo real.', href: '/localizacao/busca-cep', icon: '📍', color: 'green' as const },
+  { title: 'Cotação de Moedas', description: 'USD, EUR, GBP, BTC em tempo real pela AwesomeAPI.', href: '/financeiro/cotacao', icon: '💱', color: 'purple' as const },
+  { title: 'Tabela FIPE', description: 'Preços médios de veículos novos e usados no Brasil.', href: '/financeiro/tabela-fipe', icon: '🚗', color: 'orange' as const },
+  { title: 'Conversor CLT → PJ', description: 'Descubra quanto faturar como PJ para manter seu salário.', href: '/financeiro/conversor-clt-pj', icon: '💰', color: 'blue' as const },
+  { title: 'Gerador de QR Code', description: 'Gere QR Codes a partir de textos ou URLs e baixe em PNG.', href: '/utilidades/gerador-qr-code', icon: '📱', color: 'green' as const },
+  { title: 'Calculadora de IMC', description: 'Calcule seu IMC, veja classificação OMS e TMB.', href: '/utilidades/calculadora-imc', icon: '⚖️', color: 'purple' as const },
+  { title: 'Tabela de Calorias', description: 'Consulte calorias e nutrientes de 200 alimentos (TACO/IBGE).', href: '/utilidades/tabela-calorias', icon: '🍎', color: 'orange' as const },
 ];
 
 export default function Home() {
@@ -40,10 +32,22 @@ export default function Home() {
         </h1>
         <p style={{
           color: '#64748b',
-          marginBottom: '2rem',
+          marginBottom: '1rem',
           fontSize: '1.1rem',
         }}>
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
+        </p>
+        <p style={{
+          background: '#eff6ff',
+          color: '#2563eb',
+          display: 'inline-block',
+          padding: '0.5rem 1.25rem',
+          borderRadius: '50px',
+          fontSize: '0.9rem',
+          fontWeight: 600,
+          marginBottom: '2rem',
+        }}>
+          33 ferramentas gratuitas
         </p>
         
         <SearchBar />
@@ -64,7 +68,7 @@ export default function Home() {
         margin: '0 auto',
         padding: '0 1rem 4rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.5rem',
       }}>
         {mainTools.map((tool) => (
@@ -80,22 +84,31 @@ export default function Home() {
         padding: '0 1rem',
       }}>
         <div style={{
-          background: '#f8fafc',
-          borderRadius: '16px',
-          padding: '2rem',
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #eff6ff 50%, #f0fdf4 100%)',
+          borderRadius: '20px',
+          padding: '2.5rem',
+          border: '1px solid #e0f2fe',
         }}>
           <h2 style={{
-            fontSize: '1.5rem',
+            fontSize: '1.8rem',
             fontWeight: 700,
             color: '#0f172a',
             textAlign: 'center',
-            marginBottom: '1.5rem',
+            marginBottom: '0.5rem',
           }}>
             Explore por Categoria
           </h2>
+          <p style={{
+            textAlign: 'center',
+            color: '#64748b',
+            marginBottom: '2rem',
+            fontSize: '1rem',
+          }}>
+            Encontre a ferramenta ideal para cada necessidade
+          </p>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: '1rem',
           }}>
             {[
