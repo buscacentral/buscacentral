@@ -37,6 +37,7 @@ const tools = [
   { name: 'Formatador JSON XML', path: '/utilidades/formatador-codigo', category: 'Utilidades', keywords: ['json', 'xml', 'formatar', 'minificar', 'validar', 'código'] },
   { name: 'Calculadora de IMC', path: '/utilidades/calculadora-imc', category: 'Utilidades', keywords: ['imc', 'peso', 'altura', 'massa corporal', 'obesidade', 'saúde'] },
   { name: 'Tabela de Calorias', path: '/utilidades/tabela-calorias', category: 'Utilidades', keywords: ['calorias', 'taco', 'alimentos', 'nutrição', 'proteínas', 'carboidratos'] },
+  { name: 'Busca de Produtos', path: '/produtos', category: 'Compras', keywords: ['produtos', 'mercado livre', 'comprar', 'preço', 'oferta', 'busca'] },
 ];
 
 export default function SearchBar() {
