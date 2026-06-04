@@ -205,7 +205,6 @@ export default function ProdutosClient() {
       }
     } catch (err) {
       console.error('[ProdutosClient] Erro na busca:', err);
-      setError('Ocorreu um erro ao buscar produtos. Verifique sua conexão e tente novamente.');
       setProducts([]);
       setTotalCount(0);
     } finally {
