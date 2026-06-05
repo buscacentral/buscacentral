@@ -35,7 +35,7 @@ export default function Cotacao() {
     >
       <CotacaoClient />
 
-      <article className="mt-12 prose prose-gray max-w-none">
+      <section className="mt-12 prose prose-gray max-w-none">
         <h2>Sobre as cotações de moedas</h2>
         <p>
           As cotações são obtidas em tempo real através da AwesomeAPI, uma das principais APIs
@@ -48,7 +48,7 @@ export default function Cotacao() {
           taxa de juros, balança comercial e cenário político. A atualização automática a cada
           minuto garante que você sempre tenha os valores mais recentes.
         </p>
-      </article>
+      </section>
     </ToolPageLayout>
   );
 }

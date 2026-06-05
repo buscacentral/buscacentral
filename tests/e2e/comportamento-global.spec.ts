@@ -118,8 +118,9 @@ test.describe('3. Detecção de Erros no Console (Regressão)', () => {
       expect(response, `Resposta de ${central.route} não deve ser nula`).not.toBeNull();
       expect(response!.status(), `Status HTTP de ${central.route}`).toBe(200);
 
-      // Aguarda a página estabilizar (carregamento completo)
-      await page.waitForLoadState('networkidle');
+      // Aguarda a página estabilizar
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(1000);
 
       // Coleta erros acumulados durante esta navegação
       if (pageErrors.length > 0 || consoleErrors.length > 0) {

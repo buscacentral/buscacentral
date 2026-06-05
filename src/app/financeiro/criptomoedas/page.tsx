@@ -17,7 +17,7 @@ export default function Criptomoedas() {
     >
       <CriptomoedasClient />
 
-      <article className="mt-12 prose prose-gray max-w-none">
+      <section className="mt-12 prose prose-gray max-w-none">
         <h2>Sobre as criptomoedas</h2>
         <p>
           Os dados são obtidos em tempo real através da API do CoinGecko, uma das maiores
@@ -25,7 +25,7 @@ export default function Criptomoedas() {
           criptomoedas por valor de mercado, com preços em Reais (BRL). O Fear &amp; Greed Index
           é fornecido pela Alternative.me e indica o sentimento atual do mercado.
         </p>
-      </article>
+      </section>
     </ToolPageLayout>
   );
 }
