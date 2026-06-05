@@ -83,7 +83,11 @@ const DEFAULT_CLT_INPUT: InputCLT = {
   mesesTrabalhados: 12,
   valeRefeicao: 1000,
   planoSaude: 500,
+  planoOdontologico: 0,
+  valeTransporte: 0,
+  receberVT: false,
   gympass: 100,
+  outrosBeneficios: 0,
   plrAnual: 0,
 };
 
@@ -181,7 +185,11 @@ class CLTPJController extends BaseController {
       mesesTrabalhados: sanitizeNumber(getInputValue('#meses-trabalhados'), DEFAULT_CLT_INPUT.mesesTrabalhados),
       valeRefeicao: sanitizeNumber(getInputValue('#vale-refeicao'), 0),
       planoSaude: sanitizeNumber(getInputValue('#plano-saude'), 0),
+      planoOdontologico: sanitizeNumber(getInputValue('#plano-odontologico'), 0),
+      valeTransporte: sanitizeNumber(getInputValue('#vale-transporte'), 0),
+      receberVT: false,
       gympass: sanitizeNumber(getInputValue('#gympass'), 0),
+      outrosBeneficios: sanitizeNumber(getInputValue('#outros-beneficios'), 0),
       plrAnual: sanitizeNumber(getInputValue('#plr-anual'), 0),
     };
 
