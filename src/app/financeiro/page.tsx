@@ -63,6 +63,13 @@ const tools = [
     icon: '💰',
     color: 'bg-blue-50 border-blue-200'
   },
+  {
+    title: 'ROI Imobiliário',
+    description: 'Calcule o Cap Rate e o ROI anual do seu investimento imobiliário.',
+    href: '/financeiro/roi-imobiliario',
+    icon: '🏠',
+    color: 'bg-amber-50 border-amber-200'
+  },
 ];
 
 export default function FinanceiroPage() {

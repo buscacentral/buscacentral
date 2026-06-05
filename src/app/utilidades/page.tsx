@@ -55,6 +55,13 @@ const subcategorias = [
       { title: 'Extrator de Emails', description: 'Extraia emails de qualquer texto ou documento.', href: '/utilidades/extrator-emails', icon: '📧' },
     ],
   },
+  {
+    nome: 'Logística',
+    icon: '📦',
+    ferramentas: [
+      { title: 'Rastreador de Encomendas', description: 'Rastreie encomendas dos Correios em tempo real via BrasilAPI.', href: '/utilidades/rastreio', icon: '📦' },
+    ],
+  },
 ];
 
 export default function UtilidadesPage() {
