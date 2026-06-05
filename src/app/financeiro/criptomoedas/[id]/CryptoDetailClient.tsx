@@ -40,6 +40,10 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   const [error, setError] = useState('');
   const [profitQty, setProfitQty] = useState('');
   const [profitBuyPrice, setProfitBuyPrice] = useState('');
+  const [convertCrypto, setConvertCrypto] = useState('');
+  const [convertBrl, setConvertBrl] = useState('');
+  const [convertSource, setConvertSource] = useState<'crypto' | 'brl'>('crypto');
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -122,6 +126,68 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
 
   const profitCalc = getProfitCalc();
   const chart = getChartFormatted();
+  const currentPrice = md?.current_price?.brl ?? 0;
+
+  // Conversor bidirecional CRYPTO <=> BRL
+  const handleConvertCrypto = (val: string) => {
+    setConvertCrypto(val);
+    setConvertSource('crypto');
+    const num = parseFloat(val.replace(',', '.'));
+    if (!isNaN(num) && num > 0 && currentPrice > 0) {
+      setConvertBrl((num * currentPrice).toFixed(2));
+    } else {
+      setConvertBrl('');
+    }
+  };
+
+  const handleConvertBrl = (val: string) => {
+    setConvertBrl(val);
+    setConvertSource('brl');
+    const num = parseFloat(val.replace(',', '.'));
+    if (!isNaN(num) && num > 0 && currentPrice > 0) {
+      setConvertCrypto((num / currentPrice).toFixed(8));
+    } else {
+      setConvertCrypto('');
+    }
+  };
+
+  // Tabela de conversões rápidas (valores adaptados por tipo de moeda)
+  const isStablecoin = ['USDT', 'USDC'].includes(symbol);
+  const quickAmounts = isStablecoin
+    ? [1, 10, 100, 500, 1000, 5000]
+    : [0.001, 0.01, 0.1, 0.5, 1, 5];
+
+  // FAQ Schema JSON-LD (dinâmico por moeda)
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `Como é calculada a cotação do ${name} (${symbol}) em tempo real?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `A cotação do ${name} exibida no BuscaCentral é obtida em tempo real através da API do CoinGecko, que agrega dados de centenas de exchanges globais. O preço é calculado com base na média ponderada do volume de negociação em Reais (BRL), garantindo um valor referência preciso para o mercado brasileiro.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `Qual o melhor horário para acompanhar o preço do ${symbol}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'O mercado de criptomoedas opera 24 horas por dia, 7 dias por semana, sem fechamento. Os maiores volumes de negociação ocorrem entre 10h e 16h (horário de Nova York), quando os mercados americanos estão ativos. No Brasil, isso corresponde aproximadamente ao período entre 11h e 17h. Horários de maior volatilidade costumam coincidir com abertura de mercados tradicionais e anúncios macroeconômicos.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `Como funciona a calculadora de conversão de ${name} do BuscaCentral?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 0.001, 0.01, 0.1, 0.5, 1 e 5 ${symbol}.`,
+        },
+      },
+    ],
+  };
 
   if (loading) {
     return <div className="text-center py-12 text-gray-500">Carregando dados de {name}...</div>;
@@ -212,6 +278,77 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         </div>
       </div>
 
+      {/* Conversor Dinâmico BTC <=> BRL */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
+          Conversor {symbol} ⇄ BRL
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-end">
+          <div>
+            <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+              Quantidade de {symbol}
+            </label>
+            <input
+              type="text"
+              value={convertCrypto}
+              onChange={(e) => handleConvertCrypto(e.target.value)}
+              placeholder="0.5"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base md:text-lg font-mono"
+            />
+          </div>
+          <div className="text-center pb-3">
+            <span className="text-2xl text-slate-400 font-light">⇄</span>
+          </div>
+          <div>
+            <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+              Valor em R$ (BRL)
+            </label>
+            <input
+              type="text"
+              value={convertBrl}
+              onChange={(e) => handleConvertBrl(e.target.value)}
+              placeholder="50.000"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base md:text-lg font-mono"
+            />
+          </div>
+        </div>
+        <p className="text-sm text-slate-400 mt-3 text-center">
+          Cotação atual: R$ {formatPrice(currentPrice)} por {symbol}
+        </p>
+      </div>
+
+      {/* Tabela de Conversões Rápidas */}
+      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
+          Conversões Rápidas — {name}
+        </h2>
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
+          <table className="w-full text-base md:text-lg">
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="text-left py-3 px-5 text-slate-600 font-semibold">Quantidade</th>
+                <th className="text-right py-3 px-5 text-slate-600 font-semibold">Valor Estimado (BRL)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quickAmounts.map((amt) => (
+                <tr key={amt} className="odd:bg-slate-50 even:bg-white border-t border-slate-100">
+                  <td className="py-3 px-5 font-mono font-semibold text-slate-800">
+                    {amt} {symbol}
+                  </td>
+                  <td className="py-3 px-5 text-right font-mono font-semibold text-green-700">
+                    R$ {formatPrice(amt * currentPrice)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-slate-400 mt-3">
+          Valores calculados com base na cotação atual de R$ {formatPrice(currentPrice)}.
+        </p>
+      </div>
+
       {/* Calculadora de Lucro */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-base font-semibold text-gray-900 mb-4">Calculadora de Lucro/Perda — {name}</h2>
@@ -258,6 +395,39 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         ) : (
           <p className="text-sm text-gray-400">Preencha os campos para calcular seu lucro ou prejuízo.</p>
         )}
+      </div>
+
+      {/* FAQ Accordion com Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
+          Perguntas Frequentes — {name}
+        </h2>
+        <div className="divide-y divide-slate-200">
+          {faqSchema.mainEntity.map((item, idx) => (
+            <div key={idx}>
+              <button
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full flex items-center justify-between py-4 text-left gap-4"
+              >
+                <span className="text-base md:text-lg font-medium text-slate-800">
+                  {item.name}
+                </span>
+                <span className={`text-slate-400 text-xl transition-transform duration-200 flex-shrink-0 ${openFaq === idx ? 'rotate-45' : ''}`}>
+                  +
+                </span>
+              </button>
+              <div className={`overflow-hidden transition-all duration-200 ${openFaq === idx ? 'max-h-96 pb-4' : 'max-h-0'}`}>
+                <p className="text-sm md:text-base text-slate-600 leading-relaxed">
+                  {item.acceptedAnswer.text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
