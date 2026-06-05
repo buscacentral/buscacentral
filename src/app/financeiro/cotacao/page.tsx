@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout from '@/components/ToolPageLayout';
 import CotacaoClient from './CotacaoClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = {
   title: 'Cotação do Dólar, Euro e Libra Hoje em Tempo Real | BuscaCentral',
@@ -49,6 +50,8 @@ export default function Cotacao() {
           minuto garante que você sempre tenha os valores mais recentes.
         </p>
       </section>
+
+      <LinksRelacionados categoria="financeiro" paginaAtual="/financeiro/cotacao" />
     </ToolPageLayout>
   );
 }

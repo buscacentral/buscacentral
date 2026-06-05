@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout from '@/components/ToolPageLayout';
 import ClimaClient from './ClimaClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = {
   title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
@@ -42,6 +43,8 @@ export default function ClimaPage() {
           atualizados em tempo real.
         </p>
       </section>
+
+      <LinksRelacionados categoria="localizacao" paginaAtual="/localizacao/clima" />
     </ToolPageLayout>
   );
 }

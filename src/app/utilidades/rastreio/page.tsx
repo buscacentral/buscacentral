@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout from '@/components/ToolPageLayout';
 import RastreioClient from './RastreioClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = {
   title: 'Rastreador de Encomendas Correios em Tempo Real | BuscaCentral',
@@ -42,6 +43,8 @@ export default function RastreioPage() {
           para ver o histórico completo de movimentações do seu pacote.
         </p>
       </section>
+
+      <LinksRelacionados categoria="utilidades" paginaAtual="/utilidades/rastreio" />
     </ToolPageLayout>
   );
 }

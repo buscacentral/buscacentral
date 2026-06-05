@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import ROIImobiliarioClient from './ROIImobiliarioClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = generateToolMetadata(
   'Calculadora de ROI Imobiliário',
@@ -31,6 +32,8 @@ export default function ROIImobiliario() {
           investimento imobiliário vale a pena comparado a outras aplicações.
         </p>
       </section>
+
+      <LinksRelacionados categoria="financeiro" paginaAtual="/financeiro/roi-imobiliario" />
     </ToolPageLayout>
   );
 }

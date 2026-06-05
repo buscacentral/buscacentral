@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import FinanciamentoCarroClient from './FinanciamentoCarroClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = generateToolMetadata(
   'Calculadora de Financiamento de Carro',
@@ -30,6 +31,8 @@ export default function FinanciamentoCarro() {
           O Price oferece previsibilidade com parcelas fixas. A escolha depende do seu fluxo de caixa.
         </p>
       </article>
+
+      <LinksRelacionados categoria="financeiro" paginaAtual="/financeiro/financiamento-carro" />
     </ToolPageLayout>
   );
 }

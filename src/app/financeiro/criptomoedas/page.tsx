@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import CriptomoedasClient from './CriptomoedasClient';
+import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = generateToolMetadata(
   'Criptomoedas',
@@ -26,6 +27,8 @@ export default function Criptomoedas() {
           é fornecido pela Alternative.me e indica o sentimento atual do mercado.
         </p>
       </section>
+
+      <LinksRelacionados categoria="criptomoedas" paginaAtual="/financeiro/criptomoedas" />
     </ToolPageLayout>
   );
 }
