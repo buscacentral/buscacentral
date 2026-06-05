@@ -40,12 +40,21 @@ export const metadata: Metadata = {
     siteName: "BuscaCentral",
     locale: "pt_BR",
     type: "website",
+    images: [
+      {
+        url: "https://buscacentral.com.br/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "BuscaCentral — 35+ Ferramentas Online Gratuitas",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "BuscaCentral — Ferramentas Online Gratuitas",
     description:
       "Central de ferramentas online gratuitas do Brasil. Gerador de CPF, CNPJ, consulta de CEP, cotações e muito mais.",
+    images: ["https://buscacentral.com.br/opengraph-image"],
   },
   alternates: {
     canonical: "https://buscacentral.com.br",
