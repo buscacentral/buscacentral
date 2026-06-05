@@ -21,7 +21,11 @@ export interface InputCLT {
   readonly mesesTrabalhados: number;
   readonly valeRefeicao: number;
   readonly planoSaude: number;
+  readonly planoOdontologico: number;
+  readonly valeTransporte: number;
+  readonly receberVT: boolean;
   readonly gympass: number;
+  readonly outrosBeneficios: number;
   readonly plrAnual: number;
 }
 
@@ -37,7 +41,11 @@ export interface ResultadoCLT {
   readonly liquidoMensal: number;
   readonly valeRefeicao: number;
   readonly planoSaude: number;
+  readonly planoOdontologico: number;
+  readonly valeTransporte: number;
   readonly gympass: number;
+  readonly outrosBeneficios: number;
+  readonly descontoVT: number;
   readonly totalBeneficios: number;
   readonly plrMensal: number;
   readonly ganhoRealCLT: number;
@@ -247,19 +255,30 @@ export function calcularMultaFGTS(fgtsAcumulado: number): number {
 }
 
 /**
- * Calcula o total de benefícios CLT.
- * 
- * @param valeRefeicao - Valor mensal do VR/VA
- * @param planoSaude - Valor mensal do plano de saúde
- * @param gympass - Valor mensal do Gympass/outros
- * @returns Total de benefícios mensais
+ * Percentual máximo de desconto do Vale Transporte (6% do salário base)
  */
-export function calcularTotalBeneficios(
+const PERCENTUAL_VT = 0.06;
+
+/**
+ * Calcula o total de benefícios CLT.
+ * Se receberVT for false, o VT é descontado do salário (não é benefício).
+ * 
+ * @returns Total de benefícios mensais e desconto VT
+ */
+export function calcularBeneficios(
   valeRefeicao: number,
   planoSaude: number,
-  gympass: number
-): number {
-  return valeRefeicao + planoSaude + gympass;
+  planoOdontologico: number,
+  valeTransporte: number,
+  receberVT: boolean,
+  gympass: number,
+  outrosBeneficios: number,
+  salarioBruto: number,
+): { totalBeneficios: number; descontoVT: number } {
+  const descontoVT = receberVT ? 0 : Math.min(valeTransporte, salarioBruto * PERCENTUAL_VT);
+  const vtComoBeneficio = receberVT ? valeTransporte : 0;
+  const totalBeneficios = valeRefeicao + planoSaude + planoOdontologico + vtComoBeneficio + gympass + outrosBeneficios;
+  return { totalBeneficios, descontoVT };
 }
 
 /**
@@ -300,16 +319,24 @@ export function calcularFaturamentoPJ(
  * @returns Resultado completo dos cálculos CLT
  */
 export function calcularResultadoCLT(input: InputCLT): ResultadoCLT {
-  const { salarioBruto, mesesTrabalhados, valeRefeicao, planoSaude, gympass, plrAnual } = input;
+  const {
+    salarioBruto, mesesTrabalhados, valeRefeicao, planoSaude,
+    planoOdontologico, valeTransporte, receberVT, gympass,
+    outrosBeneficios, plrAnual,
+  } = input;
   
   // Cálculos de descontos
   const inss = calcularINSS(salarioBruto);
   const baseIRRF = salarioBruto - inss;
   const irrf = calcularIRRF(baseIRRF);
-  const liquidoMensal = salarioBruto - inss - irrf;
 
-  // Benefícios
-  const totalBeneficios = calcularTotalBeneficios(valeRefeicao, planoSaude, gympass);
+  // Benefícios e desconto VT
+  const { totalBeneficios, descontoVT } = calcularBeneficios(
+    valeRefeicao, planoSaude, planoOdontologico, valeTransporte,
+    receberVT, gympass, outrosBeneficios, salarioBruto,
+  );
+
+  const liquidoMensal = salarioBruto - inss - irrf - descontoVT;
   const plrMensal = calcularPLRMensal(plrAnual);
 
   // Ganho real
@@ -323,7 +350,6 @@ export function calcularResultadoCLT(input: InputCLT): ResultadoCLT {
   const fgtsAcumulado = calcularFGTSAcumulado(salarioBruto, mesesTrabalhados);
   const multaFgts = calcularMultaFGTS(fgtsAcumulado);
 
-  // Provisão total anual e mensal
   const provisaoAnualCLT = decimoTerceiro + ferias + umTercoFerias + fgtsAcumulado + multaFgts;
   const provisaoMensalCLT = provisaoAnualCLT / 12;
 
@@ -334,7 +360,11 @@ export function calcularResultadoCLT(input: InputCLT): ResultadoCLT {
     liquidoMensal,
     valeRefeicao,
     planoSaude,
+    planoOdontologico,
+    valeTransporte,
     gympass,
+    outrosBeneficios,
+    descontoVT,
     totalBeneficios,
     plrMensal,
     ganhoRealCLT,

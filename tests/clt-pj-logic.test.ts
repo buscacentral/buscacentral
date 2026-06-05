@@ -16,7 +16,7 @@ import {
   calcularFerias,
   calcularFGTSAcumulado,
   calcularMultaFGTS,
-  calcularTotalBeneficios,
+  calcularBeneficios,
   calcularPLRMensal,
   calcularFaturamentoPJ,
   calcularResultadoCLT,
@@ -306,14 +306,28 @@ describe('calcularMultaFGTS', () => {
 // TESTES DE FUNÇÕES AUXILIARES
 // ============================================================
 
-describe('calcularTotalBeneficios', () => {
-  it('deve somar todos os benefícios', () => {
-    const total = calcularTotalBeneficios(1000, 500, 100);
-    expect(total).toBe(1600);
+describe('calcularBeneficios', () => {
+  it('deve somar todos os benefícios quando recebe VT', () => {
+    const result = calcularBeneficios(1000, 500, 80, 300, true, 100, 0, 5000);
+    expect(result.totalBeneficios).toBe(1980);
+    expect(result.descontoVT).toBe(0);
+  });
+
+  it('deve descontar VT quando não recebe', () => {
+    const result = calcularBeneficios(1000, 500, 80, 300, false, 100, 0, 5000);
+    expect(result.totalBeneficios).toBe(1680);
+    expect(result.descontoVT).toBe(300);
+  });
+
+  it('deve limitar desconto VT a 6% do salário', () => {
+    const result = calcularBeneficios(0, 0, 0, 500, false, 0, 0, 1000);
+    expect(result.descontoVT).toBe(60); // 1000 * 0.06
   });
 
   it('deve retornar 0 quando todos são zero', () => {
-    expect(calcularTotalBeneficios(0, 0, 0)).toBe(0);
+    const result = calcularBeneficios(0, 0, 0, 0, false, 0, 0, 0);
+    expect(result.totalBeneficios).toBe(0);
+    expect(result.descontoVT).toBe(0);
   });
 });
 
@@ -352,7 +366,11 @@ describe('calcularResultadoCLT', () => {
     mesesTrabalhados: 12,
     valeRefeicao: 1000,
     planoSaude: 500,
+    planoOdontologico: 0,
+    valeTransporte: 0,
+    receberVT: false,
     gympass: 100,
+    outrosBeneficios: 0,
     plrAnual: 0,
   };
 
@@ -396,7 +414,11 @@ describe('calcularComparacaoCLTPJ', () => {
     mesesTrabalhados: 12,
     valeRefeicao: 1000,
     planoSaude: 500,
+    planoOdontologico: 0,
+    valeTransporte: 0,
+    receberVT: false,
     gympass: 100,
+    outrosBeneficios: 0,
     plrAnual: 0,
   };
 

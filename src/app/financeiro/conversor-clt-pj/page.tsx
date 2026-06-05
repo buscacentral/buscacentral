@@ -23,6 +23,23 @@ export default function ConversorCLTPJ() {
           Nossa <strong>calculadora CLT para PJ</strong> foi desenvolvida para mostrar o faturamento real necessário ao migrar do regime celetista para Pessoa Jurídica. Diferente de simuladores comuns que apenas aplicam uma margem fixa, esta ferramenta calcula a <strong>base tributável</strong> corretamente — considerando que INSS e IRRF incidem apenas sobre o salário bruto, enquanto verbas indenizatórias como vale-refeição e plano de saúde são isentas.
         </p>
 
+        <h2>Como comparar CLT e PJ</h2>
+        <p>
+          A conta usa o <strong>pacote mensal equivalente</strong>. Inclui benefícios, 13º, férias, FGTS, PLR,
+          contador, INSS, impostos e despesas. Quando a proposta for em moeda estrangeira, o câmbio também é
+          considerado na conversão.
+        </p>
+        <p>
+          <strong>CLT:</strong> usa INSS progressivo, IRRF com deduções, dependentes e tabelas oficiais da Receita
+          Federal. Considera também o 13º salário proporcional, férias com 1/3, FGTS acumulado e multa rescisória
+          de 40%.
+        </p>
+        <p>
+          <strong>PJ:</strong> considera regime tributário (Simples Nacional), custo com contabilidade, despesas
+          operacionais, benefícios que o PJ precisa custear por conta própria e faixas do INSS pró-labore quando
+          aplicável.
+        </p>
+
         <h3>Como o FGTS é projetado neste cálculo</h3>
         <p>
           O FGTS (Fundo de Garantia do Tempo de Serviço) representa 8% do salário bruto depositado mensalmente pela empresa. Ao converter para PJ, você perde esse depósito acumulado. Nossa calculadora projeta o saldo acumulado com base nos meses trabalhados e inclui a multa rescisória de 40% sobre o total — um valor que muitos simuladores ignoram, mas que faz diferença significativa no cálculo.
