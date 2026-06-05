@@ -1,73 +1,16 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import {
+  sanitizeNumber,
+  calcularPrice,
+  calcularSAC,
+  gerarResumo,
+  type Parcela,
+} from '@/lib/financiamento-logic';
+import { formatCurrency } from '@/lib/formatters';
 
-const parseBRL = (v: string) => parseFloat(v.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-const formatCurrency = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-interface Parcela {
-  numero: number;
-  parcela: number;
-  juros: number;
-  amortizacao: number;
-  saldoDevedor: number;
-}
-
-function calcularPrice(financiado: number, taxa: number, parcelas: number): Parcela[] {
-  if (financiado <= 0 || taxa <= 0 || parcelas <= 0) return [];
-  const i = taxa / 100;
-  const pmt = financiado * (i * Math.pow(1 + i, parcelas)) / (Math.pow(1 + i, parcelas) - 1);
-  const tabela: Parcela[] = [];
-  let saldo = financiado;
-
-  for (let n = 1; n <= parcelas; n++) {
-    const juros = saldo * i;
-    const amortizacao = pmt - juros;
-    saldo -= amortizacao;
-    tabela.push({
-      numero: n,
-      parcela: pmt,
-      juros,
-      amortizacao,
-      saldoDevedor: Math.max(saldo, 0),
-    });
-  }
-  return tabela;
-}
-
-function calcularSAC(financiado: number, taxa: number, parcelas: number): Parcela[] {
-  if (financiado <= 0 || taxa <= 0 || parcelas <= 0) return [];
-  const i = taxa / 100;
-  const amortizacaoConst = financiado / parcelas;
-  const tabela: Parcela[] = [];
-  let saldo = financiado;
-
-  for (let n = 1; n <= parcelas; n++) {
-    const juros = saldo * i;
-    const parcela = amortizacaoConst + juros;
-    saldo -= amortizacaoConst;
-    tabela.push({
-      numero: n,
-      parcela,
-      juros,
-      amortizacao: amortizacaoConst,
-      saldoDevedor: Math.max(saldo, 0),
-    });
-  }
-  return tabela;
-}
-
-function resumo(tabela: Parcela[]) {
-  if (tabela.length === 0) return null;
-  const totalPago = tabela.reduce((s, p) => s + p.parcela, 0);
-  const totalJuros = tabela.reduce((s, p) => s + p.juros, 0);
-  return {
-    primeira: tabela[0].parcela,
-    ultima: tabela[tabela.length - 1].parcela,
-    totalPago,
-    totalJuros,
-  };
-}
+const parseBRL = (v: string) => sanitizeNumber(v);
 
 export default function FinanciamentoCarroClient() {
   const [valorVeiculo, setValorVeiculo] = useState('80000');
@@ -85,14 +28,14 @@ export default function FinanciamentoCarroClient() {
       entrada = veiculo * (entrada / 100);
     }
     const financiado = Math.max(veiculo - entrada, 0);
-    const t = parseFloat(taxa.replace(',', '.')) || 0;
+    const taxaMensal = sanitizeNumber(taxa) / 100;
 
-    if (financiado <= 0 || t <= 0 || parcelas <= 0) return null;
+    if (financiado <= 0 || taxaMensal <= 0 || parcelas <= 0) return null;
 
-    const tabelaPrice = calcularPrice(financiado, t, parcelas);
-    const tabelaSAC = calcularSAC(financiado, t, parcelas);
-    const resumoPrice = resumo(tabelaPrice);
-    const resumoSAC = resumo(tabelaSAC);
+    const tabelaPrice = calcularPrice(financiado, taxaMensal, parcelas);
+    const tabelaSAC = calcularSAC(financiado, taxaMensal, parcelas);
+    const resumoPrice = gerarResumo(tabelaPrice);
+    const resumoSAC = gerarResumo(tabelaSAC);
 
     if (!resumoPrice || !resumoSAC) return null;
 
@@ -104,8 +47,8 @@ export default function FinanciamentoCarroClient() {
     return {
       financiado,
       entrada,
-      tabelaPrice,
-      tabelaSAC,
+      tabelaPrice: tabelaPrice as readonly Parcela[],
+      tabelaSAC: tabelaSAC as readonly Parcela[],
       resumoPrice,
       resumoSAC,
       economia: Math.abs(economia),
@@ -219,13 +162,13 @@ export default function FinanciamentoCarroClient() {
                   <div className="border-t border-gray-200 pt-3 flex justify-between">
                     <dt className="text-gray-500">Primeira Parcela</dt>
                     <dd className="font-bold text-blue-700 text-lg">
-                      {formatCurrency(sistema === 'price' ? resultado.resumoPrice.primeira : resultado.resumoSAC.primeira)}
+                      {formatCurrency(sistema === 'price' ? resultado.resumoPrice.primeiraParcela : resultado.resumoSAC.primeiraParcela)}
                     </dd>
                   </div>
                   {sistema === 'sac' && (
                     <div className="flex justify-between">
                       <dt className="text-gray-500">Última Parcela</dt>
-                      <dd className="font-medium text-gray-900">{formatCurrency(resultado.resumoSAC.ultima)}</dd>
+                      <dd className="font-medium text-gray-900">{formatCurrency(resultado.resumoSAC.ultimaParcela)}</dd>
                     </div>
                   )}
                   <div className="flex justify-between">

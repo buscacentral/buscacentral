@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { calcularCustoViagem, sanitizeNumber } from '@/lib/viagem-logic';
+import { formatCurrency, formatDecimal, formatInteger } from '@/lib/formatters';
 
 interface City {
   n: string;
@@ -354,19 +356,24 @@ export default function DistanciaCidadesClient() {
                 </div>
               </div>
               {(() => {
-                const consumoNum = parseFloat(consumo) || 10;
-                const precoNum = parseFloat(precoGasolina) || 6;
-                const litros = result.estimatedRoad / consumoNum;
-                const custoTotal = litros * precoNum;
+                const consumoNum = sanitizeNumber(consumo, 10);
+                const precoNum = sanitizeNumber(precoGasolina, 6);
+                const viagem = calcularCustoViagem({
+                  distancia: result.estimatedRoad,
+                  consumo: consumoNum,
+                  precoCombustivel: precoNum,
+                  pedagio: 0,
+                  tipoTrajeto: 'ida',
+                });
                 return (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-amber-50 rounded-lg p-3 text-center">
                       <p className="text-xs text-amber-600 mb-1">Litros Necessários</p>
-                      <p className="text-xl font-bold text-amber-700">{litros.toFixed(1)}L</p>
+                      <p className="text-xl font-bold text-amber-700">{formatDecimal(viagem.litrosNecessarios)}L</p>
                     </div>
                     <div className="bg-red-50 rounded-lg p-3 text-center">
                       <p className="text-xs text-red-600 mb-1">Custo Total</p>
-                      <p className="text-xl font-bold text-red-700">R$ {custoTotal.toFixed(2)}</p>
+                      <p className="text-xl font-bold text-red-700">{formatCurrency(viagem.custoTotal)}</p>
                     </div>
                   </div>
                 );
