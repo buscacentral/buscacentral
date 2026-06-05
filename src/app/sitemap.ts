@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/financeiro/juros-compostos',
     '/financeiro/conversor-clt-pj',
     '/financeiro/financiamento-carro',
+    '/financeiro/roi-imobiliario',
     '/financeiro/rescisao-trabalhista',
     '/financeiro/simulador-investimentos',
     '/utilidades',
