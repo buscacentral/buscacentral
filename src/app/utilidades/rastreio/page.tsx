@@ -1,12 +1,29 @@
 import type { Metadata } from 'next';
-import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import RastreioClient from './RastreioClient';
 
-export const metadata: Metadata = generateToolMetadata(
-  'Rastreador de Encomendas',
-  'Rastreie encomendas dos Correios em tempo real. Acompanhe a entrega dos seus pacotes com atualizações instantâneas via BrasilAPI.',
-  '/utilidades/rastreio'
-);
+export const metadata: Metadata = {
+  title: 'Rastreador de Encomendas Correios em Tempo Real | BuscaCentral',
+  description: 'Rastreie suas encomendas e pacotes dos Correios em tempo real. Veja o histórico de entrega completo com atualizações instantâneas e gratuitas.',
+  keywords: [
+    'rastreio correios', 'rastrear encomenda', 'rastreador pacotes',
+    'codigo rastreio', 'rastreamento encomendas', 'onde está meu pacote',
+  ],
+  alternates: { canonical: 'https://buscacentral.com.br/utilidades/rastreio' },
+  openGraph: {
+    title: 'Rastreador de Encomendas Correios em Tempo Real | BuscaCentral',
+    description: 'Rastreie suas encomendas dos Correios em tempo real. Histórico de entrega completo e gratuito.',
+    url: 'https://buscacentral.com.br/utilidades/rastreio',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Rastreador de Encomendas Correios em Tempo Real | BuscaCentral',
+    description: 'Rastreie suas encomendas dos Correios em tempo real. Histórico de entrega completo e gratuito.',
+  },
+};
 
 export default function RastreioPage() {
   return (

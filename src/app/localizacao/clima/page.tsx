@@ -1,12 +1,29 @@
 import type { Metadata } from 'next';
-import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import ClimaClient from './ClimaClient';
 
-export const metadata: Metadata = generateToolMetadata(
-  'Consulta de Clima e Previsão do Tempo',
-  'Consulte a temperatura, umidade e condições climáticas atuais de qualquer região do Brasil em tempo real. Dados da Open-Meteo API.',
-  '/localizacao/clima'
-);
+export const metadata: Metadata = {
+  title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
+  description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real com nosso simulador meteorológico gratuito.',
+  keywords: [
+    'previsão do tempo', 'clima hoje', 'temperatura atual',
+    'umidade relativa', 'velocidade vento', 'condição climática',
+  ],
+  alternates: { canonical: 'https://buscacentral.com.br/localizacao/clima' },
+  openGraph: {
+    title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
+    description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real.',
+    url: 'https://buscacentral.com.br/localizacao/clima',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
+    description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real.',
+  },
+};
 
 export default function ClimaPage() {
   return (
