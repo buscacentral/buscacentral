@@ -64,16 +64,16 @@ function getTodosFeriados(ano: number): { data: Date; nome: string }[] {
   return [...getFeriadosFixos(ano), ...getFeriadosMoveis(ano)].sort((a, b) => a.data.getTime() - b.data.getTime());
 }
 
-function isFeriado(date: Date, feriados: Map<string, string>): string | null {
-  const key = `${date.getMonth()}-${date.getDate()}`;
-  return feriados.get(key) || null;
+function isFeriado(date: Date, feriadosMap: Map<string, string>): string | null {
+  const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  return feriadosMap.get(key) || null;
 }
 
 function buildFeriadosMap(inicio: Date, fim: Date): Map<string, string> {
   const map = new Map<string, string>();
   for (let ano = inicio.getFullYear(); ano <= fim.getFullYear(); ano++) {
     for (const f of getTodosFeriados(ano)) {
-      const key = `${f.data.getMonth()}-${f.data.getDate()}`;
+      const key = `${f.data.getFullYear()}-${f.data.getMonth()}-${f.data.getDate()}`;
       map.set(key, f.nome);
     }
   }
