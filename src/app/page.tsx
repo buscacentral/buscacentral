@@ -64,8 +64,8 @@ export default function Home() {
               >
                 <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
                 <div>
-                  <p className="font-bold text-slate-900 text-xl mb-1">{cat.name}</p>
-                  <p className="text-base text-slate-500 font-medium">{cat.count} ferramentas</p>
+                  <p className="text-base md:text-lg font-bold text-slate-900 mb-1">{cat.name}</p>
+                  <p className="text-sm md:text-base text-slate-500 font-medium">{cat.count} ferramentas</p>
                 </div>
               </a>
             ))}
