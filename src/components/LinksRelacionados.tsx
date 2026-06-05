@@ -13,7 +13,7 @@ type Categoria =
   | 'localizacao'
   | 'documentos'
   | 'utilidades'
-  | 'saude';
+  | 'bem-estar';
 
 const LINKS_MAP: Record<Categoria, readonly LinkRelacionado[]> = {
   financeiro: [
@@ -46,9 +46,9 @@ const LINKS_MAP: Record<Categoria, readonly LinkRelacionado[]> = {
     { href: '/utilidades/gerador-senha', icon: '🔐', title: 'Gerador de Senha', description: 'Gere senhas seguras e aleatórias.' },
     { href: '/utilidades/dias-uteis', icon: '📅', title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre datas.' },
   ],
-  saude: [
-    { href: '/utilidades/calculadora-imc', icon: '⚖️', title: 'Calculadora de IMC', description: 'Calcule seu IMC e classificação OMS.' },
-    { href: '/utilidades/tabela-calorias', icon: '🍎', title: 'Tabela de Calorias', description: 'Consulte calorias de 200 alimentos.' },
+  'bem-estar': [
+    { href: '/utilidades/calculadora-imc', icon: '⚖️', title: 'Calculadora de IMC', description: 'Simule seu índice de massa corporal de forma prática.' },
+    { href: '/utilidades/tabela-calorias', icon: '🍎', title: 'Tabela de Calorias', description: 'Consulte calorias e nutrientes de 200 alimentos.' },
     { href: '/financeiro/rescisao-trabalhista', icon: '📋', title: 'Calculadora de Rescisão', description: 'Calcule valores de rescisão trabalhista.' },
   ],
 };
@@ -59,7 +59,7 @@ const TITULOS: Record<Categoria, string> = {
   localizacao: 'Ferramentas de Localização',
   documentos: 'Ferramentas de Documentos',
   utilidades: 'Outras Ferramentas Úteis',
-  saude: 'Ferramentas de Saúde e Bem-estar',
+  'bem-estar': 'Ferramentas de Bem-Estar Recomendadas',
 };
 
 interface LinksRelacionadosProps {
