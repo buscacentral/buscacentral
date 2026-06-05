@@ -23,7 +23,7 @@ export default function Home() {
         <p className="text-slate-500 mb-6 text-xl md:text-2xl max-w-3xl mx-auto">
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
-        <p className="bg-blue-50 text-blue-600 inline-block px-6 py-2 rounded-full text-base md:text-lg font-bold mb-10 shadow-sm border border-blue-100">
+        <p className="bg-blue-50 text-blue-600 inline-block px-6 py-2 rounded-full text-lg font-bold mb-10 shadow-sm border border-blue-100">
           34 ferramentas gratuitas
         </p>
         
@@ -64,8 +64,8 @@ export default function Home() {
               >
                 <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
                 <div>
-                  <p className="text-lg md:text-xl font-bold text-slate-900 mb-1">{cat.name}</p>
-                  <p className="text-base text-slate-500 font-medium">{cat.count} ferramentas</p>
+                  <p className="text-xl font-bold text-slate-900 mb-1">{cat.name}</p>
+                  <p className="text-lg text-slate-500 font-medium">{cat.count} ferramentas</p>
                 </div>
               </a>
             ))}
