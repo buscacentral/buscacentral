@@ -77,9 +77,9 @@ export default function SearchBar() {
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}
-        className="w-full py-3.5 pl-12 pr-4 border-2 border-slate-200 rounded-full text-base md:text-lg shadow-sm outline-none transition-all duration-300 focus:border-blue-500 focus:shadow-md focus:ring-4 focus:ring-blue-50"
+        className="w-full py-3 pl-11 pr-4 border-2 border-slate-200 rounded-full text-base shadow-sm outline-none transition-all duration-300 focus:border-blue-500 focus:shadow-md focus:ring-4 focus:ring-blue-50"
       />
-      <span className="absolute left-4.5 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors duration-300 group-focus-within:text-blue-500">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors duration-300 group-focus-within:text-blue-500">
         🔍
       </span>
       

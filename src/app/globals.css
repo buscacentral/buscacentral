@@ -12,7 +12,7 @@
 }
 
 html {
-  font-size: 112.5%; /* 18px base instead of 16px, makes everything 12.5% larger */
+  font-size: 100%; /* 16px base — padrão Tailwind */
 }
 
 body {

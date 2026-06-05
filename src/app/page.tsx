@@ -16,25 +16,25 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
-      <section className="text-center mx-auto mt-12 mb-16 max-w-4xl px-6">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
+      <section className="text-center mx-auto mt-10 mb-12 max-w-4xl px-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight tracking-tight">
           O que você deseja buscar ou gerar?
         </h1>
-        <p className="text-slate-500 mb-6 text-xl md:text-2xl max-w-3xl mx-auto">
+        <p className="text-slate-500 mb-5 text-lg md:text-xl max-w-3xl mx-auto">
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
-        <p className="bg-blue-50 text-blue-600 inline-block px-6 py-2 rounded-full text-lg font-bold mb-10 shadow-sm border border-blue-100">
+        <p className="bg-blue-50 text-blue-600 inline-block px-5 py-1.5 rounded-full text-sm font-bold mb-8 shadow-sm border border-blue-100">
           34 ferramentas gratuitas
         </p>
         
         <SearchBar />
       </section>
 
-      <h2 className="text-center text-3xl md:text-4xl font-extrabold text-slate-900 mb-10 tracking-tight">
+      <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 mb-8 tracking-tight">
         Ferramentas Populares
       </h2>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {mainTools.map((tool) => (
           <ToolCard key={tool.href} {...tool} />
         ))}
@@ -43,14 +43,14 @@ export default function Home() {
       <AdPlaceholder position="middle" />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-8 md:p-12 border border-blue-100 shadow-sm">
-          <h2 className="text-3xl font-extrabold text-slate-900 text-center mb-3">
+        <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-6 md:p-10 border border-blue-100 shadow-sm">
+          <h2 className="text-2xl font-extrabold text-slate-900 text-center mb-2">
             Explore por Categoria
           </h2>
-          <p className="text-center text-slate-500 mb-10 text-lg">
+          <p className="text-center text-slate-500 mb-8 text-base">
             Encontre a ferramenta ideal para cada necessidade
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 5 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 2 },
@@ -60,12 +60,12 @@ export default function Home() {
               <a
                 key={cat.href}
                 href={cat.href}
-                className="group flex items-center gap-6 p-6 bg-white rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                className="group flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
-                <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
+                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">{cat.icon}</span>
                 <div>
-                  <p className="text-xl font-bold text-slate-900 mb-1">{cat.name}</p>
-                  <p className="text-lg text-slate-500 font-medium">{cat.count} ferramentas</p>
+                  <p className="text-base font-bold text-slate-900 mb-0.5">{cat.name}</p>
+                  <p className="text-sm text-slate-500">{cat.count} ferramentas</p>
                 </div>
               </a>
             ))}
