@@ -52,6 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/utilidades/whatsapp-link',
     '/utilidades/dias-uteis',
     '/utilidades/rastreio',
+    '/utilidades/planejador-viagem',
     '/utilidades/formatador-codigo',
     '/utilidades/calculadora-imc',
     '/utilidades/tabela-calorias',

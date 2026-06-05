@@ -37,6 +37,7 @@ const tools = [
   { name: 'Extrator de Emails', path: '/utilidades/extrator-emails', category: 'Utilidades', keywords: ['email', 'extrair', 'contato'] },
   { name: 'Dias Úteis', path: '/utilidades/dias-uteis', category: 'Utilidades', keywords: ['dias', 'úteis', 'data', 'feriado', 'prazo', 'calendário'] },
   { name: 'Rastreador de Encomendas', path: '/utilidades/rastreio', category: 'Utilidades', keywords: ['rastreio', 'encomenda', 'correios', 'pacote', 'rastrear', 'entrega'] },
+  { name: 'Planejador de Férias', path: '/utilidades/planejador-viagem', category: 'Utilidades', keywords: ['viagem', 'férias', 'orçamento', 'planejamento', 'custo', 'passagem'] },
   { name: 'Formatador JSON XML', path: '/utilidades/formatador-codigo', category: 'Utilidades', keywords: ['json', 'xml', 'formatar', 'minificar', 'validar', 'código'] },
   { name: 'Calculadora de IMC', path: '/utilidades/calculadora-imc', category: 'Utilidades', keywords: ['imc', 'peso', 'altura', 'massa corporal', 'obesidade', 'saúde'] },
   { name: 'Tabela de Calorias', path: '/utilidades/tabela-calorias', category: 'Utilidades', keywords: ['calorias', 'taco', 'alimentos', 'nutrição', 'proteínas', 'carboidratos'] },

@@ -24,7 +24,7 @@ export default function Home() {
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
         <p className="bg-blue-50 text-blue-600 inline-block px-5 py-1.5 rounded-full text-sm font-bold mb-8 shadow-sm border border-blue-100">
-          35 ferramentas gratuitas
+          36 ferramentas gratuitas
         </p>
         
         <SearchBar />
@@ -55,7 +55,7 @@ export default function Home() {
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 5 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 9 },
-              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 18 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 19 },
             ].map((cat) => (
               <a
                 key={cat.href}

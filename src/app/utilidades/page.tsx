@@ -62,6 +62,13 @@ const subcategorias = [
       { title: 'Rastreador de Encomendas', description: 'Rastreie encomendas dos Correios em tempo real via BrasilAPI.', href: '/utilidades/rastreio', icon: '📦' },
     ],
   },
+  {
+    nome: 'Viagens',
+    icon: '✈️',
+    ferramentas: [
+      { title: 'Planejador de Férias', description: 'Planeje sua viagem com orçamento completo: passagem, hospedagem, alimentação e atividades.', href: '/utilidades/planejador-viagem', icon: '✈️' },
+    ],
+  },
 ];
 
 export default function UtilidadesPage() {
