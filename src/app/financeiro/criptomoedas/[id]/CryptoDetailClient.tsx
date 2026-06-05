@@ -126,7 +126,14 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
 
   const profitCalc = getProfitCalc();
   const chart = getChartFormatted();
-  const currentPrice = md?.current_price?.brl ?? 0;
+
+  // Tabela de conversões rápidas (valores adaptados por tipo de moeda)
+  const isStablecoin = ['USDT', 'USDC'].includes(symbol);
+  const quickAmounts = isStablecoin
+    ? [1, 10, 100, 500, 1000, 5000]
+    : [0.001, 0.01, 0.1, 0.5, 1, 5];
+
+  const currentPrice = data?.market_data?.current_price?.brl ?? 0;
 
   // Conversor bidirecional CRYPTO <=> BRL
   const handleConvertCrypto = (val: string) => {
@@ -151,13 +158,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
     }
   };
 
-  // Tabela de conversões rápidas (valores adaptados por tipo de moeda)
-  const isStablecoin = ['USDT', 'USDC'].includes(symbol);
-  const quickAmounts = isStablecoin
-    ? [1, 10, 100, 500, 1000, 5000]
-    : [0.001, 0.01, 0.1, 0.5, 1, 5];
-
   // FAQ Schema JSON-LD (dinâmico por moeda)
+  const quickDesc = isStablecoin
+    ? '1, 10, 100, 500, 1000 e 5000'
+    : '0.001, 0.01, 0.1, 0.5, 1 e 5';
+
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -172,10 +177,10 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       },
       {
         '@type': 'Question',
-        name: `Qual o melhor horário para acompanhar o preço do ${symbol}?`,
+        name: `Qual a diferença entre o ${name} e o Bitcoin?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'O mercado de criptomoedas opera 24 horas por dia, 7 dias por semana, sem fechamento. Os maiores volumes de negociação ocorrem entre 10h e 16h (horário de Nova York), quando os mercados americanos estão ativos. No Brasil, isso corresponde aproximadamente ao período entre 11h e 17h. Horários de maior volatilidade costumam coincidir com abertura de mercados tradicionais e anúncios macroeconômicos.',
+          text: `O ${name} (${symbol}) e o Bitcoin (BTC) são criptomoedas distintas com propósitos e tecnologias diferentes. O Bitcoin foi a primeira criptomoeda e funciona principalmente como reserva de valor digital. O ${name} pode ter características técnicas, caso de uso e modelo de consenso próprios. Ambos são negociados 24/7 em exchanges globais e podem ser convertidos para Reais (BRL) usando a calculadora do BuscaCentral.`,
         },
       },
       {
@@ -183,7 +188,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         name: `Como funciona a calculadora de conversão de ${name} do BuscaCentral?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: `A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 0.001, 0.01, 0.1, 0.5, 1 e 5 ${symbol}.`,
+          text: `A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como ${quickDesc} ${symbol}.`,
         },
       },
     ],
