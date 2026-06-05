@@ -37,24 +37,36 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   const [data, setData] = useState<CoinData | null>(null);
   const [chartData, setChartData] = useState<MarketChart | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [profitQty, setProfitQty] = useState('');
   const [profitBuyPrice, setProfitBuyPrice] = useState('');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError('');
     try {
       const [coinRes, chartRes] = await Promise.all([
         fetch(`https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&community_data=false&developer_data=false`),
         fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=brl&days=7`),
       ]);
-      if (coinRes.ok) setData(await coinRes.json());
-      if (chartRes.ok) setChartData(await chartRes.json());
+
+      if (coinRes.ok) {
+        setData(await coinRes.json());
+      } else if (coinRes.status === 429) {
+        setError('Limite de requisições atingido. Aguarde alguns segundos e tente novamente.');
+      } else {
+        setError(`Erro ao carregar dados de ${name}.`);
+      }
+
+      if (chartRes.ok) {
+        setChartData(await chartRes.json());
+      }
     } catch {
-      // silencioso
+      setError(`Erro de conexão ao carregar ${name}. Verifique sua internet.`);
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, name]);
 
   useEffect(() => {
     fetchData();
@@ -113,6 +125,20 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
 
   if (loading) {
     return <div className="text-center py-12 text-gray-500">Carregando dados de {name}...</div>;
+  }
+
+  if (error && !data) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={fetchData}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    );
   }
 
   if (!data) {
