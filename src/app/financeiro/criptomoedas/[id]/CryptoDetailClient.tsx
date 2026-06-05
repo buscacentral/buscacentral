@@ -45,17 +45,24 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   const [convertSource, setConvertSource] = useState<'crypto' | 'brl'>('crypto');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  // Sanitiza o ID: apenas letras, números e hífens
+  const safeId = id.replace(/[^a-z0-9-]/g, '');
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
       const [coinRes, chartRes] = await Promise.all([
-        fetch(`https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&community_data=false&developer_data=false`),
-        fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=brl&days=7`),
+        fetch(`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(safeId)}?localization=false&tickers=false&community_data=false&developer_data=false`),
+        fetch(`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(safeId)}/market_chart?vs_currency=brl&days=7`),
       ]);
 
       if (coinRes.ok) {
-        setData(await coinRes.json());
+        try {
+          setData(await coinRes.json());
+        } catch {
+          setError(`Erro ao processar dados de ${name}.`);
+        }
       } else if (coinRes.status === 429) {
         setError('Limite de requisições atingido. Aguarde alguns segundos e tente novamente.');
       } else {
@@ -63,14 +70,18 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       }
 
       if (chartRes.ok) {
-        setChartData(await chartRes.json());
+        try {
+          setChartData(await chartRes.json());
+        } catch {
+          // gráfico é opcional
+        }
       }
     } catch {
       setError(`Erro de conexão ao carregar ${name}. Verifique sua internet.`);
     } finally {
       setLoading(false);
     }
-  }, [id, name]);
+  }, [safeId, name]);
 
   useEffect(() => {
     fetchData();

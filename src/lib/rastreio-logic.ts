@@ -27,7 +27,7 @@ export interface ResultadoRastreio {
  * @returns Resultado com eventos ou mensagem de erro
  */
 export async function buscarRastreio(codigo: string): Promise<ResultadoRastreio> {
-  const codigoSanitizado = codigo.trim().toUpperCase();
+  const codigoSanitizado = codigo.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
 
   if (!codigoSanitizado) {
     return { codigo: '', sucesso: false, mensagem: 'Por favor, digite um código de rastreio.', eventos: [] };
@@ -38,21 +38,28 @@ export async function buscarRastreio(codigo: string): Promise<ResultadoRastreio>
   }
 
   try {
-    const response = await fetch(`https://brasilapi.com.br/api/rastro/v1/${codigoSanitizado}`);
+    const response = await fetch(`https://brasilapi.com.br/api/rastro/v1/${encodeURIComponent(codigoSanitizado)}`);
 
     if (!response.ok) {
       return { codigo: codigoSanitizado, sucesso: false, mensagem: 'Código não encontrado ou ainda não postado.', eventos: [] };
     }
 
-    const data = await response.json();
+    let data: Record<string, unknown>;
+    try {
+      data = await response.json();
+    } catch {
+      return { codigo: codigoSanitizado, sucesso: false, mensagem: 'Resposta inválida do serviço de rastreio.', eventos: [] };
+    }
 
-    const eventos: EventoRastreio[] = (data.eventos || []).map((e: Record<string, unknown>) => ({
-      data: e.dtDtEvent ? String(e.dtDtEvent) : new Date(String(e.data)).toLocaleDateString('pt-BR'),
-      hora: e.tmTmEvent ? String(e.tmTmEvent) : new Date(String(e.data)).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      local: (e.unidade as Record<string, string>)?.nome || 'Unidade de Tratamento',
-      status: String(e.descricao || 'Status não informado'),
-      detalhe: e.detalhe ? String(e.detalhe) : '',
-    }));
+    const eventos: EventoRastreio[] = Array.isArray(data.eventos)
+      ? (data.eventos as Record<string, unknown>[]).map((e) => ({
+          data: e.dtDtEvent ? String(e.dtDtEvent) : new Date(String(e.data)).toLocaleDateString('pt-BR'),
+          hora: e.tmTmEvent ? String(e.tmTmEvent) : new Date(String(e.data)).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+          local: (e.unidade as Record<string, string>)?.nome || 'Unidade de Tratamento',
+          status: String(e.descricao || 'Status não informado'),
+          detalhe: e.detalhe ? String(e.detalhe) : '',
+        }))
+      : [];
 
     if (eventos.length === 0) {
       return { codigo: codigoSanitizado, sucesso: true, mensagem: 'Nenhum evento registrado ainda. O objeto pode ter acabado de ser postado.', eventos: [] };
