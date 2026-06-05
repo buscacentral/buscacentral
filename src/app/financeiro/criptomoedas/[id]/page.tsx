@@ -27,14 +27,30 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const crypto = CRYPTO_MAP[id];
   if (!crypto) return {};
 
+  const title = `${crypto.name} (${crypto.symbol}) Hoje: Cotação em Tempo Real e Conversor | BuscaCentral`;
+  const description = `Acompanhe a cotação do ${crypto.name} (${crypto.symbol}) em tempo real, veja o gráfico de 7 dias, dados de mercado e use o conversor de ${crypto.symbol} para BRL gratuito.`;
+  const url = `https://buscacentral.com.br/financeiro/criptomoedas/${id}`;
+
   return {
-    title: `${crypto.name} (${crypto.symbol}) - Cotação em Tempo Real`,
-    description: crypto.description,
+    title,
+    description,
+    keywords: [
+      `${crypto.name}`, `${crypto.symbol}`, `cotação ${crypto.name}`, `preço ${crypto.symbol}`,
+      `${crypto.name} hoje`, `converter ${crypto.symbol} para real`, `criptomoedas`,
+    ],
+    alternates: { canonical: url },
     openGraph: {
-      title: `${crypto.name} (${crypto.symbol}) - Cotação em Tempo Real | BuscaCentral`,
-      description: crypto.description,
-      url: `https://buscacentral.com.br/financeiro/criptomoedas/${id}`,
+      title,
+      description,
+      url,
+      siteName: 'BuscaCentral',
+      locale: 'pt_BR',
       type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
     },
   };
 }

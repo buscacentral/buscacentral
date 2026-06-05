@@ -113,6 +113,9 @@ export default function CotacaoClient() {
   const selectedCurr = currencies.find(c => c.code === selectedCurrency);
   const isConvertible = CONVERTIBLE_CODES.includes(selectedCurrency);
 
+  // Sanitiza strings para JSON-LD (evita aspas e caracteres especiais)
+  const sanitize = (s: string) => s.replace(/"/g, '\\"').replace(/\n/g, ' ').trim();
+
   // FAQ Schema JSON-LD
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -120,26 +123,26 @@ export default function CotacaoClient() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'Como é calculada a cotação do Dólar Comercial em tempo real?',
+        name: sanitize('Como é calculada a cotação do Dólar Comercial em tempo real?'),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'A cotação do Dólar Comercial exibida no BuscaCentral é obtida em tempo real através da AwesomeAPI, que agrega dados dos principais mercados financeiros brasileiros. O valor representa a cotação de compra (bid) em Reais (BRL), atualizada a cada minuto para garantir precisão.',
+          text: sanitize('A cotação do Dólar Comercial exibida no BuscaCentral é obtida em tempo real através da AwesomeAPI, que agrega dados dos principais mercados financeiros brasileiros. O valor representa a cotação de compra (bid) em Reais (BRL), atualizada a cada minuto para garantir precisão.'),
         },
       },
       {
         '@type': 'Question',
-        name: 'Qual a diferença entre o Dólar Turismo e o Dólar Comercial exibido no BuscaCentral?',
+        name: sanitize('Qual a diferença entre o Dólar Turismo e o Dólar Comercial exibido no BuscaCentral?'),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'O Dólar Comercial é a cotação usada em transações financeiras entre bancos e empresas, sem IOF ou spread de casas de câmbio. O Dólar Turismo inclui IOF (até 1,1%), spread da casa de câmbio e custos operacionais, sendo sempre mais caro. O BuscaCentral exibe o Dólar Comercial, que é a referência oficial do mercado.',
+          text: sanitize('O Dólar Comercial é a cotação usada em transações financeiras entre bancos e empresas, sem IOF ou spread de casas de câmbio. O Dólar Turismo inclui IOF (até 1,1%), spread da casa de câmbio e custos operacionais, sendo sempre mais caro. O BuscaCentral exibe o Dólar Comercial, que é a referência oficial do mercado.'),
         },
       },
       {
         '@type': 'Question',
-        name: 'Como converter Euro ou Libra para Real usando a calculadora?',
+        name: sanitize('Como converter Euro ou Libra para Real usando a calculadora?'),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Na página de Cotação do BuscaCentral, selecione a moeda desejada (Euro ou Libra Esterlina) clicando no cartão da moeda. Em seguida, use o conversor bidirecional: digite o valor na moeda estrangeira para ver o equivalente em Reais, ou digite em Reais para converter para Euro ou Libra. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 1, 5, 10, 50, 100, 500 e 1000 unidades.',
+          text: sanitize('Na página de Cotação do BuscaCentral, selecione a moeda desejada (Euro ou Libra Esterlina) clicando no cartão da moeda. Em seguida, use o conversor bidirecional: digite o valor na moeda estrangeira para ver o equivalente em Reais, ou digite em Reais para converter para Euro ou Libra. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 1, 5, 10, 50, 100, 500 e 1000 unidades.'),
         },
       },
     ],
@@ -206,7 +209,7 @@ export default function CotacaoClient() {
 
       {/* Conversor Bidirecional */}
       {isConvertible && selectedCurr && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
           <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
             Conversor {selectedCurr.code.replace('-BRL', '')} ⇄ BRL
           </h2>
@@ -242,12 +245,12 @@ export default function CotacaoClient() {
           <p className="text-sm text-slate-400 mt-3 text-center">
             Cotação: 1 {selectedCurr.code.replace('-BRL', '')} = R$ {selectedCurr.bid}
           </p>
-        </div>
+        </section>
       )}
 
       {/* Tabela de Conversões Rápidas */}
       {isConvertible && selectedCurr && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
           <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
             Conversões Rápidas — {selectedCurr.name}
           </h2>
@@ -276,12 +279,12 @@ export default function CotacaoClient() {
           <p className="text-sm text-slate-400 mt-3">
             Valores calculados com base na cotação de compra (bid) de R$ {selectedCurr.bid}.
           </p>
-        </div>
+        </section>
       )}
 
       {/* Conversor genérico para moedas não-convertíveis (ARS, BTC) */}
       {!isConvertible && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Conversor R$ → Moeda</h2>
           <div className="flex gap-4 items-end">
             <div className="flex-1">
@@ -313,7 +316,7 @@ export default function CotacaoClient() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* FAQ Accordion com Schema JSON-LD */}
@@ -321,7 +324,7 @@ export default function CotacaoClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — Cotação de Moedas
         </h2>
@@ -331,10 +334,11 @@ export default function CotacaoClient() {
               <button
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between py-4 text-left gap-4"
+                aria-expanded={openFaq === idx}
               >
-                <span className="text-base md:text-lg font-medium text-slate-800">
+                <h3 className="text-base md:text-lg font-medium text-slate-800">
                   {item.name}
-                </span>
+                </h3>
                 <span className={`text-slate-400 text-xl transition-transform duration-200 flex-shrink-0 ${openFaq === idx ? 'rotate-45' : ''}`}>
                   +
                 </span>
@@ -347,7 +351,7 @@ export default function CotacaoClient() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </>
   );
 }

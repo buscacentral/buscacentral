@@ -158,6 +158,9 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
     }
   };
 
+  // Sanitiza strings para JSON-LD (evita aspas e caracteres especiais)
+  const sanitize = (s: string) => s.replace(/"/g, '\\"').replace(/\n/g, ' ').trim();
+
   // FAQ Schema JSON-LD (dinâmico por moeda)
   const quickDesc = isStablecoin
     ? '1, 10, 100, 500, 1000 e 5000'
@@ -169,26 +172,26 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
     mainEntity: [
       {
         '@type': 'Question',
-        name: `Como é calculada a cotação do ${name} (${symbol}) em tempo real?`,
+        name: sanitize(`Como é calculada a cotação do ${name} (${symbol}) em tempo real?`),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: `A cotação do ${name} exibida no BuscaCentral é obtida em tempo real através da API do CoinGecko, que agrega dados de centenas de exchanges globais. O preço é calculado com base na média ponderada do volume de negociação em Reais (BRL), garantindo um valor referência preciso para o mercado brasileiro.`,
+          text: sanitize(`A cotação do ${name} exibida no BuscaCentral é obtida em tempo real através da API do CoinGecko, que agrega dados de centenas de exchanges globais. O preço é calculado com base na média ponderada do volume de negociação em Reais (BRL), garantindo um valor referência preciso para o mercado brasileiro.`),
         },
       },
       {
         '@type': 'Question',
-        name: `Qual a diferença entre o ${name} e o Bitcoin?`,
+        name: sanitize(`Qual a diferença entre o ${name} e o Bitcoin?`),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: `O ${name} (${symbol}) e o Bitcoin (BTC) são criptomoedas distintas com propósitos e tecnologias diferentes. O Bitcoin foi a primeira criptomoeda e funciona principalmente como reserva de valor digital. O ${name} pode ter características técnicas, caso de uso e modelo de consenso próprios. Ambos são negociados 24/7 em exchanges globais e podem ser convertidos para Reais (BRL) usando a calculadora do BuscaCentral.`,
+          text: sanitize(`O ${name} (${symbol}) e o Bitcoin (BTC) são criptomoedas distintas com propósitos e tecnologias diferentes. O Bitcoin foi a primeira criptomoeda e funciona principalmente como reserva de valor digital. O ${name} pode ter características técnicas, caso de uso e modelo de consenso próprios. Ambos são negociados 24/7 em exchanges globais e podem ser convertidos para Reais (BRL) usando a calculadora do BuscaCentral.`),
         },
       },
       {
         '@type': 'Question',
-        name: `Como funciona a calculadora de conversão de ${name} do BuscaCentral?`,
+        name: sanitize(`Como funciona a calculadora de conversão de ${name} do BuscaCentral?`),
         acceptedAnswer: {
           '@type': 'Answer',
-          text: `A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como ${quickDesc} ${symbol}.`,
+          text: sanitize(`A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como ${quickDesc} ${symbol}.`),
         },
       },
     ],
@@ -221,7 +224,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   return (
     <div className="space-y-6">
       {/* Preço e variação */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         <div className="flex items-baseline gap-4 flex-wrap">
           <span className="text-3xl font-extrabold text-gray-900">
             R$ {formatPrice(md.current_price.brl)}
@@ -231,11 +234,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
             {Math.abs(md.price_change_percentage_24h).toFixed(2)}% (24h)
           </span>
         </div>
-      </div>
+      </section>
 
       {/* Gráfico 7 dias */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-gray-900 mb-4">Preço 7 dias (BRL)</h2>
+      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Preço 7 dias (BRL)</h2>
         {chart ? (
           <div className="h-64">
             <Line
@@ -254,11 +257,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         ) : (
           <div className="h-64 flex items-center justify-center text-gray-400">Gráfico indisponível</div>
         )}
-      </div>
+      </section>
 
       {/* Dados de mercado */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-gray-900 mb-4">Dados de Mercado</h2>
+      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Dados de Mercado</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
             <span className="text-gray-500">Capitalização de mercado:</span>
@@ -281,10 +284,10 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
             <span className="font-semibold">{formatSupply(md.circulating_supply)} {symbol}</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Conversor Dinâmico BTC <=> BRL */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      {/* Conversor Dinâmico CRYPTO <=> BRL */}
+      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Conversor {symbol} ⇄ BRL
         </h2>
@@ -320,10 +323,10 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         <p className="text-sm text-slate-400 mt-3 text-center">
           Cotação atual: R$ {formatPrice(currentPrice)} por {symbol}
         </p>
-      </div>
+      </section>
 
       {/* Tabela de Conversões Rápidas */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Conversões Rápidas — {name}
         </h2>
@@ -352,11 +355,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         <p className="text-sm text-slate-400 mt-3">
           Valores calculados com base na cotação atual de R$ {formatPrice(currentPrice)}.
         </p>
-      </div>
+      </section>
 
       {/* Calculadora de Lucro */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-gray-900 mb-4">Calculadora de Lucro/Perda — {name}</h2>
+      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Calculadora de Lucro/Perda — {name}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">Quantidade comprada</label>
@@ -400,14 +403,14 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         ) : (
           <p className="text-sm text-gray-400">Preencha os campos para calcular seu lucro ou prejuízo.</p>
         )}
-      </div>
+      </section>
 
       {/* FAQ Accordion com Schema JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — {name}
         </h2>
@@ -417,10 +420,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
               <button
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between py-4 text-left gap-4"
+                aria-expanded={openFaq === idx}
               >
-                <span className="text-base md:text-lg font-medium text-slate-800">
+                <h3 className="text-base md:text-lg font-medium text-slate-800">
                   {item.name}
-                </span>
+                </h3>
                 <span className={`text-slate-400 text-xl transition-transform duration-200 flex-shrink-0 ${openFaq === idx ? 'rotate-45' : ''}`}>
                   +
                 </span>
@@ -433,7 +437,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }
