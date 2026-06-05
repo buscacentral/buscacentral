@@ -51,6 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/utilidades/dias-uteis',
     '/utilidades/formatador-codigo',
     '/utilidades/calculadora-imc',
+    '/utilidades/tabela-calorias',
     '/sobre',
     '/privacidade',
     '/termos',
