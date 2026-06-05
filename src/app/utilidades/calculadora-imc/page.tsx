@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import CalculadoraIMCClient from './CalculadoraIMCClient';
+import AvisoSaude from '@/components/AvisoSaude';
 
 export const metadata: Metadata = generateToolMetadata(
   'Calculadora de IMC',
@@ -16,6 +17,7 @@ export default function CalculadoraIMC() {
       ariaLabel="Calculadora de IMC interativa"
     >
       <CalculadoraIMCClient />
+      <AvisoSaude />
     </ToolPageLayout>
   );
 }

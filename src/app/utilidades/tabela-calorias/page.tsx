@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import TabelaCaloriasClient from './TabelaCaloriasClient';
+import AvisoSaude from '@/components/AvisoSaude';
 
 export const metadata: Metadata = generateToolMetadata(
   'Tabela de Calorias',
@@ -16,6 +17,7 @@ export default function TabelaCalorias() {
       ariaLabel="Tabela de calorias interativa"
     >
       <TabelaCaloriasClient />
+      <AvisoSaude />
     </ToolPageLayout>
   );
 }
