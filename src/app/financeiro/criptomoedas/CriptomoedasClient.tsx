@@ -224,6 +224,15 @@ export default function CriptomoedasClient() {
               />
             </div>
           </div>
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-400 leading-relaxed">
+              <strong className="text-gray-500">O que é?</strong> O Fear & Greed Index é um termômetro
+              do sentimento do mercado crypto, calculado com base em volatilidade, volume, pesquisas
+              em redes sociais, dominância do Bitcoin e tendências de busca. Varia de 0 (medo extremo)
+              a 100 (ganância extrema). Historicamente, períodos de <strong>medo extremo</strong> costumam
+              preceder recuperações, enquanto <strong>ganância extrema</strong> pode indicar correção próxima.
+            </p>
+          </div>
         </div>
       )}
 
