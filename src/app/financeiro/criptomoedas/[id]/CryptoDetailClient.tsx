@@ -224,7 +224,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   return (
     <div className="space-y-6">
       {/* Preço e variação */}
-      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-baseline gap-4 flex-wrap">
           <span className="text-3xl font-extrabold text-gray-900">
             R$ {formatPrice(md.current_price.brl)}
@@ -237,7 +237,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       </section>
 
       {/* Gráfico 7 dias */}
-      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Preço 7 dias (BRL)</h2>
         {chart ? (
           <div className="h-64">
@@ -260,7 +260,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       </section>
 
       {/* Dados de mercado */}
-      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Dados de Mercado</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
@@ -287,7 +287,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       </section>
 
       {/* Conversor Dinâmico CRYPTO <=> BRL */}
-      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Conversor {symbol} ⇄ BRL
         </h2>
@@ -326,7 +326,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       </section>
 
       {/* Tabela de Conversões Rápidas */}
-      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Conversões Rápidas — {name}
         </h2>
@@ -334,17 +334,17 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
           <table className="w-full text-base md:text-lg">
             <thead>
               <tr className="bg-slate-100">
-                <th className="text-left py-3 px-5 text-slate-600 font-semibold">Quantidade</th>
-                <th className="text-right py-3 px-5 text-slate-600 font-semibold">Valor Estimado (BRL)</th>
+                <th className="text-left py-3 px-3 sm:px-5 text-slate-600 font-semibold">Quantidade</th>
+                <th className="text-right py-3 px-3 sm:px-5 text-slate-600 font-semibold">Valor Estimado (BRL)</th>
               </tr>
             </thead>
             <tbody>
               {quickAmounts.map((amt) => (
                 <tr key={amt} className="odd:bg-slate-50 even:bg-white border-t border-slate-100">
-                  <td className="py-3 px-5 font-mono font-semibold text-slate-800">
+                  <td className="py-3 px-3 sm:px-5 font-mono font-semibold text-slate-800">
                     {amt} {symbol}
                   </td>
-                  <td className="py-3 px-5 text-right font-mono font-semibold text-green-700">
+                  <td className="py-3 px-3 sm:px-5 text-right font-mono font-semibold text-green-700">
                     R$ {formatPrice(amt * currentPrice)}
                   </td>
                 </tr>
@@ -358,7 +358,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
       </section>
 
       {/* Calculadora de Lucro */}
-      <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Calculadora de Lucro/Perda — {name}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
@@ -410,7 +410,7 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — {name}
         </h2>

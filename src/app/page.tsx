@@ -16,7 +16,7 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
-      <section className="text-center mx-auto mt-10 mb-12 max-w-4xl px-6">
+      <section className="text-center mx-auto mt-10 mb-12 max-w-4xl px-4 sm:px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight tracking-tight">
           O que você deseja buscar ou gerar?
         </h1>

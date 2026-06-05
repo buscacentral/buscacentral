@@ -73,7 +73,7 @@ export default function UtilidadesPage() {
             <h2 className="text-3xl font-bold text-slate-900">{sub.nome}</h2>
             <span className="text-sm md:text-base text-slate-500 font-medium ml-2">{sub.ferramentas.length} ferramentas</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {sub.ferramentas.map((tool) => (
               <Link
                 key={tool.href}

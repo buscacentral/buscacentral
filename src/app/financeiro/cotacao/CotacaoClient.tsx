@@ -209,7 +209,7 @@ export default function CotacaoClient() {
 
       {/* Conversor Bidirecional */}
       {isConvertible && selectedCurr && (
-        <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm mb-6">
           <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
             Conversor {selectedCurr.code.replace('-BRL', '')} ⇄ BRL
           </h2>
@@ -250,7 +250,7 @@ export default function CotacaoClient() {
 
       {/* Tabela de Conversões Rápidas */}
       {isConvertible && selectedCurr && (
-        <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm mb-6">
           <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
             Conversões Rápidas — {selectedCurr.name}
           </h2>
@@ -258,17 +258,17 @@ export default function CotacaoClient() {
             <table className="w-full text-base md:text-lg">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="text-left py-3 px-5 text-slate-600 font-semibold">Quantidade</th>
-                  <th className="text-right py-3 px-5 text-slate-600 font-semibold">Valor Estimado (BRL)</th>
+                  <th className="text-left py-3 px-3 sm:px-5 text-slate-600 font-semibold">Quantidade</th>
+                  <th className="text-right py-3 px-3 sm:px-5 text-slate-600 font-semibold">Valor Estimado (BRL)</th>
                 </tr>
               </thead>
               <tbody>
                 {QUICK_AMOUNTS.map((amt) => (
                   <tr key={amt} className="odd:bg-slate-50 even:bg-white border-t border-slate-100">
-                    <td className="py-3 px-5 font-mono font-semibold text-slate-800">
+                    <td className="py-3 px-3 sm:px-5 font-mono font-semibold text-slate-800">
                       {amt.toLocaleString('pt-BR')} {selectedCurr.code.replace('-BRL', '')}
                     </td>
-                    <td className="py-3 px-5 text-right font-mono font-semibold text-green-700">
+                    <td className="py-3 px-3 sm:px-5 text-right font-mono font-semibold text-green-700">
                       R$ {formatPrice(amt * parseFloat(selectedCurr.bid))}
                     </td>
                   </tr>
@@ -284,7 +284,7 @@ export default function CotacaoClient() {
 
       {/* Conversor genérico para moedas não-convertíveis (ARS, BTC) */}
       {!isConvertible && (
-        <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
+        <section className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Conversor R$ → Moeda</h2>
           <div className="flex gap-4 items-end">
             <div className="flex-1">
@@ -324,7 +324,7 @@ export default function CotacaoClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — Cotação de Moedas
         </h2>

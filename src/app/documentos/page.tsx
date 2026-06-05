@@ -32,7 +32,7 @@ export default function DocumentosPage() {
         Todos os CPFs e CNPJs gerados são fictícios e destinados exclusivamente a testes e desenvolvimento.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12">
         {tools.map((tool) => (
           <Link
             key={tool.href}
@@ -46,7 +46,7 @@ export default function DocumentosPage() {
         ))}
       </div>
 
-      <section className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+      <section className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200">
         <h2 className="text-lg font-bold text-slate-800 mb-2">Ferramentas Relacionadas</h2>
         <p className="text-sm md:text-base text-slate-500 mb-4">Outras ferramentas que podem ser úteis</p>
         <div className="flex flex-wrap gap-3">
