@@ -31,7 +31,7 @@ const subcategorias = [
     ],
   },
   {
-    nome: 'Saúde e Bem-estar',
+    nome: 'Bem-estar',
     icon: '❤️',
     ferramentas: [
       { title: 'Calculadora de IMC', description: 'Calcule seu IMC, classificação OMS e TMB.', href: '/utilidades/calculadora-imc', icon: '⚖️' },

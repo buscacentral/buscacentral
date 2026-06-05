@@ -39,7 +39,7 @@ export default function Privacidade() {
             <li>CEPs consultados na Busca de CEP</li>
             <li>Textos processados em ferramentas como Base64, Contador de Caracteres e Comparador</li>
             <li>Senhas geradas pelo Gerador de Senha</li>
-            <li>IMC, calorias e dados de saúde inseridos nas calculadoras</li>
+            <li>IMC, calorias e dados pessoais inseridos nas calculadoras</li>
           </ul>
           <p>
             <strong>Seus dados permanecem no seu navegador e são descartados ao fechar a aba.</strong>
