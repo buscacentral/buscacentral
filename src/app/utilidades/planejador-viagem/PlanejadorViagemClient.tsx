@@ -116,7 +116,7 @@ export default function PlanejadorViagemClient() {
       {/* Resultados */}
       <section className="lg:col-span-2 space-y-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200">
         {/* Resumo da viagem */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-xl border border-slate-200 text-center">
             <p className="text-xs font-bold text-slate-400 uppercase mb-1">Dias</p>
             <p className="text-3xl font-black text-slate-900">{resultado.diasTotais}</p>
@@ -154,7 +154,7 @@ export default function PlanejadorViagemClient() {
             {categorias.map((cat) => (
               <div key={cat.label} className="flex items-center gap-3">
                 <span className="text-xl w-8 text-center">{cat.icon}</span>
-                <span className="text-sm font-medium text-slate-700 w-28">{cat.label}</span>
+                <span className="text-sm font-medium text-slate-700 w-20 sm:w-28 flex-shrink-0">{cat.label}</span>
                 <div className="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
                   <div
                     className="h-full bg-sky-500 rounded-full transition-all duration-500"

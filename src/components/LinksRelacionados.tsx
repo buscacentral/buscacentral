@@ -45,6 +45,7 @@ const LINKS_MAP: Record<Categoria, readonly LinkRelacionado[]> = {
     { href: '/utilidades/gerador-qr-code', icon: '📱', title: 'Gerador de QR Code', description: 'Gere QR Codes a partir de textos ou URLs.' },
     { href: '/utilidades/gerador-senha', icon: '🔐', title: 'Gerador de Senha', description: 'Gere senhas seguras e aleatórias.' },
     { href: '/utilidades/dias-uteis', icon: '📅', title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre datas.' },
+    { href: '/utilidades/planejador-viagem', icon: '✈️', title: 'Planejador de Férias', description: 'Planeje sua viagem com orçamento completo.' },
   ],
   'bem-estar': [
     { href: '/utilidades/calculadora-imc', icon: '⚖️', title: 'Calculadora de IMC', description: 'Simule seu índice de massa corporal de forma prática.' },
