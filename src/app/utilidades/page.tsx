@@ -60,8 +60,8 @@ const subcategorias = [
 export default function UtilidadesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Central de Utilidades</h1>
-      <p className="text-gray-600 mb-12">
+      <h1 className="text-4xl font-bold text-slate-900 mb-4">Central de Utilidades</h1>
+      <p className="text-base md:text-lg text-slate-600 max-w-3xl leading-relaxed mb-12">
         Ferramentas úteis para o dia a dia organizadas por categoria.
         Gere senhas, QR Codes, converta textos e muito mais — tudo gratuito e sem cadastro.
       </p>
@@ -70,19 +70,19 @@ export default function UtilidadesPage() {
         <section key={sub.nome} className="mb-12">
           <div className="flex items-center gap-3 mb-6">
             <span className="text-4xl">{sub.icon}</span>
-            <h2 className="text-3xl font-bold text-gray-900">{sub.nome}</h2>
-            <span className="text-base text-gray-500 font-medium ml-2">{sub.ferramentas.length} ferramentas</span>
+            <h2 className="text-3xl font-bold text-slate-900">{sub.nome}</h2>
+            <span className="text-sm md:text-base text-slate-500 font-medium ml-2">{sub.ferramentas.length} ferramentas</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {sub.ferramentas.map((tool) => (
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="group block p-10 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                className="group block p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
               >
                 <div className="text-7xl mb-6 transition-transform duration-300 group-hover:scale-110">{tool.icon}</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">{tool.title}</h3>
-                <p className="text-base text-gray-600 leading-relaxed">{tool.description}</p>
+                <h3 className="text-base md:text-lg font-semibold text-slate-800 mb-2">{tool.title}</h3>
+                <p className="text-sm md:text-base text-slate-500 leading-relaxed">{tool.description}</p>
               </Link>
             ))}
           </div>

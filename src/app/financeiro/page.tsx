@@ -68,8 +68,8 @@ const tools = [
 export default function FinanceiroPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Central Financeira</h1>
-      <p className="text-gray-600 mb-12">
+      <h1 className="text-4xl font-bold text-slate-900 mb-4">Central Financeira</h1>
+      <p className="text-base md:text-lg text-slate-600 max-w-3xl leading-relaxed mb-12">
         Ferramentas financeiras gratuitas para acompanhar cotações, simular investimentos e consultar preços de veículos.
       </p>
 
@@ -78,11 +78,11 @@ export default function FinanceiroPage() {
           <Link
             key={tool.href}
             href={tool.href}
-            className={`group block p-10 rounded-2xl border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${tool.color}`}
+            className={`group block p-6 rounded-2xl border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${tool.color}`}
           >
             <div className="text-7xl mb-6 transition-transform duration-300 group-hover:scale-110">{tool.icon}</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">{tool.title}</h3>
-            <p className="text-base text-gray-600 leading-relaxed">{tool.description}</p>
+            <h3 className="text-base md:text-lg font-semibold text-slate-800 mb-2">{tool.title}</h3>
+            <p className="text-sm md:text-base text-slate-500 leading-relaxed">{tool.description}</p>
           </Link>
         ))}
       </div>

@@ -20,12 +20,12 @@ const sugestoes = [
 export default function LocalizacaoPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Central de Localização</h1>
-      <p className="text-gray-600 mb-4">
+      <h1 className="text-4xl font-bold text-slate-900 mb-4">Central de Localização</h1>
+      <p className="text-base md:text-lg text-slate-600 max-w-3xl leading-relaxed mb-4">
         Ferramentas de localização para consultas de endereço e distâncias.
         Busque CEPs, calcule rotas e estime custos de viagem entre cidades brasileiras.
       </p>
-      <p className="text-sm text-gray-500 mb-10">
+      <p className="text-sm md:text-base text-slate-500 max-w-3xl leading-relaxed mb-10">
         Dados fornecidos pelo ViaCEP e coordenadas oficiais do IBGE.
       </p>
 
@@ -34,24 +34,24 @@ export default function LocalizacaoPage() {
           <Link
             key={tool.href}
             href={tool.href}
-            className={`group block p-10 rounded-2xl border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${tool.color}`}
+            className={`group block p-6 rounded-2xl border-2 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 ${tool.color}`}
           >
             <div className="text-7xl mb-6 transition-transform duration-300 group-hover:scale-110">{tool.icon}</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">{tool.title}</h3>
-            <p className="text-base text-gray-600 leading-relaxed">{tool.description}</p>
+            <h3 className="text-base md:text-lg font-semibold text-slate-800 mb-2">{tool.title}</h3>
+            <p className="text-sm md:text-base text-slate-500 leading-relaxed">{tool.description}</p>
           </Link>
         ))}
       </div>
 
       <section className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-        <h2 className="text-lg font-bold text-gray-900 mb-2">Ferramentas Relacionadas</h2>
-        <p className="text-sm text-gray-500 mb-4">Outras ferramentas que podem ser úteis</p>
+        <h2 className="text-lg font-bold text-slate-800 mb-2">Ferramentas Relacionadas</h2>
+        <p className="text-sm md:text-base text-slate-500 mb-4">Outras ferramentas que podem ser úteis</p>
         <div className="flex flex-wrap gap-3">
           {sugestoes.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-sm transition-all text-sm font-medium text-gray-700"
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-sm transition-all text-sm md:text-base font-medium text-slate-700"
             >
               <span>{s.icon}</span>
               {s.title}

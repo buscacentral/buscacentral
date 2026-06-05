@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         <body style="font-family: sans-serif; padding: 2rem; text-align: center;">
           <h1 style="color: #dc2626;">Erro na Autorização</h1>
           <p>${errorDescription || error}</p>
-          <a href="/produtos" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
+          <a href="/" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
         </body>
       </html>`,
       { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
         <body style="font-family: sans-serif; padding: 2rem; text-align: center;">
           <h1 style="color: #dc2626;">Código de Autorização Ausente</h1>
           <p>Nenhum código foi retornado pelo Mercado Livre.</p>
-          <a href="/produtos" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
+          <a href="/" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
         </body>
       </html>`,
       { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
             </svg>
             <h1 style="color: #111827; font-size: 1.5rem; margin-bottom: 0.5rem;">Acesso Autorizado!</h1>
             <p style="color: #4b5563; font-size: 0.875rem; margin-bottom: 1.5rem;">O token de busca do Mercado Livre foi configurado e salvo com sucesso no Supabase.</p>
-            <a href="/produtos" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 0.75rem; background: #2563eb; color: white; font-weight: bold; text-decoration: none; border-radius: 0.5rem; transition: background 0.2s;">Ir para Busca de Produtos</a>
+            <a href="/" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 0.75rem; background: #2563eb; color: white; font-weight: bold; text-decoration: none; border-radius: 0.5rem; transition: background 0.2s;">Ir para Busca</a>
           </div>
         </body>
       </html>`,
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
         <body style="font-family: sans-serif; padding: 2rem; text-align: center;">
           <h1 style="color: #dc2626;">Erro no Servidor</h1>
           <p>Ocorreu um erro ao processar a autorização: ${err.message}</p>
-          <a href="/produtos" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
+          <a href="/" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
         </body>
       </html>`,
       { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
