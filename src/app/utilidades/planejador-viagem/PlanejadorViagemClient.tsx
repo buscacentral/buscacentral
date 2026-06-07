@@ -133,17 +133,17 @@ export default function PlanejadorViagemClient() {
 
         {/* Totais */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center overflow-hidden">
-            <p className="text-xs font-bold text-slate-400 uppercase mb-1 truncate">Custo Total</p>
-            <p className="text-xl xl:text-2xl font-black text-emerald-600 truncate" title={formatCurrency(resultado.custoTotal)}>{formatCurrency(resultado.custoTotal)}</p>
+          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center flex flex-col justify-center">
+            <p className="text-xs font-bold text-slate-400 uppercase mb-1">Custo Total</p>
+            <p className="text-lg lg:text-base xl:text-xl font-black text-emerald-600 tracking-tight break-words leading-tight">{formatCurrency(resultado.custoTotal)}</p>
           </div>
-          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center overflow-hidden">
-            <p className="text-xs font-bold text-slate-400 uppercase mb-1 truncate">Por Pessoa</p>
-            <p className="text-xl xl:text-2xl font-black text-sky-600 truncate" title={formatCurrency(resultado.custoPorPessoa)}>{formatCurrency(resultado.custoPorPessoa)}</p>
+          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center flex flex-col justify-center">
+            <p className="text-xs font-bold text-slate-400 uppercase mb-1">Por Pessoa</p>
+            <p className="text-lg lg:text-base xl:text-xl font-black text-sky-600 tracking-tight break-words leading-tight">{formatCurrency(resultado.custoPorPessoa)}</p>
           </div>
-          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center overflow-hidden">
-            <p className="text-xs font-bold text-slate-400 uppercase mb-1 truncate">Por Dia</p>
-            <p className="text-xl xl:text-2xl font-black text-purple-600 truncate" title={formatCurrency(resultado.custoPorDia)}>{formatCurrency(resultado.custoPorDia)}</p>
+          <div className="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 shadow-sm text-center flex flex-col justify-center">
+            <p className="text-xs font-bold text-slate-400 uppercase mb-1">Por Dia</p>
+            <p className="text-lg lg:text-base xl:text-xl font-black text-purple-600 tracking-tight break-words leading-tight">{formatCurrency(resultado.custoPorDia)}</p>
           </div>
         </div>
 
