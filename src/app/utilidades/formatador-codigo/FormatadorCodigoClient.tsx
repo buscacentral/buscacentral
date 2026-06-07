@@ -43,7 +43,7 @@ function validateJSON(input: string): { valid: boolean; error: string | null } {
 
 function formatXML(input: string): { result: string; error: string | null } {
   try {
-    let xml = input.trim();
+    const xml = input.trim();
     if (!xml.startsWith('<')) return { result: '', error: 'XML inválido: não começa com tag' };
 
     let formatted = '';

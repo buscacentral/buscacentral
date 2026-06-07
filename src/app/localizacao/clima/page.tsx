@@ -4,16 +4,16 @@ import ClimaClient from './ClimaClient';
 import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = {
-  title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
-  description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real com nosso simulador meteorológico gratuito.',
+  title: 'Previsão do Tempo de 5 Dias e Clima Atual | BuscaCentral',
+  description: 'Consulte a previsão do tempo estendida de 5 dias, sensação térmica, probabilidade de chuva e clima atual de qualquer cidade gratuitamente.',
   keywords: [
-    'previsão do tempo', 'clima hoje', 'temperatura atual',
-    'umidade relativa', 'velocidade vento', 'condição climática',
+    'previsão do tempo 5 dias', 'clima hoje', 'temperatura atual',
+    'sensação térmica', 'probabilidade de chuva', 'condição climática', 'clima tempo'
   ],
   alternates: { canonical: 'https://buscacentral.com.br/localizacao/clima' },
   openGraph: {
-    title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
-    description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real.',
+    title: 'Previsão do Tempo de 5 Dias e Clima Atual | BuscaCentral',
+    description: 'Consulte a previsão do tempo estendida de 5 dias, sensação térmica, probabilidade de chuva e clima atual de qualquer cidade gratuitamente.',
     url: 'https://buscacentral.com.br/localizacao/clima',
     siteName: 'BuscaCentral',
     locale: 'pt_BR',
@@ -21,16 +21,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Previsão do Tempo e Condição Climática Instantânea | BuscaCentral',
-    description: 'Consulte o clima, temperatura atual, umidade e velocidade do vento de qualquer região em tempo real.',
+    title: 'Previsão do Tempo de 5 Dias e Clima Atual | BuscaCentral',
+    description: 'Consulte a previsão do tempo estendida de 5 dias, sensação térmica, probabilidade de chuva e clima atual de qualquer cidade gratuitamente.',
   },
 };
 
 export default function ClimaPage() {
   return (
     <ToolPageLayout
-      title="Previsão do Tempo Instantânea"
-      description="Consulte a temperatura e as condições climáticas atuais de qualquer região."
+      title="Previsão do Tempo (5 Dias)"
+      description="Consulte o clima atual, a sensação térmica e a previsão de 5 dias para qualquer região."
       ariaLabel="Consulta de clima interativa"
     >
       <ClimaClient />

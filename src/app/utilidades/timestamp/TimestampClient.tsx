@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import CopyButton from '@/components/CopyButton';
 
 export default function TimestampClient() {
-  const [currentTimestamp, setCurrentTimestamp] = useState(Math.floor(Date.now() / 1000));
+  const [currentTimestamp, setCurrentTimestamp] = useState(0);
+
+  useEffect(() => {
+    setCurrentTimestamp(Math.floor(Date.now() / 1000));
+  }, []);
   const [inputTimestamp, setInputTimestamp] = useState('');
   const [inputDate, setInputDate] = useState('');
   const [convertedDate, setConvertedDate] = useState('');

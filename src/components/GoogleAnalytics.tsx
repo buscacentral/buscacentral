@@ -10,7 +10,10 @@ export default function GoogleAnalytics() {
 
   useEffect(() => {
     const stored = localStorage.getItem('cookie-consent');
-    if (stored === 'accepted') setConsent(true);
+    if (stored === 'accepted') {
+      const timer = setTimeout(() => setConsent(true), 0);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   if (!GA_MEASUREMENT_ID || !consent) return null;

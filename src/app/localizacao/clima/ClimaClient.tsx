@@ -10,23 +10,18 @@ interface Cidade {
   admin1?: string;
 }
 
-const CIDADES_PADRAO: Cidade[] = [
-  { nome: 'Uberaba', lat: -19.7476, lng: -47.9392, admin1: 'MG' },
-  { nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' },
-  { nome: 'Rio de Janeiro', lat: -22.9068, lng: -43.1729, admin1: 'RJ' },
-  { nome: 'Belo Horizonte', lat: -19.9167, lng: -43.9345, admin1: 'MG' },
-  { nome: 'Brasília', lat: -15.7975, lng: -47.8919, admin1: 'DF' },
-  { nome: 'Curitiba', lat: -25.4284, lng: -49.2733, admin1: 'PR' },
-  { nome: 'Salvador', lat: -12.9714, lng: -38.5124, admin1: 'BA' },
-  { nome: 'Manaus', lat: -3.119, lng: -60.0217, admin1: 'AM' },
-];
-
 function formatCidadeNome(c: Cidade): string {
   return c.admin1 ? `${c.nome}, ${c.admin1}` : c.nome;
 }
 
+function formatarDataCurta(dataString: string): string {
+  const data = new Date(dataString + 'T00:00:00');
+  return new Intl.DateTimeFormat('pt-BR', { weekday: 'short', day: '2-digit' }).format(data).replace('.', '');
+}
+
 export default function ClimaClient() {
-  const [cidade, setCidade] = useState<Cidade>(CIDADES_PADRAO[0]);
+  const [cidade, setCidade] = useState<Cidade | null>(null);
+  const [buscasRecentes, setBuscasRecentes] = useState<Cidade[]>([]);
   const [dados, setDados] = useState<DadosClima | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
@@ -89,6 +84,7 @@ export default function ClimaClient() {
   }, []);
 
   const fetchClima = useCallback(async () => {
+    if (!cidade) return;
     setCarregando(true);
     setErro('');
     setDados(null);
@@ -103,14 +99,42 @@ export default function ClimaClient() {
   }, [cidade]);
 
   useEffect(() => {
-    fetchClima();
-  }, [fetchClima]);
+    if (cidade) {
+      fetchClima();
+    }
+  }, [fetchClima, cidade]);
+
+  useEffect(() => {
+    const salvas = localStorage.getItem('buscasRecentesClima');
+    if (salvas) {
+      try {
+        const parseadas = JSON.parse(salvas);
+        setBuscasRecentes(parseadas);
+        if (parseadas.length > 0) {
+          setCidade(parseadas[0]);
+        } else {
+          setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
+        }
+      } catch {
+        setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
+      }
+    } else {
+      setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
+    }
+  }, []);
 
   const selecionarCidade = (c: Cidade) => {
     setCidade(c);
     setBusca('');
     setResultados([]);
     setDropdownAberto(false);
+
+    setBuscasRecentes((prev) => {
+      const filtradas = prev.filter(item => item.lat !== c.lat || item.lng !== c.lng);
+      const novas = [c, ...filtradas].slice(0, 4);
+      localStorage.setItem('buscasRecentesClima', JSON.stringify(novas));
+      return novas;
+    });
   };
 
   return (
@@ -157,29 +181,31 @@ export default function ClimaClient() {
         </div>
 
         {/* Cidades rápidas */}
-        <div className="mb-6">
-          <p className="text-sm text-slate-500 mb-2">Ou selecione uma cidade popular:</p>
-          <div className="flex flex-wrap gap-2">
-            {CIDADES_PADRAO.map((c) => (
-              <button
-                key={c.nome}
-                onClick={() => selecionarCidade(c)}
-                className={`px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
-                  cidade.nome === c.nome && cidade.lat === c.lat
-                    ? 'bg-sky-600 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                {formatCidadeNome(c)}
-              </button>
-            ))}
+        {buscasRecentes.length > 0 && (
+          <div className="mb-6">
+            <p className="text-sm text-slate-500 mb-2">Suas buscas recentes:</p>
+            <div className="flex flex-wrap gap-2">
+              {buscasRecentes.map((c, index) => (
+                <button
+                  key={`${c.lat}-${c.lng}-${index}`}
+                  onClick={() => selecionarCidade(c)}
+                  className={`px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors ${
+                    cidade?.nome === c.nome && cidade?.lat === c.lat
+                      ? 'bg-sky-600 text-white'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {formatCidadeNome(c)}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Resultado */}
-        {carregando ? (
+        {!cidade || carregando ? (
           <div className="text-center py-12" aria-live="polite">
-            <p className="text-base text-slate-500">Consultando clima de {formatCidadeNome(cidade)}...</p>
+            <p className="text-base text-slate-500">Consultando clima...</p>
           </div>
         ) : erro ? (
           <div className="text-center py-12" role="alert">
@@ -192,35 +218,64 @@ export default function ClimaClient() {
             </button>
           </div>
         ) : dados ? (
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200" aria-label="Dados climáticos">
-            <div className="flex flex-col justify-center space-y-4">
-              <h2 className="text-lg md:text-xl font-bold text-slate-900">{formatCidadeNome(cidade)}</h2>
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl md:text-6xl font-black text-slate-950">
-                  {dados.temperaturaAtual}°C
-                </span>
-                <span className="text-lg md:text-xl font-semibold text-sky-600">
+          <div className="space-y-6">
+            <section className={`grid grid-cols-1 md:grid-cols-2 gap-6 p-4 sm:p-6 rounded-2xl border border-slate-200 text-white transition-colors duration-500 ${
+              dados.codigoTempo <= 3 ? 'bg-gradient-to-br from-sky-400 to-blue-500' : 'bg-gradient-to-br from-slate-500 to-slate-700'
+            }`} aria-label="Dados climáticos atuais">
+              <div className="flex flex-col justify-center space-y-4">
+                <h2 className="text-lg md:text-xl font-bold">{formatCidadeNome(cidade)}</h2>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-6xl md:text-7xl font-black">
+                    {dados.temperaturaAtual}°C
+                  </span>
+                </div>
+                <span className="text-lg md:text-xl font-semibold opacity-90">
                   {traduzirCodigoTempo(dados.codigoTempo)}
                 </span>
               </div>
-            </div>
 
-            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3 text-sm md:text-base text-slate-600">
-              <h3 className="text-base font-bold text-slate-900 mb-2">Detalhes do Clima</h3>
-              <div className="flex justify-between border-b border-slate-100 pb-2">
-                <span>Umidade Relativa:</span>
-                <strong className="text-slate-900">{dados.umidade}%</strong>
+              <div className="bg-white/20 backdrop-blur-md p-5 rounded-xl border border-white/30 shadow-sm space-y-3 text-sm md:text-base">
+                <h3 className="text-base font-bold mb-2">Detalhes do Clima</h3>
+                <div className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Sensação Térmica:</span>
+                  <strong className="text-white">{dados.sensacaoTermica}°C</strong>
+                </div>
+                <div className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Umidade Relativa:</span>
+                  <strong className="text-white">{dados.umidade}%</strong>
+                </div>
+                <div className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Velocidade do Vento:</span>
+                  <strong className="text-white">{dados.velocidadeVento} km/h</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Prob. de Chuva Hoje:</span>
+                  <strong className="text-white">{dados.previsaoDiaria?.[0]?.probChuva ?? 0}%</strong>
+                </div>
               </div>
-              <div className="flex justify-between border-b border-slate-100 pb-2">
-                <span>Velocidade do Vento:</span>
-                <strong className="text-slate-900">{dados.velocidadeVento} km/h</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>Condição:</span>
-                <strong className="text-slate-900">{traduzirCodigoTempo(dados.codigoTempo)}</strong>
-              </div>
-            </div>
-          </section>
+            </section>
+
+            {dados.previsaoDiaria && dados.previsaoDiaria.length > 0 && (
+              <section aria-label="Previsão para 5 dias">
+                <h3 className="text-lg font-bold text-slate-800 mb-4">Próximos 5 Dias</h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  {dados.previsaoDiaria.map((dia, idx) => (
+                    <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center text-center space-y-2">
+                      <span className="text-sm font-semibold text-slate-600 uppercase">{formatarDataCurta(dia.data)}</span>
+                      <span className="text-3xl" aria-hidden="true">
+                        {traduzirCodigoTempo(dia.codigoTempo).split(' ').pop()}
+                      </span>
+                      <div className="flex justify-between w-full text-sm mt-2 font-medium">
+                        <span className="text-rose-500">{dia.tempMax}°</span>
+                        <span className="text-sky-500">{dia.tempMin}°</span>
+                      </div>
+                      <span className="text-xs text-slate-400 mt-1">{dia.probChuva}% chuva</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
         ) : null}
       </div>
     </section>
