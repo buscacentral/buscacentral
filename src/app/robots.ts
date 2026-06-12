@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/_next/', '/api/', '/admin/'],
       },
     ],
-    sitemap: 'https://www.buscacentral.com.br/sitemap.xml',
+    sitemap: 'https://buscacentral.com.br/sitemap.xml',
   };
 }

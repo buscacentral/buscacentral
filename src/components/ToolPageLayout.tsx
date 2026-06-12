@@ -1,5 +1,17 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import AdPlaceholder from './AdPlaceholder';
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface RelatedTool {
+  title: string;
+  url: string;
+  description: string;
+}
 
 interface ToolPageLayoutProps {
   children: React.ReactNode;
@@ -7,6 +19,10 @@ interface ToolPageLayoutProps {
   description: string;
   ariaLabel?: string;
   showMiddleAd?: boolean;
+  seoContent?: React.ReactNode;
+  faqItems?: FAQItem[];
+  relatedTools?: RelatedTool[];
+  path?: string;
 }
 
 /**
@@ -50,9 +66,54 @@ export default function ToolPageLayout({
   description,
   ariaLabel,
   showMiddleAd = true,
+  seoContent,
+  faqItems,
+  relatedTools,
+  path,
 }: ToolPageLayoutProps) {
+  const url = path ? `https://buscacentral.com.br${path}` : 'https://buscacentral.com.br';
+  
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": title,
+    "description": description,
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL"
+    },
+    "url": url
+  };
+
+  const faqSchema = faqItems && faqItems.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
   return (
     <article className="max-w-4xl mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+
       {/* Cabeçalho da ferramenta */}
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
@@ -76,13 +137,34 @@ export default function ToolPageLayout({
       )}
 
       {/* Seção de conteúdo SEO */}
-      <section
-        id="seo-content"
-        aria-label="Informações sobre a ferramenta"
-        className="mt-12"
-      >
-        {/* O conteúdo SEO específico de cada ferramenta fica aqui */}
-      </section>
+      {seoContent && (
+        <section
+          id="seo-content"
+          aria-label="Informações sobre a ferramenta"
+          className="mt-12"
+        >
+          {seoContent}
+        </section>
+      )}
+
+      {/* Ferramentas Relacionadas */}
+      {relatedTools && relatedTools.length > 0 && (
+        <section className="mt-16 pt-12 border-t border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Ferramentas Relacionadas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedTools.map((tool, idx) => (
+              <Link 
+                key={idx} 
+                href={tool.url}
+                className="block p-6 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all"
+              >
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">{tool.title}</h3>
+                <p className="text-sm text-gray-600 line-clamp-3">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

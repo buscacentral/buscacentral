@@ -15,6 +15,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://buscacentral.com.br"),
   title: {
     default: "BuscaCentral — Ferramentas Online Gratuitas",
     template: "%s | BuscaCentral",
@@ -57,9 +58,6 @@ export const metadata: Metadata = {
       "Central de ferramentas online gratuitas do Brasil. Gerador de CPF, CNPJ, consulta de CEP, cotações e muito mais.",
     images: ["https://buscacentral.com.br/opengraph-image"],
   },
-  alternates: {
-    canonical: "https://buscacentral.com.br",
-  },
 };
 
 export default function RootLayout({
@@ -82,6 +80,22 @@ export default function RootLayout({
         />
         <GoogleAnalytics />
         <MicrosoftClarity />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "BuscaCentral",
+              url: "https://buscacentral.com.br",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://buscacentral.com.br/buscar?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-white text-gray-900">
         <a
