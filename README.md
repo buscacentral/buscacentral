@@ -1,9 +1,9 @@
 # BuscaCentral.com.br
 
 ![Vercel](https://img.shields.io/badge/Vercel-deployed-black)
-![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)
 ![License](https://img.shields.io/badge/license-proprietária-red)
 
 Central brasileira de ferramentas online gratuitas.
@@ -12,7 +12,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis (34)
+## 🛠️ Ferramentas disponíveis (37)
 
 ### 📋 Documentos
 - Gerador de CPF
@@ -24,6 +24,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ### 📍 Localização
 - Busca de CEP
 - Distância entre Cidades
+- Clima
 
 ### 💰 Financeiro
 - Cotação de Moedas em tempo real
@@ -34,6 +35,7 @@ Consultas rápidas, sem cadastro e sem custo.
 - Calculadora de Financiamento de Carro
 - Calculadora de Rescisão Trabalhista
 - Simulador de Investimentos (CDB / Tesouro Direto)
+- ROI Imobiliário
 
 ### 🔧 Utilidades
 - Gerador de QR Code
@@ -55,13 +57,12 @@ Consultas rápidas, sem cadastro e sem custo.
 - Conversor de Timestamp
 - Removedor de Duplicatas
 - Codificador/Decodificador Base64
-
-### 🛒 Compras
-- Busca de Produtos (Mercado Livre)
+- Rastreio
+- Planejador de Viagem
 
 ## 🚀 Stack
 
-- Next.js 15 (React)
+- Next.js 16 (React)
 - TypeScript
 - Tailwind CSS
 - Hospedagem: Vercel
@@ -75,7 +76,6 @@ Consultas rápidas, sem cadastro e sem custo.
 | AwesomeAPI | Cotação de moedas | Gratuita |
 | CNPJ.ws | Consulta CNPJ | Gratuita |
 | parallelum.com.br | Tabela FIPE | Gratuita |
-| Mercado Livre | Busca de Produtos | Gratuita |
 
 ## 💡 Como rodar localmente
 

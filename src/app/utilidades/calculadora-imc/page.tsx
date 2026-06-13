@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import CalculadoraIMCClient from './CalculadoraIMCClient';
 import AvisoSaude from '@/components/AvisoSaude';
 

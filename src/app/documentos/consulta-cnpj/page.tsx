@@ -8,12 +8,74 @@ export const metadata: Metadata = generateToolMetadata(
   '/documentos/consulta-cnpj'
 );
 
+const seoContent = (
+  <article className="prose prose-gray max-w-none">
+    <h2>Como consultar um CNPJ na BuscaCentral?</h2>
+    <p>A <strong>Consulta CNPJ da BuscaCentral</strong> permite acessar os dados cadastrais de qualquer empresa brasileira diretamente da base da Receita Federal. Basta digitar o CNPJ (com ou sem pontuação) para receber informações completas em segundos.</p>
+
+    <h3>Dados retornados pela consulta</h3>
+    <ul>
+      <li><strong>Razão Social:</strong> Nome oficial da empresa no cadastro da Receita Federal.</li>
+      <li><strong>Situação Cadastral:</strong> Indica se a empresa está Ativa, Inapta, Suspensa ou Baixada.</li>
+      <li><strong>Endereço:</strong> Logradouro, número, bairro, cidade, estado e CEP da sede.</li>
+      <li><strong>CNAE:</strong> Código de Atividade Econômica Principal — descreve a atividade principal da empresa.</li>
+      <li><strong>Data de Abertura:</strong> Data em que a empresa foi constituída legalmente.</li>
+      <li><strong>Capital Social:</strong> Valor do capital registrado na Junta Comercial.</li>
+    </ul>
+
+    <h3>Para que serve a consulta?</h3>
+    <ul>
+      <li><strong>Due Diligence:</strong> Verificar se uma empresa está ativa antes de fechar um negócio.</li>
+      <li><strong>Compras e Fornecedores:</strong> Confirmar o CNPJ de um fornecedor antes de emitir notas.</li>
+      <li><strong>Marketing B2B:</strong> Validar listas de empresas para campanhas comerciais.</li>
+      <li><strong>Compliance:</strong> Empresas precisam verificar parceiros para atender à LGPD e normas anticorrupção.</li>
+    </ul>
+  </article>
+);
+
+const faqItems = [
+  {
+    question: "A consulta funciona para empresas de todo o Brasil?",
+    answer: "Sim. A consulta acessa a base de dados da Receita Federal, que cobre todas as empresas registradas no território nacional."
+  },
+  {
+    question: "Por que uma empresa aparece como 'Inapta'?",
+    answer: "Uma empresa é classificada como Inapta quando a Receita Federal identifica que ela deixou de apresentar declarações por dois ou mais anos consecutivos, ou apresentou indícios de não possuir atividade econômica."
+  },
+  {
+    question: "Os dados são atualizados em tempo real?",
+    answer: "Os dados são extraídos diretamente da Receita Federal e refletem o último cadastro disponível. Podem haver pequenas variações de atualização conforme o calendário da Receita."
+  }
+];
+
+const relatedTools = [
+  {
+    title: "Gerador de CNPJ",
+    url: "/documentos/gerador-cnpj",
+    description: "Gere CNPJs válidos para testes de sistemas."
+  },
+  {
+    title: "Validador de CNPJ",
+    url: "/documentos/validador-cnpj",
+    description: "Verifique se um CNPJ possui dígitos verificadores válidos."
+  },
+  {
+    title: "Busca de CEP",
+    url: "/localizacao/busca-cep",
+    description: "Consulte o CEP do endereço de qualquer empresa."
+  }
+];
+
 export default function ConsultaCNPJ() {
   return (
     <ToolPageLayout
       title="Consulta CNPJ"
       description="Consulte gratuitamente os dados cadastrais de qualquer empresa brasileira diretamente da base da Receita Federal."
       ariaLabel="Consulta de CNPJ interativa"
+      path="/documentos/consulta-cnpj"
+      seoContent={seoContent}
+      faqItems={faqItems}
+      relatedTools={relatedTools}
     >
       <ConsultaCNPJClient />
     </ToolPageLayout>
