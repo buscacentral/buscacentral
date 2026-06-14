@@ -16,7 +16,7 @@ const seoContent = (
     <h3>Como a validação matemática acontece?</h3>
     <p>Um CNPJ possui 14 dígitos (no formato 00.000.000/0001-00). A nossa ferramenta ignora pontos, barras e traços e foca nos números:</p>
     <ul>
-      <li>Os primeiros 12 dígitos são a raiz do CNPJ (sendo que o "/0001" indica a matriz e "/0002" em diante indicam filiais).</li>
+      <li>Os primeiros 12 dígitos são a raiz do CNPJ (sendo que o &quot;/0001&quot; indica a matriz e &quot;/0002&quot; em diante indicam filiais).</li>
       <li>Os dois últimos números são os <strong>Dígitos Verificadores (DV)</strong>.</li>
     </ul>
     <p>O validador aplica um algoritmo oficial de multiplicação com pesos decrescentes nos 12 primeiros números para calcular qual deveria ser o 13º dígito. Em seguida, refaz o cálculo incluindo o 13º dígito para descobrir qual deveria ser o 14º. Se os resultados baterem com o que foi digitado, o CNPJ é considerado válido.</p>
@@ -24,7 +24,7 @@ const seoContent = (
     <h3>Aplicações práticas para o Validador</h3>
     <ul>
       <li><strong>Desenvolvimento de Software:</strong> Programadores usam validadores para criar máscaras de <i>input</i> em formulários web, garantindo que o banco de dados não receba informações corrompidas.</li>
-      <li><strong>Prevenção de Fraudes em Cadastros:</strong> Ajuda a bloquear tentativas de usuários que tentam se registrar em sistemas B2B usando CNPJs falsos ou sequências como "11.111.111/1111-11" (que o validador bloqueia automaticamente).</li>
+      <li><strong>Prevenção de Fraudes em Cadastros:</strong> Ajuda a bloquear tentativas de usuários que tentam se registrar em sistemas B2B usando CNPJs falsos ou sequências como &quot;11.111.111/1111-11&quot; (que o validador bloqueia automaticamente).</li>
       <li><strong>Setor de Compras e RH:</strong> Facilita a checagem rápida antes de emitir notas fiscais ou contratos para garantir que não houve erro de digitação por parte do fornecedor.</li>
     </ul>
 

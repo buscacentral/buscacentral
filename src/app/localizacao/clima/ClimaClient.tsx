@@ -19,9 +19,30 @@ function formatarDataCurta(dataString: string): string {
   return new Intl.DateTimeFormat('pt-BR', { weekday: 'short', day: '2-digit' }).format(data).replace('.', '');
 }
 
+function getInitialCity(): Cidade {
+  if (typeof window === 'undefined') return { nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' };
+  try {
+    const salvas = localStorage.getItem('buscasRecentesClima');
+    if (salvas) {
+      const parseadas = JSON.parse(salvas);
+      if (parseadas.length > 0) return parseadas[0];
+    }
+  } catch { /* ignore */ }
+  return { nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' };
+}
+
+function getInitialRecentes(): Cidade[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const salvas = localStorage.getItem('buscasRecentesClima');
+    if (salvas) return JSON.parse(salvas);
+  } catch { /* ignore */ }
+  return [];
+}
+
 export default function ClimaClient() {
-  const [cidade, setCidade] = useState<Cidade | null>(null);
-  const [buscasRecentes, setBuscasRecentes] = useState<Cidade[]>([]);
+  const [cidade, setCidade] = useState<Cidade>(getInitialCity);
+  const [buscasRecentes, setBuscasRecentes] = useState<Cidade[]>(getInitialRecentes);
   const [dados, setDados] = useState<DadosClima | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
@@ -103,25 +124,6 @@ export default function ClimaClient() {
       fetchClima();
     }
   }, [fetchClima, cidade]);
-
-  useEffect(() => {
-    const salvas = localStorage.getItem('buscasRecentesClima');
-    if (salvas) {
-      try {
-        const parseadas = JSON.parse(salvas);
-        setBuscasRecentes(parseadas);
-        if (parseadas.length > 0) {
-          setCidade(parseadas[0]);
-        } else {
-          setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
-        }
-      } catch {
-        setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
-      }
-    } else {
-      setCidade({ nome: 'São Paulo', lat: -23.5505, lng: -46.6333, admin1: 'SP' });
-    }
-  }, []);
 
   const selecionarCidade = (c: Cidade) => {
     setCidade(c);

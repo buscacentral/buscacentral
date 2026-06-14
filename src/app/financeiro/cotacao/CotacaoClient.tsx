@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface CurrencyRate {
   code: string;
@@ -32,10 +32,9 @@ export default function CotacaoClient() {
   const [selectedCurrency, setSelectedCurrency] = useState('USD-BRL');
   const [convertForeign, setConvertForeign] = useState('');
   const [convertBrl, setConvertBrl] = useState('');
-  const [convertSource, setConvertSource] = useState<'foreign' | 'brl'>('foreign');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const fetchRates = async () => {
+  const fetchRates = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -43,7 +42,7 @@ export default function CotacaoClient() {
       const response = await fetch(`https://economia.awesomeapi.com.br/last/${codes.join(',')}`);
       const data = await response.json();
 
-      const updated = currencies.map(curr => {
+      setCurrencies(prev => prev.map(curr => {
         const key = curr.code.replace('-', '');
         if (data[key]) {
           return {
@@ -54,22 +53,20 @@ export default function CotacaoClient() {
           };
         }
         return curr;
-      });
-
-      setCurrencies(updated);
+      }));
       setLastUpdate(new Date().toLocaleString('pt-BR'));
     } catch {
       setError('Erro ao buscar cotações. Tente novamente.');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchRates();
     const interval = setInterval(fetchRates, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchRates]);
 
   // Obtém a cotação bid da moeda selecionada
   const getRate = (): number => {
@@ -81,7 +78,6 @@ export default function CotacaoClient() {
   // Conversor bidirecional
   const handleConvertForeign = (val: string) => {
     setConvertForeign(val);
-    setConvertSource('foreign');
     const num = parseFloat(val.replace(',', '.'));
     const rate = getRate();
     if (!isNaN(num) && num > 0 && rate > 0) {
@@ -93,7 +89,6 @@ export default function CotacaoClient() {
 
   const handleConvertBrl = (val: string) => {
     setConvertBrl(val);
-    setConvertSource('brl');
     const num = parseFloat(val.replace(',', '.'));
     const rate = getRate();
     if (!isNaN(num) && num > 0 && rate > 0) {

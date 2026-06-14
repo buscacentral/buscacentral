@@ -54,24 +54,6 @@ export default function TabelaFipeClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (vehicleType) {
-      fetchBrands();
-    }
-  }, [vehicleType]);
-
-  useEffect(() => {
-    if (vehicleType && selectedBrand) {
-      fetchModels();
-    }
-  }, [selectedBrand]);
-
-  useEffect(() => {
-    if (vehicleType && selectedBrand && selectedModel) {
-      fetchYears();
-    }
-  }, [selectedModel]);
-
   const fetchBrands = async () => {
     setLoading(true);
     setError('');
@@ -128,6 +110,24 @@ export default function TabelaFipeClient() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (vehicleType) {
+      fetchBrands();
+    }
+  }, [vehicleType]);
+
+  useEffect(() => {
+    if (vehicleType && selectedBrand) {
+      fetchModels();
+    }
+  }, [selectedBrand, vehicleType]);
+
+  useEffect(() => {
+    if (vehicleType && selectedBrand && selectedModel) {
+      fetchYears();
+    }
+  }, [selectedModel, selectedBrand, vehicleType]);
 
   const fetchPrice = async () => {
     if (!selectedYear) return;

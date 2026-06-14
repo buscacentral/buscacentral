@@ -20,7 +20,7 @@ const seoContent = (
       <li>Se o resultado desse cálculo bater exatamente com o 10º dígito, a primeira etapa está correta.</li>
       <li>Em seguida, faz um novo cálculo usando os 10 primeiros dígitos para conferir o 11º dígito.</li>
     </ul>
-    <p>Se as duas contas baterem, o CPF é considerado válido. Caso o usuário digite "111.111.111-11", a ferramenta automaticamente identifica como falso, pois essa é uma regra de bloqueio do algoritmo oficial.</p>
+    <p>Se as duas contas baterem, o CPF é considerado válido. Caso o usuário digite &quot;111.111.111-11&quot;, a ferramenta automaticamente identifica como falso, pois essa é uma regra de bloqueio do algoritmo oficial.</p>
 
     <h3>Para que serve validar o CPF?</h3>
     <ul>

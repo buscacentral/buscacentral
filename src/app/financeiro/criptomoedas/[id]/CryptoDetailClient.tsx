@@ -42,7 +42,6 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   const [profitBuyPrice, setProfitBuyPrice] = useState('');
   const [convertCrypto, setConvertCrypto] = useState('');
   const [convertBrl, setConvertBrl] = useState('');
-  const [convertSource, setConvertSource] = useState<'crypto' | 'brl'>('crypto');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Sanitiza o ID: apenas letras, números e hífens
@@ -149,7 +148,6 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   // Conversor bidirecional CRYPTO <=> BRL
   const handleConvertCrypto = (val: string) => {
     setConvertCrypto(val);
-    setConvertSource('crypto');
     const num = parseFloat(val.replace(',', '.'));
     if (!isNaN(num) && num > 0 && currentPrice > 0) {
       setConvertBrl((num * currentPrice).toFixed(2));
@@ -160,7 +158,6 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
 
   const handleConvertBrl = (val: string) => {
     setConvertBrl(val);
-    setConvertSource('brl');
     const num = parseFloat(val.replace(',', '.'));
     if (!isNaN(num) && num > 0 && currentPrice > 0) {
       setConvertCrypto((num / currentPrice).toFixed(8));
