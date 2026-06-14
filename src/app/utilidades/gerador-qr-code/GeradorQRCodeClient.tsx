@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import QRCode from 'qrcode';
+import Image from 'next/image';
 
 export default function GeradorQRCodeClient() {
   const [text, setText] = useState('');
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [error, setError] = useState('');
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleGenerate = async () => {
     if (!text.trim()) {
@@ -81,7 +81,7 @@ export default function GeradorQRCodeClient() {
 
         {qrDataUrl && (
           <div className="flex justify-center p-6 bg-gray-50 rounded-lg">
-            <img src={qrDataUrl} alt="QR Code gerado" className="max-w-[300px]" />
+            <Image src={qrDataUrl} alt="QR Code gerado" width={300} height={300} unoptimized className="max-w-[300px] h-auto" />
           </div>
         )}
       </div>

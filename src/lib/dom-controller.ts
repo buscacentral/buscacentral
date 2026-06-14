@@ -29,8 +29,6 @@ export interface ControllerState {
   readonly data: unknown;
 }
 
-type StateUpdater = (state: Partial<ControllerState>) => void;
-
 // ============================================================
 // UTILITÁRIOS DOM (FUNÇÕES PURAS)
 // ============================================================

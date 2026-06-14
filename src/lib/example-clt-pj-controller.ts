@@ -58,7 +58,6 @@ import {
 
 import {
   formatCurrency,
-  formatDecimal,
   formatPercent,
 } from './formatters';
 
@@ -67,7 +66,6 @@ import {
   getElement,
   getInputValue,
   setInnerHTML,
-  setTextContent,
   setVisible,
   addEventListenerSafe,
   debounce,

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { calcularCustoViagem, sanitizeNumber } from '@/lib/viagem-logic';
-import { formatCurrency, formatDecimal, formatInteger } from '@/lib/formatters';
+import { formatCurrency, formatDecimal } from '@/lib/formatters';
 
 interface City {
   n: string;

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
 import QRCode from 'qrcode';
+import Image from 'next/image';
 
 export default function WhatsAppLinkClient() {
   const [phone, setPhone] = useState('');
@@ -103,7 +104,7 @@ export default function WhatsAppLinkClient() {
             {qrDataUrl && (
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-700 mb-2">QR Code:</p>
-                <img src={qrDataUrl} alt="QR Code WhatsApp" className="inline-block" />
+                <Image src={qrDataUrl} alt="QR Code WhatsApp" width={300} height={300} unoptimized className="inline-block" />
                 <p className="text-xs text-gray-500 mt-2">Escaneie para abrir o WhatsApp</p>
               </div>
             )}

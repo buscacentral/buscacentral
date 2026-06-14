@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -443,7 +444,7 @@ function CryptoRow({
         </td>
         <td className="px-4 py-3">
           <div className="flex items-center gap-2">
-            <img src={crypto.image} alt={crypto.name} className="w-7 h-7" />
+            <Image src={crypto.image} alt={crypto.name} width={28} height={28} unoptimized className="w-7 h-7" />
             <div>
               <p className="font-semibold text-gray-900 text-sm">{crypto.name}</p>
               <p className="text-xs text-gray-500 uppercase">{crypto.symbol}</p>

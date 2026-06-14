@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import NextImage from 'next/image';
 
 export default function ConversorImagensClient() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -105,7 +106,7 @@ export default function ConversorImagensClient() {
         />
         {originalImage ? (
           <div>
-            <img src={originalImage} alt="Original" className="max-h-48 mx-auto mb-4 rounded" />
+            <NextImage src={originalImage} alt="Original" width={300} height={200} unoptimized className="max-h-48 w-auto mx-auto mb-4 rounded" />
             <p className="text-sm text-gray-500">{fileName} ({formatSize(originalSize)})</p>
           </div>
         ) : (

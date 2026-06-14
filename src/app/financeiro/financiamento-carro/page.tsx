@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import FinanciamentoCarroClient from './FinanciamentoCarroClient';
-import LinksRelacionados from '@/components/LinksRelacionados';
 
 export const metadata: Metadata = generateToolMetadata(
   'Calculadora de Financiamento de Carro',

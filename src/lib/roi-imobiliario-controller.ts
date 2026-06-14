@@ -22,7 +22,6 @@ import { formatCurrency } from './formatters';
 import {
   getElement,
   getInputValue,
-  setTextContent,
   addEventListenerSafe,
   debounce,
 } from './dom-controller';

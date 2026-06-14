@@ -57,7 +57,6 @@ import {
 import {
   getElement,
   getInputValue,
-  setTextContent,
   addEventListenerSafe,
   debounce,
 } from './dom-controller';

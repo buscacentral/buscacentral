@@ -174,6 +174,7 @@ export default function ClimaClient() {
                     <button
                       onClick={() => selecionarCidade(c)}
                       role="option"
+                      aria-selected={cidade?.lat === c.lat && cidade?.lng === c.lng}
                       className="w-full text-left px-4 py-3 hover:bg-sky-50 transition-colors border-b border-slate-50 last:border-0 flex items-center justify-between"
                     >
                       <span className="text-base font-medium text-slate-800">{c.nome}</span>

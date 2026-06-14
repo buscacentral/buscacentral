@@ -61,7 +61,6 @@ export default function SimuladorInvestimentosClient() {
     const aliq = aliquotaIR(dias);
     const totalInvestido = inicial + aporte * meses;
 
-    const cdiMensal = Math.pow(1 + cdiAnual, 1 / 12) - 1;
     const selicMensal = Math.pow(1 + selicAnual, 1 / 12) - 1;
     const cdbMensal = Math.pow(1 + cdiAnual * cdbPercent, 1 / 12) - 1;
     const poupancaMensal = selicAnual * 0.7 / 12;
@@ -76,11 +75,9 @@ export default function SimuladorInvestimentosClient() {
 
     const rendCDB = brutoCDB - totalInvestido;
     const rendSelic = brutoSelic - totalInvestido;
-    const rendPoup = brutoPoup - totalInvestido;
 
     const irCDB = rendCDB * aliq;
     const irSelic = rendSelic * aliq;
-    const irPoup = 0;
 
     const liqCDB = brutoCDB - irCDB;
     const liqSelic = brutoSelic - irSelic;

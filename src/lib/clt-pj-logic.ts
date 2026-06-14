@@ -105,9 +105,6 @@ const PERCENTUAL_FGTS = 0.08;
 /** Multa rescisória do FGTS */
 const MULTA_FGTS = 0.4;
 
-/** Fator rodoviário (distância real = linha reta × fator) */
-const FATOR_RODOVIARIO = 1.3;
-
 // ============================================================
 // FUNÇÕES DE VALIDAÇÃO
 // ============================================================
