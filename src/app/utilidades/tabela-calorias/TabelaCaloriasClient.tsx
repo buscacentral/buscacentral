@@ -1,6 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+
+interface ItemPrato extends Alimento {
+  porcao: number;
+}
 
 interface Alimento {
   id: number;
@@ -110,7 +114,7 @@ const alimentos: Alimento[] = [
   { id: 94, nome: 'Ervilha', categoria: 'Legumes', calorias: 75, proteinas: 5.0, carboidratos: 13.0, gorduras: 0.3, fibra: 5.1 },
   { id: 95, nome: 'Milho verde (lata)', categoria: 'Legumes', calorias: 88, proteinas: 2.4, carboidratos: 18.7, gorduras: 1.2, fibra: 2.0 },
   { id: 96, nome: 'Palmito', categoria: 'Legumes', calorias: 29, proteinas: 2.5, carboidratos: 5.5, gorduras: 0.2, fibra: 3.5 },
-  { id: 97, nome: 'Cogchampignon', categoria: 'Legumes', calorias: 25, proteinas: 2.5, carboidratos: 3.3, gorduras: 0.4, fibra: 1.0 },
+  { id: 97, nome: 'Champignon (cogumelo)', categoria: 'Legumes', calorias: 25, proteinas: 2.5, carboidratos: 3.3, gorduras: 0.4, fibra: 1.0 },
   { id: 98, nome: 'Soja (grão)', categoria: 'Legumes', calorias: 403, proteinas: 36.5, carboidratos: 30.0, gorduras: 18.5, fibra: 15.5 },
   { id: 99, nome: 'Tofu', categoria: 'Legumes', calorias: 76, proteinas: 8.1, carboidratos: 1.9, gorduras: 4.8, fibra: 0.3 },
   { id: 100, nome: 'Suco de laranja natural', categoria: 'Bebidas', calorias: 42, proteinas: 0.7, carboidratos: 9.6, gorduras: 0.2, fibra: 0.2 },
@@ -223,54 +227,251 @@ export default function TabelaCaloriasClient() {
   const [categoriaFiltro, setCategoriaFiltro] = useState('Todas');
   const [porcao, setPorcao] = useState('100');
 
+  // Filtros nutricionais rápidos
+  const [filtroProteico, setFiltroProteico] = useState(false);
+  const [filtroLowCarb, setFiltroLowCarb] = useState(false);
+  const [filtroBaixaCaloria, setFiltroBaixaCaloria] = useState(false);
+  const [filtroFibras, setFiltroFibras] = useState(false);
+
+  // Limite de paginação
+  const [limiteExibicao, setLimiteExibicao] = useState(24);
+
+  // Meu prato
+  const [prato, setPrato] = useState<ItemPrato[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      await Promise.resolve();
+      setIsClient(true);
+      try {
+        const salvas = localStorage.getItem('buscaCentralMeuPrato');
+        if (salvas) {
+          setPrato(JSON.parse(salvas));
+        }
+      } catch { /* ignore */ }
+    };
+    init();
+  }, []);
+
+  const atualizarPrato = (novoPrato: ItemPrato[]) => {
+    setPrato(novoPrato);
+    try {
+      localStorage.setItem('buscaCentralMeuPrato', JSON.stringify(novoPrato));
+    } catch { /* ignore */ }
+  };
+
+  const adicionarAoPrato = (alimento: Alimento) => {
+    const peso = parseFloat(porcao) || 100;
+    const index = prato.findIndex(item => item.id === alimento.id);
+    if (index > -1) {
+      const novoPrato = [...prato];
+      novoPrato[index].porcao += peso;
+      atualizarPrato(novoPrato);
+    } else {
+      atualizarPrato([...prato, { ...alimento, porcao: peso }]);
+    }
+  };
+
+  const removerDoPrato = (id: number) => {
+    atualizarPrato(prato.filter(item => item.id !== id));
+  };
+
+  const limparPrato = () => {
+    atualizarPrato([]);
+  };
+
+  // Resetar paginação ao filtrar
+  useEffect(() => {
+    const resetLimit = async () => {
+      await Promise.resolve();
+      setLimiteExibicao(24);
+    };
+    resetLimit();
+  }, [busca, categoriaFiltro, filtroProteico, filtroLowCarb, filtroBaixaCaloria, filtroFibras]);
+
   const alimentosFiltrados = useMemo(() => {
     return alimentos.filter((a) => {
       const matchBusca = a.nome.toLowerCase().includes(busca.toLowerCase());
       const matchCategoria = categoriaFiltro === 'Todas' || a.categoria === categoriaFiltro;
-      return matchBusca && matchCategoria;
+      
+      const matchProteina = !filtroProteico || a.proteinas >= 15;
+      const matchLowCarb = !filtroLowCarb || a.carboidratos <= 5;
+      const matchBaixaCaloria = !filtroBaixaCaloria || a.calorias <= 50;
+      const matchFibras = !filtroFibras || a.fibra >= 3;
+
+      return matchBusca && matchCategoria && matchProteina && matchLowCarb && matchBaixaCaloria && matchFibras;
     });
-  }, [busca, categoriaFiltro]);
+  }, [busca, categoriaFiltro, filtroProteico, filtroLowCarb, filtroBaixaCaloria, filtroFibras]);
+
+  const alimentosExibidos = useMemo(() => {
+    return alimentosFiltrados.slice(0, limiteExibicao);
+  }, [alimentosFiltrados, limiteExibicao]);
 
   const calcularPorcao = (valor: number) => {
     const peso = parseFloat(porcao) || 100;
     return (valor * peso) / 100;
   };
 
+  const totaisPrato = useMemo(() => {
+    return prato.reduce(
+      (acc, item) => {
+        const mult = item.porcao / 100;
+        return {
+          calorias: acc.calorias + item.calorias * mult,
+          proteinas: acc.proteinas + item.proteinas * mult,
+          carboidratos: acc.carboidratos + item.carboidratos * mult,
+          gorduras: acc.gorduras + item.gorduras * mult,
+          fibra: acc.fibra + item.fibra * mult,
+          peso: acc.peso + item.porcao,
+        };
+      },
+      { calorias: 0, proteinas: 0, carboidratos: 0, gorduras: 0, fibra: 0, peso: 0 }
+    );
+  }, [prato]);
+
   return (
     <>
+      {/* Seção Meu Prato */}
+      {isClient && prato.length > 0 && (
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 md:p-6 text-white mb-8 shadow-lg transition-all duration-300">
+          <div className="flex items-center justify-between border-b border-white/20 pb-4 mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl" aria-hidden="true">🍽️</span>
+              <h2 className="text-lg md:text-xl font-bold tracking-tight">Meu Prato / Refeição</h2>
+            </div>
+            <button
+              onClick={limparPrato}
+              className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg font-semibold transition border border-white/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              Limpar Prato
+            </button>
+          </div>
+
+          {/* Totais do Prato */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center mb-6">
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Calorias</p>
+              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.calorias.toFixed(0)} <span className="text-xs font-normal">kcal</span></p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Proteínas</p>
+              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.proteinas.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Carbos</p>
+              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.carboidratos.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Gorduras</p>
+              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.gorduras.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm col-span-2 sm:col-span-1">
+              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Fibras</p>
+              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.fibra.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+            </div>
+          </div>
+
+          {/* Distribuição Gráfica do Prato */}
+          {totaisPrato.peso > 0 && (
+            <div className="mb-6 bg-white/10 rounded-xl p-4 border border-white/5 shadow-inner">
+              <p className="text-xs text-blue-100 font-semibold mb-2 text-center uppercase tracking-wider">
+                Distribuição de Macros do Prato (Total da Refeição: {totaisPrato.peso.toFixed(0)}g)
+              </p>
+              {(() => {
+                const totalMacros = totaisPrato.proteinas + totaisPrato.carboidratos + totaisPrato.gorduras;
+                if (totalMacros === 0) return null;
+                const pPct = (totaisPrato.proteinas / totalMacros) * 100;
+                const cPct = (totaisPrato.carboidratos / totalMacros) * 100;
+                const gPct = (totaisPrato.gorduras / totalMacros) * 100;
+                return (
+                  <div>
+                    <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden flex mb-2 shadow-inner" aria-hidden="true">
+                      <div className="bg-blue-300 h-full transition-all duration-500" style={{ width: `${pPct}%` }} title={`Proteínas: ${pPct.toFixed(0)}%`} />
+                      <div className="bg-green-300 h-full transition-all duration-500" style={{ width: `${cPct}%` }} title={`Carboidratos: ${cPct.toFixed(0)}%`} />
+                      <div className="bg-yellow-300 h-full transition-all duration-500" style={{ width: `${gPct}%` }} title={`Gorduras: ${gPct.toFixed(0)}%`} />
+                    </div>
+                    <div className="flex justify-center flex-wrap gap-4 text-xs font-semibold text-blue-50 mt-1">
+                      <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-blue-300 rounded-full"></span> Proteínas: {pPct.toFixed(0)}%</span>
+                      <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-green-300 rounded-full"></span> Carboidratos: {cPct.toFixed(0)}%</span>
+                      <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-yellow-300 rounded-full"></span> Gorduras: {gPct.toFixed(0)}%</span>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Lista de Alimentos no Prato */}
+          <div className="bg-white rounded-xl p-3 sm:p-4 text-slate-800 space-y-2 max-h-60 overflow-y-auto shadow-inner">
+            {prato.map((item) => {
+              const mult = item.porcao / 100;
+              return (
+                <div key={item.id} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 text-sm">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-slate-900">{item.nome}</span>
+                    <span className="text-xs text-slate-500 font-medium">Porção: {item.porcao}g ({item.categoria})</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono font-bold text-slate-800 tabular-nums">
+                      {(item.calorias * mult).toFixed(0)} kcal
+                    </span>
+                    <button
+                      onClick={() => removerDoPrato(item.id)}
+                      className="text-slate-400 hover:text-rose-500 p-1 transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded"
+                      aria-label={`Remover ${item.nome} do prato`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Caixa de Busca e Filtros */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Buscar alimento</label>
+            <label htmlFor="busca-alimento" className="block text-sm font-medium text-gray-700 mb-2">Buscar alimento</label>
             <input
+              id="busca-alimento"
+              name="busca-alimento"
+              autoComplete="off"
               type="text"
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
-              placeholder="Ex: arroz, frango, banana..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Ex: arroz, frango, banana…"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Porção (g)</label>
+            <label htmlFor="porcao-padrao" className="block text-sm font-medium text-gray-700 mb-2">Porção padrão (g)</label>
             <input
+              id="porcao-padrao"
+              name="porcao-padrao"
+              autoComplete="off"
               type="number"
               value={porcao}
               onChange={(e) => setPorcao(e.target.value)}
               placeholder="100"
               min="1"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             />
           </div>
         </div>
 
+        {/* Botões de Categoria */}
         <div className="flex flex-wrap gap-2 mt-4">
           {categorias.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategoriaFiltro(cat)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
                 categoriaFiltro === cat
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-blue-600 text-white shadow-sm'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -278,50 +479,137 @@ export default function TabelaCaloriasClient() {
             </button>
           ))}
         </div>
+
+        {/* Filtros Nutricionais Rápidos */}
+        <div className="mt-4 pt-4 border-t border-slate-100">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Filtros rápidos (por 100g)</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setFiltroProteico(!filtroProteico)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                filtroProteico
+                  ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              💪 Proteico (≥ 15g)
+            </button>
+            <button
+              onClick={() => setFiltroLowCarb(!filtroLowCarb)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 ${
+                filtroLowCarb
+                  ? 'bg-green-100 text-green-800 border border-green-300'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              🍃 Low Carb (≤ 5g)
+            </button>
+            <button
+              onClick={() => setFiltroBaixaCaloria(!filtroBaixaCaloria)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 ${
+                filtroBaixaCaloria
+                  ? 'bg-orange-100 text-orange-800 border border-orange-300'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              🔥 Baixa Caloria (≤ 50 kcal)
+            </button>
+            <button
+              onClick={() => setFiltroFibras(!filtroFibras)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+                filtroFibras
+                  ? 'bg-purple-100 text-purple-800 border border-purple-300'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              🍇 Rico em Fibras (≥ 3g)
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-4 text-sm text-gray-500">
+      {/* Resultados e Grid de Alimentos */}
+      <div className="mb-4 text-sm text-gray-500" aria-live="polite">
         {alimentosFiltrados.length} alimento{alimentosFiltrados.length !== 1 ? 's' : ''} encontrado{alimentosFiltrados.length !== 1 ? 's' : ''}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {alimentosFiltrados.map((alimento) => (
-          <div key={alimento.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h3 className="font-semibold text-gray-900">{alimento.nome}</h3>
-                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{alimento.categoria}</span>
+        {alimentosExibidos.map((alimento) => (
+          <div key={alimento.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-bold text-slate-900">{alimento.nome}</h3>
+                  <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded font-semibold tracking-wide uppercase">{alimento.categoria}</span>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-2xl font-black text-blue-600 tabular-nums">{calcularPorcao(alimento.calorias).toFixed(0)}</p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">kcal</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-blue-600">{calcularPorcao(alimento.calorias).toFixed(0)}</p>
-                <p className="text-xs text-gray-400">kcal</p>
+
+              {/* Barra de Proporção Visual de Macronutrientes */}
+              {(() => {
+                const sum = alimento.proteinas + alimento.carboidratos + alimento.gorduras;
+                if (sum === 0) return <div className="h-1.5 my-3" aria-hidden="true" />; // Spacer invisível
+                const pPct = (alimento.proteinas / sum) * 100;
+                const cPct = (alimento.carboidratos / sum) * 100;
+                const gPct = (alimento.gorduras / sum) * 100;
+                return (
+                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden flex my-3" aria-hidden="true">
+                    <div className="bg-blue-400 h-full" style={{ width: `${pPct}%` }} title={`Proteínas: ${pPct.toFixed(0)}%`} />
+                    <div className="bg-green-400 h-full" style={{ width: `${cPct}%` }} title={`Carboidratos: ${cPct.toFixed(0)}%`} />
+                    <div className="bg-yellow-400 h-full" style={{ width: `${gPct}%` }} title={`Gorduras: ${gPct.toFixed(0)}%`} />
+                  </div>
+                );
+              })()}
+
+              <div className="grid grid-cols-4 gap-1.5 text-center mt-2">
+                <div className="bg-blue-50/70 rounded-lg p-1.5 border border-blue-100/30">
+                  <p className="text-[9px] text-blue-500 font-bold uppercase tracking-wider">Proteínas</p>
+                  <p className="text-xs font-bold text-blue-800 tabular-nums">{calcularPorcao(alimento.proteinas).toFixed(1)}g</p>
+                </div>
+                <div className="bg-green-50/70 rounded-lg p-1.5 border border-green-100/30">
+                  <p className="text-[9px] text-green-500 font-bold uppercase tracking-wider">Carbos</p>
+                  <p className="text-xs font-bold text-green-800 tabular-nums">{calcularPorcao(alimento.carboidratos).toFixed(1)}g</p>
+                </div>
+                <div className="bg-yellow-50/70 rounded-lg p-1.5 border border-yellow-100/30">
+                  <p className="text-[9px] text-yellow-500 font-bold uppercase tracking-wider">Gorduras</p>
+                  <p className="text-xs font-bold text-yellow-800 tabular-nums">{calcularPorcao(alimento.gorduras).toFixed(1)}g</p>
+                </div>
+                <div className="bg-purple-50/70 rounded-lg p-1.5 border border-purple-100/30">
+                  <p className="text-[9px] text-purple-500 font-bold uppercase tracking-wider">Fibras</p>
+                  <p className="text-xs font-bold text-purple-800 tabular-nums">{calcularPorcao(alimento.fibra).toFixed(1)}g</p>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 text-center">
-              <div className="bg-blue-50 rounded-lg p-2">
-                <p className="text-xs text-blue-600 font-medium">Proteínas</p>
-                <p className="text-sm font-bold text-blue-800">{calcularPorcao(alimento.proteinas).toFixed(1)}g</p>
-              </div>
-              <div className="bg-green-50 rounded-lg p-2">
-                <p className="text-xs text-green-600 font-medium">Carbos</p>
-                <p className="text-sm font-bold text-green-800">{calcularPorcao(alimento.carboidratos).toFixed(1)}g</p>
-              </div>
-              <div className="bg-yellow-50 rounded-lg p-2">
-                <p className="text-xs text-yellow-600 font-medium">Gorduras</p>
-                <p className="text-sm font-bold text-yellow-800">{calcularPorcao(alimento.gorduras).toFixed(1)}g</p>
-              </div>
-              <div className="bg-purple-50 rounded-lg p-2">
-                <p className="text-xs text-purple-600 font-medium">Fibras</p>
-                <p className="text-sm font-bold text-purple-800">{calcularPorcao(alimento.fibra).toFixed(1)}g</p>
-              </div>
-            </div>
+
+            {/* Ação: Adicionar ao prato */}
+            <button
+              onClick={() => adicionarAoPrato(alimento)}
+              className="w-full mt-4 bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-600 py-2 rounded-lg font-semibold text-xs transition border border-slate-200 hover:border-blue-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              <span>＋ Adicionar ao Prato</span>
+            </button>
           </div>
         ))}
       </div>
 
+      {/* Carregar Mais */}
+      {alimentosFiltrados.length > limiteExibicao && (
+        <div className="text-center mt-8">
+          <button
+            onClick={() => setLimiteExibicao((prev) => prev + 24)}
+            className="px-6 py-3 bg-white border border-slate-300 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition shadow-sm text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            Carregar mais alimentos…
+          </button>
+        </div>
+      )}
+
       {alimentosFiltrados.length === 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm text-center">
-          <p className="text-gray-500">Nenhum alimento encontrado com esses filtros.</p>
+        <div className="bg-white border border-gray-200 rounded-xl p-10 shadow-sm text-center">
+          <p className="text-gray-500 font-medium">Nenhum alimento encontrado com esses filtros.</p>
         </div>
       )}
 
