@@ -63,7 +63,11 @@ export default function CotacaoClient() {
   }, []);
 
   useEffect(() => {
-    fetchRates();
+    const initFetch = async () => {
+      await Promise.resolve();
+      fetchRates();
+    };
+    initFetch();
     const interval = setInterval(fetchRates, 60000);
     return () => clearInterval(interval);
   }, [fetchRates]);

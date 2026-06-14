@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface VehicleType {
   codigo: string;
@@ -54,7 +54,7 @@ export default function TabelaFipeClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchBrands = async () => {
+  const fetchBrands = useCallback(async () => {
     setLoading(true);
     setError('');
     setBrands([]);
@@ -73,9 +73,9 @@ export default function TabelaFipeClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [vehicleType]);
 
-  const fetchModels = async () => {
+  const fetchModels = useCallback(async () => {
     setLoading(true);
     setError('');
     setModels([]);
@@ -92,9 +92,9 @@ export default function TabelaFipeClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [vehicleType, selectedBrand]);
 
-  const fetchYears = async () => {
+  const fetchYears = useCallback(async () => {
     setLoading(true);
     setError('');
     setYears([]);
@@ -109,25 +109,37 @@ export default function TabelaFipeClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [vehicleType, selectedBrand, selectedModel]);
 
   useEffect(() => {
     if (vehicleType) {
-      fetchBrands();
+      const initFetch = async () => {
+        await Promise.resolve();
+        fetchBrands();
+      };
+      initFetch();
     }
-  }, [vehicleType]);
+  }, [vehicleType, fetchBrands]);
 
   useEffect(() => {
     if (vehicleType && selectedBrand) {
-      fetchModels();
+      const initFetch = async () => {
+        await Promise.resolve();
+        fetchModels();
+      };
+      initFetch();
     }
-  }, [selectedBrand, vehicleType]);
+  }, [selectedBrand, vehicleType, fetchModels]);
 
   useEffect(() => {
     if (vehicleType && selectedBrand && selectedModel) {
-      fetchYears();
+      const initFetch = async () => {
+        await Promise.resolve();
+        fetchYears();
+      };
+      initFetch();
     }
-  }, [selectedModel, selectedBrand, vehicleType]);
+  }, [selectedModel, selectedBrand, vehicleType, fetchYears]);
 
   const fetchPrice = async () => {
     if (!selectedYear) return;

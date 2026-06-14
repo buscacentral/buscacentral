@@ -113,8 +113,12 @@ export default function CriptomoedasClient() {
   }, []);
 
   useEffect(() => {
-    fetchCryptos(page);
-    fetchFearGreed();
+    const initFetch = async () => {
+      await Promise.resolve();
+      fetchCryptos(page);
+      fetchFearGreed();
+    };
+    initFetch();
     const interval = setInterval(() => fetchCryptos(page), 60000);
     return () => clearInterval(interval);
   }, [page, fetchCryptos, fetchFearGreed]);

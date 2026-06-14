@@ -117,13 +117,14 @@ export async function GET(request: NextRequest) {
       </html>`,
       { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
     );
-  } catch (err: any) {
-    console.error('[API /api/auth/callback] Erro interno:', err);
+  } catch (err: unknown) {
+    const errorInstance = err instanceof Error ? err : new Error(String(err));
+    console.error('[API /api/auth/callback] Erro interno:', errorInstance);
     return new NextResponse(
       `<html>
         <body style="font-family: sans-serif; padding: 2rem; text-align: center;">
           <h1 style="color: #dc2626;">Erro no Servidor</h1>
-          <p>Ocorreu um erro ao processar a autorização: ${err.message}</p>
+          <p>Ocorreu um erro ao processar a autorização: ${errorInstance.message}</p>
           <a href="/" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 0.375rem;">Voltar para Busca</a>
         </body>
       </html>`,

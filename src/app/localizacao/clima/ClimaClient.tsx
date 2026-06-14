@@ -121,7 +121,11 @@ export default function ClimaClient() {
 
   useEffect(() => {
     if (cidade) {
-      fetchClima();
+      const initFetch = async () => {
+        await Promise.resolve();
+        fetchClima();
+      };
+      initFetch();
     }
   }, [fetchClima, cidade]);
 

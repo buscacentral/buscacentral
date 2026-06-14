@@ -83,7 +83,11 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
   }, [safeId, name]);
 
   useEffect(() => {
-    fetchData();
+    const initFetch = async () => {
+      await Promise.resolve();
+      fetchData();
+    };
+    initFetch();
   }, [fetchData]);
 
   const formatPrice = (n: number) =>
