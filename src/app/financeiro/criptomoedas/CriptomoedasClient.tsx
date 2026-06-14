@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -66,6 +67,19 @@ export default function CriptomoedasClient() {
     setLoading(true);
     setError('');
     try {
+      const isClient = typeof window !== 'undefined';
+      const cacheKey = `cryptos-page-${p}`;
+      const cached = isClient ? sessionStorage.getItem(cacheKey) : null;
+      const cacheTime = isClient ? sessionStorage.getItem(`${cacheKey}-time`) : null;
+      
+      const now = Date.now();
+      if (cached && cacheTime && now - parseInt(cacheTime) < 30000) { // 30s cache for listings
+        setCryptos(JSON.parse(cached));
+        setLastUpdate(new Date(parseInt(cacheTime)).toLocaleString('pt-BR'));
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl&order=market_cap_desc&per_page=${perPage}&page=${p}&sparkline=false&price_change_percentage=24h`
       );
@@ -73,6 +87,10 @@ export default function CriptomoedasClient() {
       try {
         const data = await res.json();
         setCryptos(data);
+        if (isClient) {
+          sessionStorage.setItem(cacheKey, JSON.stringify(data));
+          sessionStorage.setItem(`${cacheKey}-time`, now.toString());
+        }
       } catch {
         throw new Error('Resposta inválida da API');
       }
@@ -100,12 +118,28 @@ export default function CriptomoedasClient() {
     setChartLoading(true);
     setChartData(null);
     try {
+      const isClient = typeof window !== 'undefined';
+      const cacheKey = `chart-7d-${id}`;
+      const cached = isClient ? sessionStorage.getItem(cacheKey) : null;
+      const cacheTime = isClient ? sessionStorage.getItem(`${cacheKey}-time`) : null;
+      
+      const now = Date.now();
+      if (cached && cacheTime && now - parseInt(cacheTime) < 60000) { // 60s cache for charts
+        setChartData(JSON.parse(cached));
+        setChartLoading(false);
+        return;
+      }
+
       const res = await fetch(
         `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=brl&days=7`
       );
       if (!res.ok) throw new Error('Erro no gráfico');
       const data = await res.json();
       setChartData(data);
+      if (isClient) {
+        sessionStorage.setItem(cacheKey, JSON.stringify(data));
+        sessionStorage.setItem(`${cacheKey}-time`, now.toString());
+      }
     } catch {
       // silencioso
     } finally {
@@ -248,14 +282,14 @@ export default function CriptomoedasClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
-          {lastUpdate ? `Atualizado: ${lastUpdate}` : 'Carregando...'}
+          {lastUpdate ? `Atualizado: ${lastUpdate}` : 'Carregando…'}
         </p>
         <button
           onClick={() => fetchCryptos(page)}
           disabled={loading}
           className="text-blue-600 hover:text-blue-800 font-medium text-sm disabled:opacity-50"
         >
-          {loading ? 'Atualizando...' : 'Atualizar'}
+          {loading ? 'Atualizando…' : 'Atualizar'}
         </button>
       </div>
 
@@ -268,7 +302,7 @@ export default function CriptomoedasClient() {
       {/* Tabela */}
       {loading && cryptos.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">Carregando dados do CoinGecko...</p>
+          <p className="text-gray-500">Carregando dados do CoinGecko…</p>
         </div>
       ) : (
         <>
@@ -330,22 +364,44 @@ export default function CriptomoedasClient() {
               <h2 className="text-base font-semibold text-gray-900 mb-3">Conversor BRL → Cripto</h2>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">Valor em Reais (R$)</label>
+                  <label htmlFor="brl-value-converter" className="block text-sm text-gray-600 mb-1">Valor em Reais (R$)</label>
                   <input
+                    id="brl-value-converter"
                     type="text"
+                    inputMode="decimal"
+                    spellCheck={false}
                     value={brlValue}
                     onChange={(e) => setBrlValue(e.target.value)}
                     placeholder="100.00"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                   />
                 </div>
                 <div className="text-center text-gray-400">↓</div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">
-                    {cryptos.find(c => c.id === selectedCrypto)?.name || 'Crypto'}
-                  </label>
-                  <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg font-mono font-bold text-gray-900">
-                    {getConvertedValue()}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="crypto-selector" className="block text-sm text-gray-600 mb-1">Moeda de destino</label>
+                    <select
+                      id="crypto-selector"
+                      value={selectedCrypto}
+                      onChange={(e) => setSelectedCrypto(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    >
+                      {cryptos.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} ({c.symbol.toUpperCase()})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="crypto-converted-output" className="block text-sm text-gray-600 mb-1">Resultado estimado</label>
+                    <output
+                      id="crypto-converted-output"
+                      role="status"
+                      className="block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg font-mono font-bold text-gray-900 h-[42px] flex items-center"
+                    >
+                      {getConvertedValue()}
+                    </output>
                   </div>
                 </div>
               </div>
@@ -353,27 +409,35 @@ export default function CriptomoedasClient() {
 
             {/* Calculadora de Lucro */}
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-semibold text-gray-900 mb-3">Calculadora de Lucro/Perda</h2>
+              <h2 className="text-base font-semibold text-gray-900 mb-3">
+                Calculadora de Lucro/Perda ({cryptos.find(c => c.id === selectedCrypto)?.name || 'Cripto'})
+              </h2>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Quantidade</label>
+                    <label htmlFor="profit-qty" className="block text-sm text-gray-600 mb-1">Quantidade</label>
                     <input
+                      id="profit-qty"
                       type="text"
+                      inputMode="decimal"
+                      spellCheck={false}
                       value={profitQty}
                       onChange={(e) => setProfitQty(e.target.value)}
                       placeholder="0.5"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Preço de compra (R$)</label>
+                    <label htmlFor="profit-buy-price" className="block text-sm text-gray-600 mb-1">Preço de compra (R$)</label>
                     <input
+                      id="profit-buy-price"
                       type="text"
+                      inputMode="decimal"
+                      spellCheck={false}
                       value={profitBuyPrice}
                       onChange={(e) => setProfitBuyPrice(e.target.value)}
                       placeholder="150.000"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                     />
                   </div>
                 </div>
@@ -381,15 +445,15 @@ export default function CriptomoedasClient() {
                   <div className="bg-gray-50 rounded-lg p-3 space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Investido:</span>
-                      <span className="font-medium">R$ {formatPrice(profitCalc.invested)}</span>
+                      <span className="font-medium font-mono">R$ {formatPrice(profitCalc.invested)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Valor atual:</span>
-                      <span className="font-medium">R$ {formatPrice(profitCalc.currentValue)}</span>
+                      <span className="font-medium font-mono">R$ {formatPrice(profitCalc.currentValue)}</span>
                     </div>
                     <div className="flex justify-between text-sm font-bold border-t border-gray-200 pt-1 mt-1">
                       <span>Resultado:</span>
-                      <span className={profitCalc.profit >= 0 ? 'text-green-600' : 'text-red-600'}>
+                      <span className={`font-mono ${profitCalc.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {profitCalc.profit >= 0 ? '+' : ''}R$ {formatPrice(profitCalc.profit)}{' '}
                         ({profitCalc.pct >= 0 ? '+' : ''}{profitCalc.pct.toFixed(2)}%)
                       </span>
@@ -436,11 +500,24 @@ function CryptoRow({
     <>
       <tr
         onClick={onSelect}
-        className={`cursor-pointer transition-colors ${selected ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSelect();
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        aria-pressed={selected}
+        className={`cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${selected ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
       >
         <td className="px-4 py-3 text-sm text-gray-500">
           {crypto.market_cap_rank}
-          {isTop10 && <span className="ml-1 text-xs text-yellow-500" title="Página individual disponível">★</span>}
+          {isTop10 && (
+            <span className="ml-1 text-xs text-yellow-500" aria-label="Página individual disponível" title="Página individual disponível">
+              ★
+            </span>
+          )}
         </td>
         <td className="px-4 py-3">
           <div className="flex items-center gap-2">
@@ -463,6 +540,7 @@ function CryptoRow({
         <td className="px-4 py-3 text-center">
           <button
             onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            aria-expanded={expanded}
             className="text-blue-600 hover:text-blue-800 text-sm font-medium"
           >
             {expanded ? 'Fechar' : 'Ver mais'}
@@ -480,7 +558,7 @@ function CryptoRow({
                 </h3>
                 {chartLoading ? (
                   <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
-                    Carregando gráfico...
+                    Carregando gráfico…
                   </div>
                 ) : chartData ? (
                   <div className="h-40">
@@ -533,12 +611,12 @@ function CryptoRow({
             {/* Link para página individual (top 10) */}
             {isTop10 && (
               <div className="mt-3 text-right">
-                <a
+                <Link
                   href={`/financeiro/criptomoedas/${crypto.id}`}
                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                 >
                   Ver página completa →
-                </a>
+                </Link>
               </div>
             )}
           </td>

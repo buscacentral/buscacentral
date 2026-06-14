@@ -60,13 +60,34 @@ export default async function CryptoPage({ params }: { params: Promise<{ id: str
   const crypto = CRYPTO_MAP[id];
   if (!crypto) notFound();
 
+  const isStablecoin = ['USDT', 'USDC'].includes(crypto.symbol);
+  const quickDesc = isStablecoin
+    ? '1, 10, 100, 500, 1000 e 5000'
+    : '0.001, 0.01, 0.1, 0.5, 1 e 5';
+
+  const faqItems = [
+    {
+      question: `Como é calculada a cotação do ${crypto.name} (${crypto.symbol}) em tempo real?`,
+      answer: `A cotação do ${crypto.name} exibida no BuscaCentral é obtida em tempo real através da API do CoinGecko, que agrega dados de centenas de exchanges globais. O preço é calculado com base na média ponderada do volume de negociação em Reais (BRL), garantindo um valor referência preciso para o mercado brasileiro.`,
+    },
+    {
+      question: `Qual a diferença entre o ${crypto.name} e o Bitcoin?`,
+      answer: `O ${crypto.name} (${crypto.symbol}) e o Bitcoin (BTC) são criptomoedas distintas com propósitos e tecnologias diferentes. O Bitcoin foi a primeira criptomoeda e funciona principalmente como reserva de valor digital. O ${crypto.name} pode ter características técnicas, caso de uso e modelo de consenso próprios. Ambos são negociados 24/7 em exchanges globais e podem ser convertidos para Reais (BRL) usando a calculadora do BuscaCentral.`,
+    },
+    {
+      question: `Como funciona a calculadora de conversão de ${crypto.name} do BuscaCentral?`,
+      answer: `A calculadora do BuscaCentral utiliza o preço atual do ${crypto.name} em Reais (BRL) para converter instantaneamente entre ${crypto.symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como ${quickDesc} ${crypto.symbol}.`,
+    },
+  ];
+
   return (
     <ToolPageLayout
       title={`${crypto.name} (${crypto.symbol})`}
       description={crypto.description}
       ariaLabel={`Cotação de ${crypto.name} em tempo real`}
+      faqItems={faqItems}
     >
-      <CryptoDetailClient id={id} name={crypto.name} symbol={crypto.symbol} />
+      <CryptoDetailClient id={id} name={crypto.name} symbol={crypto.symbol} faqItems={faqItems} />
     </ToolPageLayout>
   );
 }

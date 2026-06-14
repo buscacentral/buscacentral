@@ -33,7 +33,17 @@ interface MarketChart {
   prices: [number, number][];
 }
 
-export default function CryptoDetailClient({ id, name, symbol }: { id: string; name: string; symbol: string }) {
+export default function CryptoDetailClient({
+  id,
+  name,
+  symbol,
+  faqItems,
+}: {
+  id: string;
+  name: string;
+  symbol: string;
+  faqItems: { question: string; answer: string }[];
+}) {
   const [data, setData] = useState<CoinData | null>(null);
   const [chartData, setChartData] = useState<MarketChart | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,14 +61,32 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
     setLoading(true);
     setError('');
     try {
+      const isClient = typeof window !== 'undefined';
+      const cacheKey = `crypto-data-${safeId}`;
+      const cached = isClient ? sessionStorage.getItem(cacheKey) : null;
+      const cachedChart = isClient ? sessionStorage.getItem(`${cacheKey}-chart`) : null;
+      const cacheTime = isClient ? sessionStorage.getItem(`${cacheKey}-time`) : null;
+
+      const now = Date.now();
+      if (cached && cachedChart && cacheTime && now - parseInt(cacheTime) < 60000) { // 60s cache
+        setData(JSON.parse(cached));
+        setChartData(JSON.parse(cachedChart));
+        setLoading(false);
+        return;
+      }
+
       const [coinRes, chartRes] = await Promise.all([
         fetch(`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(safeId)}?localization=false&tickers=false&community_data=false&developer_data=false`),
         fetch(`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(safeId)}/market_chart?vs_currency=brl&days=7`),
       ]);
 
+      let coinData = null;
+      let marketChart = null;
+
       if (coinRes.ok) {
         try {
-          setData(await coinRes.json());
+          coinData = await coinRes.json();
+          setData(coinData);
         } catch {
           setError(`Erro ao processar dados de ${name}.`);
         }
@@ -70,10 +98,19 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
 
       if (chartRes.ok) {
         try {
-          setChartData(await chartRes.json());
+          marketChart = await chartRes.json();
+          setChartData(marketChart);
         } catch {
           // gráfico é opcional
         }
+      }
+
+      if (coinData && isClient) {
+        sessionStorage.setItem(cacheKey, JSON.stringify(coinData));
+        if (marketChart) {
+          sessionStorage.setItem(`${cacheKey}-chart`, JSON.stringify(marketChart));
+        }
+        sessionStorage.setItem(`${cacheKey}-time`, now.toString());
       }
     } catch {
       setError(`Erro de conexão ao carregar ${name}. Verifique sua internet.`);
@@ -170,47 +207,8 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
     }
   };
 
-  // Sanitiza strings para JSON-LD (evita aspas e caracteres especiais)
-  const sanitize = (s: string) => s.replace(/"/g, '\\"').replace(/\n/g, ' ').trim();
-
-  // FAQ Schema JSON-LD (dinâmico por moeda)
-  const quickDesc = isStablecoin
-    ? '1, 10, 100, 500, 1000 e 5000'
-    : '0.001, 0.01, 0.1, 0.5, 1 e 5';
-
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: sanitize(`Como é calculada a cotação do ${name} (${symbol}) em tempo real?`),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize(`A cotação do ${name} exibida no BuscaCentral é obtida em tempo real através da API do CoinGecko, que agrega dados de centenas de exchanges globais. O preço é calculado com base na média ponderada do volume de negociação em Reais (BRL), garantindo um valor referência preciso para o mercado brasileiro.`),
-        },
-      },
-      {
-        '@type': 'Question',
-        name: sanitize(`Qual a diferença entre o ${name} e o Bitcoin?`),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize(`O ${name} (${symbol}) e o Bitcoin (BTC) são criptomoedas distintas com propósitos e tecnologias diferentes. O Bitcoin foi a primeira criptomoeda e funciona principalmente como reserva de valor digital. O ${name} pode ter características técnicas, caso de uso e modelo de consenso próprios. Ambos são negociados 24/7 em exchanges globais e podem ser convertidos para Reais (BRL) usando a calculadora do BuscaCentral.`),
-        },
-      },
-      {
-        '@type': 'Question',
-        name: sanitize(`Como funciona a calculadora de conversão de ${name} do BuscaCentral?`),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize(`A calculadora do BuscaCentral utiliza o preço atual do ${name} em Reais (BRL) para converter instantaneamente entre ${symbol} e BRL de forma bidirecional. Basta digitar um valor em qualquer um dos dois campos e o outro será calculado automaticamente. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como ${quickDesc} ${symbol}.`),
-        },
-      },
-    ],
-  };
-
   if (loading) {
-    return <div className="text-center py-12 text-gray-500">Carregando dados de {name}...</div>;
+    return <div className="text-center py-12 text-gray-500">Carregando dados de {name}…</div>;
   }
 
   if (error && !data) {
@@ -305,11 +303,14 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-end">
           <div>
-            <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+            <label htmlFor="convert-crypto" className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
               Quantidade de {symbol}
             </label>
             <input
+              id="convert-crypto"
               type="text"
+              inputMode="decimal"
+              spellCheck={false}
               value={convertCrypto}
               onChange={(e) => handleConvertCrypto(e.target.value)}
               placeholder="0.5"
@@ -320,11 +321,14 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
             <span className="text-2xl text-slate-400 font-light">⇄</span>
           </div>
           <div>
-            <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+            <label htmlFor="convert-brl" className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
               Valor em R$ (BRL)
             </label>
             <input
+              id="convert-brl"
               type="text"
+              inputMode="decimal"
+              spellCheck={false}
               value={convertBrl}
               onChange={(e) => handleConvertBrl(e.target.value)}
               placeholder="50.000"
@@ -374,23 +378,29 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Calculadora de Lucro/Perda — {name}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Quantidade comprada</label>
+            <label htmlFor="detail-profit-qty" className="block text-sm text-gray-600 mb-1">Quantidade comprada</label>
             <input
+              id="detail-profit-qty"
               type="text"
+              inputMode="decimal"
+              spellCheck={false}
               value={profitQty}
               onChange={(e) => setProfitQty(e.target.value)}
               placeholder="0.5"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Preço de compra (R$)</label>
+            <label htmlFor="detail-profit-buy-price" className="block text-sm text-gray-600 mb-1">Preço de compra (R$)</label>
             <input
+              id="detail-profit-buy-price"
               type="text"
+              inputMode="decimal"
+              spellCheck={false}
               value={profitBuyPrice}
               onChange={(e) => setProfitBuyPrice(e.target.value)}
               placeholder="150.000"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
             />
           </div>
         </div>
@@ -417,33 +427,36 @@ export default function CryptoDetailClient({ id, name, symbol }: { id: string; n
         )}
       </section>
 
-      {/* FAQ Accordion com Schema JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — {name}
         </h2>
         <div className="divide-y divide-slate-200">
-          {faqSchema.mainEntity.map((item, idx) => (
+          {faqItems.map((item, idx) => (
             <div key={idx}>
               <button
+                id={`faq-btn-${idx}`}
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between py-4 text-left gap-4"
                 aria-expanded={openFaq === idx}
+                aria-controls={`faq-panel-${idx}`}
               >
                 <h3 className="text-base md:text-lg font-medium text-slate-800">
-                  {item.name}
+                  {item.question}
                 </h3>
                 <span className={`text-slate-400 text-xl transition-transform duration-200 flex-shrink-0 ${openFaq === idx ? 'rotate-45' : ''}`}>
                   +
                 </span>
               </button>
-              <div className={`overflow-hidden transition-all duration-200 ${openFaq === idx ? 'max-h-96 pb-4' : 'max-h-0'}`}>
+              <div
+                id={`faq-panel-${idx}`}
+                role="region"
+                aria-labelledby={`faq-btn-${idx}`}
+                aria-hidden={openFaq !== idx}
+                className={`overflow-hidden transition-all duration-200 ${openFaq === idx ? 'max-h-96 pb-4' : 'max-h-0'}`}
+              >
                 <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                  {item.acceptedAnswer.text}
+                  {item.answer}
                 </p>
               </div>
             </div>
