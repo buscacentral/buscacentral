@@ -57,6 +57,18 @@ const seoContent = (
 
 const faqItems = [
   {
+    question: "Como é calculada a cotação do Dólar Comercial em tempo real?",
+    answer: "A cotação do Dólar Comercial exibida no BuscaCentral é obtida em tempo real através da AwesomeAPI, que agrega dados dos principais mercados financeiros brasileiros. O valor representa a cotação de compra (bid) em Reais (BRL), atualizada a cada minuto para garantir precisão."
+  },
+  {
+    question: "Qual a diferença entre o Dólar Turismo e o Dólar Comercial exibido no BuscaCentral?",
+    answer: "O Dólar Comercial é a cotação usada em transações financeiras entre bancos e empresas, sem IOF ou spread de casas de câmbio. O Dólar Turismo inclui IOF (até 1,1%), spread da casa de câmbio e custos operacionais, sendo sempre mais caro. O BuscaCentral exibe o Dólar Comercial, que é a referência oficial do mercado."
+  },
+  {
+    question: "Como converter Euro ou Libra para Real usando a calculadora?",
+    answer: "Na página de Cotação do BuscaCentral, selecione a moeda desejada (Euro ou Libra Esterlina) clicando no cartão da moeda. Em seguida, use o conversor bidirecional: digite o valor na moeda estrangeira para ver o equivalente em Reais, ou digite em Reais para converter para Euro ou Libra. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 1, 5, 10, 50, 100, 500 e 1000 unidades."
+  },
+  {
     question: "Com que frequência as cotações são atualizadas?",
     answer: "As cotações são atualizadas a cada minuto através da AwesomeAPI, garantindo dados sempre atualizados durante o horário comercial."
   },
@@ -99,7 +111,7 @@ export default function Cotacao() {
       faqItems={faqItems}
       relatedTools={relatedTools}
     >
-      <CotacaoClient />
+      <CotacaoClient faqItems={faqItems} />
     </ToolPageLayout>
   );
 }

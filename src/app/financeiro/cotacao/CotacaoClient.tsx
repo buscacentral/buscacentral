@@ -24,7 +24,11 @@ const QUICK_AMOUNTS = [1, 5, 10, 50, 100, 500, 1000];
 
 const CONVERTIBLE_CODES = ['USD-BRL', 'EUR-BRL', 'GBP-BRL'];
 
-export default function CotacaoClient() {
+export default function CotacaoClient({
+  faqItems,
+}: {
+  faqItems: { question: string; answer: string }[];
+}) {
   const [currencies, setCurrencies] = useState<CurrencyRate[]>(defaultCurrencies);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,22 +42,45 @@ export default function CotacaoClient() {
     setLoading(true);
     setError('');
     try {
+      const isClient = typeof window !== 'undefined';
+      const cacheKey = 'currency-rates';
+      const cached = isClient ? sessionStorage.getItem(cacheKey) : null;
+      const cacheTime = isClient ? sessionStorage.getItem(`${cacheKey}-time`) : null;
+      
+      const now = Date.now();
+      
+      const updateState = (data: Record<string, { bid: string; ask: string; pctChange: string }>) => {
+        setCurrencies(prev => prev.map(curr => {
+          const key = curr.code.replace('-', '');
+          if (data[key]) {
+            return {
+              ...curr,
+              bid: parseFloat(data[key].bid).toFixed(curr.code === 'BTC-BRL' ? 2 : 4),
+              ask: parseFloat(data[key].ask).toFixed(curr.code === 'BTC-BRL' ? 2 : 4),
+              variation: parseFloat(data[key].pctChange).toFixed(2),
+            };
+          }
+          return curr;
+        }));
+      };
+
+      if (cached && cacheTime && now - parseInt(cacheTime) < 30000) { // 30s cache
+        const data = JSON.parse(cached);
+        updateState(data);
+        setLastUpdate(new Date(parseInt(cacheTime)).toLocaleString('pt-BR'));
+        setLoading(false);
+        return;
+      }
+
       const codes = ['USD-BRL', 'EUR-BRL', 'GBP-BRL', 'ARS-BRL', 'BTC-BRL'];
       const response = await fetch(`https://economia.awesomeapi.com.br/last/${codes.join(',')}`);
       const data = await response.json();
 
-      setCurrencies(prev => prev.map(curr => {
-        const key = curr.code.replace('-', '');
-        if (data[key]) {
-          return {
-            ...curr,
-            bid: parseFloat(data[key].bid).toFixed(curr.code === 'BTC-BRL' ? 2 : 4),
-            ask: parseFloat(data[key].ask).toFixed(curr.code === 'BTC-BRL' ? 2 : 4),
-            variation: parseFloat(data[key].pctChange).toFixed(2),
-          };
-        }
-        return curr;
-      }));
+      updateState(data);
+      if (isClient) {
+        sessionStorage.setItem(cacheKey, JSON.stringify(data));
+        sessionStorage.setItem(`${cacheKey}-time`, now.toString());
+      }
       setLastUpdate(new Date().toLocaleString('pt-BR'));
     } catch {
       setError('Erro ao buscar cotações. Tente novamente.');
@@ -112,41 +139,6 @@ export default function CotacaoClient() {
   const selectedCurr = currencies.find(c => c.code === selectedCurrency);
   const isConvertible = CONVERTIBLE_CODES.includes(selectedCurrency);
 
-  // Sanitiza strings para JSON-LD (evita aspas e caracteres especiais)
-  const sanitize = (s: string) => s.replace(/"/g, '\\"').replace(/\n/g, ' ').trim();
-
-  // FAQ Schema JSON-LD
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: sanitize('Como é calculada a cotação do Dólar Comercial em tempo real?'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize('A cotação do Dólar Comercial exibida no BuscaCentral é obtida em tempo real através da AwesomeAPI, que agrega dados dos principais mercados financeiros brasileiros. O valor representa a cotação de compra (bid) em Reais (BRL), atualizada a cada minuto para garantir precisão.'),
-        },
-      },
-      {
-        '@type': 'Question',
-        name: sanitize('Qual a diferença entre o Dólar Turismo e o Dólar Comercial exibido no BuscaCentral?'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize('O Dólar Comercial é a cotação usada em transações financeiras entre bancos e empresas, sem IOF ou spread de casas de câmbio. O Dólar Turismo inclui IOF (até 1,1%), spread da casa de câmbio e custos operacionais, sendo sempre mais caro. O BuscaCentral exibe o Dólar Comercial, que é a referência oficial do mercado.'),
-        },
-      },
-      {
-        '@type': 'Question',
-        name: sanitize('Como converter Euro ou Libra para Real usando a calculadora?'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: sanitize('Na página de Cotação do BuscaCentral, selecione a moeda desejada (Euro ou Libra Esterlina) clicando no cartão da moeda. Em seguida, use o conversor bidirecional: digite o valor na moeda estrangeira para ver o equivalente em Reais, ou digite em Reais para converter para Euro ou Libra. A tabela de conversões rápidas exibe valores pré-calculados para referências comuns como 1, 5, 10, 50, 100, 500 e 1000 unidades.'),
-        },
-      },
-    ],
-  };
-
   const formatPrice = (n: number) =>
     n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -155,14 +147,14 @@ export default function CotacaoClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-gray-500">
-          {lastUpdate ? `Última atualização: ${lastUpdate}` : 'Carregando...'}
+          {lastUpdate ? `Última atualização: ${lastUpdate}` : 'Carregando…'}
         </p>
         <button
           onClick={fetchRates}
           disabled={loading}
           className="text-blue-600 hover:text-blue-800 font-medium text-sm disabled:opacity-50"
         >
-          {loading ? 'Atualizando...' : 'Atualizar agora'}
+          {loading ? 'Atualizando…' : 'Atualizar agora'}
         </button>
       </div>
 
@@ -177,7 +169,16 @@ export default function CotacaoClient() {
         {currencies.map((curr) => (
           <div
             key={curr.code}
-            className={`bg-white border rounded-xl p-5 shadow-sm cursor-pointer transition-all ${
+            tabIndex={0}
+            role="button"
+            aria-pressed={selectedCurrency === curr.code}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleCurrencyChange(curr.code);
+              }
+            }}
+            className={`bg-white border rounded-xl p-5 shadow-sm cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
               selectedCurrency === curr.code ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'
             }`}
             onClick={() => handleCurrencyChange(curr.code)}
@@ -214,11 +215,14 @@ export default function CotacaoClient() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-end">
             <div>
-              <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+              <label htmlFor="convert-foreign" className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
                 {selectedCurr.flag} {selectedCurr.name}
               </label>
               <input
+                id="convert-foreign"
                 type="text"
+                inputMode="decimal"
+                spellCheck={false}
                 value={convertForeign}
                 onChange={(e) => handleConvertForeign(e.target.value)}
                 placeholder="100"
@@ -229,11 +233,14 @@ export default function CotacaoClient() {
               <span className="text-2xl text-slate-400 font-light">⇄</span>
             </div>
             <div>
-              <label className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
+              <label htmlFor="convert-brl" className="block text-base md:text-lg text-slate-600 mb-2 font-medium">
                 🇧🇷 Real (BRL)
               </label>
               <input
+                id="convert-brl"
                 type="text"
+                inputMode="decimal"
+                spellCheck={false}
                 value={convertBrl}
                 onChange={(e) => handleConvertBrl(e.target.value)}
                 placeholder="500"
@@ -287,9 +294,12 @@ export default function CotacaoClient() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Conversor R$ → Moeda</h2>
           <div className="flex gap-4 items-end">
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">Valor em Reais</label>
+              <label htmlFor="generic-convert-brl" className="block text-sm text-gray-600 mb-1">Valor em Reais</label>
               <input
+                id="generic-convert-brl"
                 type="text"
+                inputMode="decimal"
+                spellCheck={false}
                 value={convertBrl}
                 onChange={(e) => {
                   setConvertBrl(e.target.value);
@@ -302,49 +312,56 @@ export default function CotacaoClient() {
                   }
                 }}
                 placeholder="100.00"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-mono"
               />
             </div>
-            <div className="text-center px-4">
-              <p className="text-2xl">→</p>
+            <div className="text-center px-4 pb-2">
+              <span className="text-2xl text-slate-400 font-light">→</span>
             </div>
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">{selectedCurrency.replace('-BRL', '')}</label>
-              <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-lg font-bold text-gray-900">
+              <label htmlFor="generic-currency-output" className="block text-sm text-gray-600 mb-1">{selectedCurrency.replace('-BRL', '')}</label>
+              <output
+                id="generic-currency-output"
+                role="status"
+                className="block px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-lg font-bold text-gray-900 h-[50px] flex items-center font-mono"
+              >
                 {convertForeign || '0.00'}
-              </div>
+              </output>
             </div>
           </div>
         </section>
       )}
 
-      {/* FAQ Accordion com Schema JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <section className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">
           Perguntas Frequentes — Cotação de Moedas
         </h2>
         <div className="divide-y divide-slate-200">
-          {faqSchema.mainEntity.map((item, idx) => (
+          {faqItems.map((item, idx) => (
             <div key={idx}>
               <button
+                id={`faq-btn-${idx}`}
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between py-4 text-left gap-4"
                 aria-expanded={openFaq === idx}
+                aria-controls={`faq-panel-${idx}`}
               >
                 <h3 className="text-base md:text-lg font-medium text-slate-800">
-                  {item.name}
+                  {item.question}
                 </h3>
                 <span className={`text-slate-400 text-xl transition-transform duration-200 flex-shrink-0 ${openFaq === idx ? 'rotate-45' : ''}`}>
                   +
                 </span>
               </button>
-              <div className={`overflow-hidden transition-all duration-200 ${openFaq === idx ? 'max-h-96 pb-4' : 'max-h-0'}`}>
+              <div
+                id={`faq-panel-${idx}`}
+                role="region"
+                aria-labelledby={`faq-btn-${idx}`}
+                aria-hidden={openFaq !== idx}
+                className={`overflow-hidden transition-all duration-200 ${openFaq === idx ? 'max-h-96 pb-4' : 'max-h-0'}`}
+              >
                 <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                  {item.acceptedAnswer.text}
+                  {item.answer}
                 </p>
               </div>
             </div>
