@@ -184,8 +184,9 @@ export default function TabelaFipeClient() {
 
           {vehicleType && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Marca</label>
+              <label htmlFor="marca-select" className="block text-sm font-medium text-gray-700 mb-2">Marca</label>
               <select
+                id="marca-select"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
@@ -202,8 +203,9 @@ export default function TabelaFipeClient() {
 
           {selectedBrand && models.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Modelo</label>
+              <label htmlFor="modelo-select" className="block text-sm font-medium text-gray-700 mb-2">Modelo</label>
               <select
+                id="modelo-select"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
@@ -220,8 +222,9 @@ export default function TabelaFipeClient() {
 
           {selectedModel && years.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Ano</label>
+              <label htmlFor="ano-select" className="block text-sm font-medium text-gray-700 mb-2">Ano</label>
               <select
+                id="ano-select"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
@@ -242,7 +245,7 @@ export default function TabelaFipeClient() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Consultando...' : 'Consultar Preço'}
+              {loading ? 'Consultando…' : 'Consultar Preço'}
             </button>
           )}
         </div>

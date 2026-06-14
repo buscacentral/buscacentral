@@ -41,6 +41,7 @@ export default function RastreioClient() {
               onKeyDown={handleKeyDown}
               placeholder="Ex: BR123456789BR"
               aria-label="Código de rastreio"
+              spellCheck={false}
               className="flex-1 py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-base md:text-lg font-semibold uppercase focus:ring-2 focus:ring-sky-500 outline-none transition"
             />
             <button
@@ -48,7 +49,7 @@ export default function RastreioClient() {
               disabled={carregando}
               className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-base transition shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {carregando ? 'Buscando...' : 'Rastrear Objeto'}
+              {carregando ? 'Buscando…' : 'Rastrear Objeto'}
             </button>
           </div>
 

@@ -34,8 +34,9 @@ export default function ExtratorEmailsClient() {
             id="input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Cole qualquer texto, HTML, código ou documento que contenha emails..."
+            placeholder="Cole qualquer texto, HTML, código ou documento que contenha emails…"
             rows={10}
+            spellCheck={false}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
           />
         </div>

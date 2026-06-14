@@ -70,11 +70,14 @@ export default function SearchBar() {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto group">
+      <label htmlFor="global-search" className="sr-only">
+        Busca global de ferramentas
+      </label>
       <input
         ref={inputRef}
         type="text"
         id="global-search"
-        placeholder="Ex: cpf, cep, cnpj, dólar, fipe, bitcoin..."
+        placeholder="Ex: cpf, cep, cnpj, dólar, fipe, bitcoin…"
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);

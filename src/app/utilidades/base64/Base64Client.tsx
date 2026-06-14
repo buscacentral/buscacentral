@@ -54,8 +54,9 @@ export default function Base64Client() {
             id="input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={mode === 'encode' ? 'Digite seu texto aqui...' : 'Cole o Base64 aqui...'}
+            placeholder={mode === 'encode' ? 'Digite seu texto aqui…' : 'Cole o Base64 aqui…'}
             rows={4}
+            spellCheck={false}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
           />
         </div>

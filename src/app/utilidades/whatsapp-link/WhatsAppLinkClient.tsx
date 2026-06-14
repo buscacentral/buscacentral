@@ -48,23 +48,26 @@ export default function WhatsAppLinkClient() {
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
         <div className="space-y-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Número do WhatsApp</label>
+            <label htmlFor="whatsapp-phone" className="block text-sm font-medium text-gray-700 mb-2">Número do WhatsApp</label>
             <input
+              id="whatsapp-phone"
               type="text"
               value={phone}
               onChange={(e) => setPhone(formatPhone(e.target.value))}
               placeholder="(11) 99999-9999"
               maxLength={16}
+              spellCheck={false}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             />
             <p className="text-xs text-gray-500 mt-1">DDD + número (ex: 11 99999-9999)</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Mensagem (opcional)</label>
+            <label htmlFor="whatsapp-message" className="block text-sm font-medium text-gray-700 mb-2">Mensagem (opcional)</label>
             <textarea
+              id="whatsapp-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Olá! Gostaria de mais informações..."
+              placeholder="Olá! Gostaria de mais informações…"
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />

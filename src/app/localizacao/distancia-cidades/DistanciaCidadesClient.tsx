@@ -154,17 +154,18 @@ export default function DistanciaCidadesClient() {
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         <div className="space-y-4">
           <div ref={originRef} className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="cidade-origem" className="block text-sm font-medium text-gray-700 mb-2">
               Cidade de Origem
               <span className="text-gray-400 font-normal ml-2">({cities.length} cidades)</span>
             </label>
             <div className="relative">
               <input
+                id="cidade-origem"
                 type="text"
                 value={originSearch}
                 onChange={(e) => handleOriginSearch(e.target.value)}
                 onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
-                placeholder="Ex: São Paulo, Uberaba, Curitiba..."
+                placeholder="Ex: São Paulo, Uberaba, Curitiba…"
                 className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               />
               {originCity && (
@@ -203,14 +204,15 @@ export default function DistanciaCidadesClient() {
           </div>
 
           <div ref={destRef} className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Cidade de Destino</label>
+            <label htmlFor="cidade-destino" className="block text-sm font-medium text-gray-700 mb-2">Cidade de Destino</label>
             <div className="relative">
               <input
+                id="cidade-destino"
                 type="text"
                 value={destSearch}
                 onChange={(e) => handleDestSearch(e.target.value)}
                 onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
-                placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus..."
+                placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus…"
                 className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               />
               {destCity && (
@@ -247,7 +249,7 @@ export default function DistanciaCidadesClient() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Calculando...
+                Calculando…
               </>
             ) : (
               'Calcular Distância'

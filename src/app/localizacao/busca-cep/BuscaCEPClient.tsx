@@ -130,6 +130,7 @@ export default function BuscaCEPClient() {
                 onChange={(e) => setCep(formatCEP(e.target.value))}
                 placeholder="00000-000"
                 maxLength={9}
+                spellCheck={false}
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-mono"
               />
               <button
@@ -137,7 +138,7 @@ export default function BuscaCEPClient() {
                 disabled={loading}
                 className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Buscando...' : 'Buscar'}
+                {loading ? 'Buscando…' : 'Buscar'}
               </button>
             </div>
           </div>
@@ -181,6 +182,7 @@ export default function BuscaCEPClient() {
                   onChange={(e) => setEstado(e.target.value.toUpperCase().slice(0, 2))}
                   placeholder="SP"
                   maxLength={2}
+                  spellCheck={false}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
                 />
               </div>
@@ -190,7 +192,7 @@ export default function BuscaCEPClient() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Buscando...' : 'Buscar CEP'}
+              {loading ? 'Buscando…' : 'Buscar CEP'}
             </button>
           </div>
         )}

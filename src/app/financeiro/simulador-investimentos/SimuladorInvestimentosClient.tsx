@@ -121,35 +121,35 @@ export default function SimuladorInvestimentosClient() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Parâmetros</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Valor Inicial (R$)</label>
-              <input type="text" value={valorInicial} onChange={(e) => setValorInicial(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <label htmlFor="valor-inicial" className="block text-sm font-medium text-gray-700 mb-1">Valor Inicial (R$)</label>
+              <input id="valor-inicial" type="text" value={valorInicial} onChange={(e) => setValorInicial(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Aporte Mensal (R$)</label>
-              <input type="text" value={aporteMensal} onChange={(e) => setAporteMensal(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <label htmlFor="aporte-mensal" className="block text-sm font-medium text-gray-700 mb-1">Aporte Mensal (R$)</label>
+              <input id="aporte-mensal" type="text" value={aporteMensal} onChange={(e) => setAporteMensal(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="periodo-meses" className="block text-sm font-medium text-gray-700 mb-1">
                 Período: <span className="text-blue-600 font-bold">{meses} meses ({(meses / 12).toFixed(1)} anos)</span>
               </label>
-              <input type="range" min="1" max="360" value={meses} onChange={(e) => setMeses(parseInt(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+              <input id="periodo-meses" type="range" min="1" max="360" value={meses} onChange={(e) => setMeses(parseInt(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
                 <span>1 mês</span><span>10 anos</span><span>20 anos</span><span>30 anos</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CDI Anual (%)</label>
-                <input type="text" value={taxaCDI} onChange={(e) => setTaxaCDI(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label htmlFor="taxa-cdi" className="block text-sm font-medium text-gray-700 mb-1">CDI Anual (%)</label>
+                <input id="taxa-cdi" type="text" value={taxaCDI} onChange={(e) => setTaxaCDI(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CDB (% do CDI)</label>
-                <input type="text" value={percentCDB} onChange={(e) => setPercentCDB(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label htmlFor="percent-cdb" className="block text-sm font-medium text-gray-700 mb-1">CDB (% do CDI)</label>
+                <input id="percent-cdb" type="text" value={percentCDB} onChange={(e) => setPercentCDB(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">SELIC Anual (%)</label>
-              <input type="text" value={taxaSelic} onChange={(e) => setTaxaSelic(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <label htmlFor="taxa-selic" className="block text-sm font-medium text-gray-700 mb-1">SELIC Anual (%)</label>
+              <input id="taxa-selic" type="text" value={taxaSelic} onChange={(e) => setTaxaSelic(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
               <p className="text-xs text-gray-400 mt-1">Poupança: {(parseFloat(taxaSelic.replace(',', '.')) * 0.7).toFixed(1)}% a.a. (70% SELIC)</p>
             </div>
           </div>

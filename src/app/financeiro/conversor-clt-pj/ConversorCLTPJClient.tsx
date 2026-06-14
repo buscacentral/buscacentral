@@ -56,13 +56,13 @@ export default function ConversorCLTPJClient() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Dados de Contratação</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Salário Bruto CLT (R$)</label>
-                <input type="text" value={salarioBruto} onChange={(e) => setSalarioBruto(e.target.value)}
+                <label htmlFor="salario-bruto" className="block text-sm font-medium text-gray-700 mb-1">Salário Bruto CLT (R$)</label>
+                <input id="salario-bruto" type="text" value={salarioBruto} onChange={(e) => setSalarioBruto(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="5000" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meses Trabalhados no Ano</label>
-                <input type="number" min="1" max="12" value={mesesTrabalhados} onChange={(e) => setMesesTrabalhados(e.target.value)}
+                <label htmlFor="meses-trabalhados" className="block text-sm font-medium text-gray-700 mb-1">Meses Trabalhados no Ano</label>
+                <input id="meses-trabalhados" type="number" min="1" max="12" value={mesesTrabalhados} onChange={(e) => setMesesTrabalhados(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12" />
                 <p className="text-xs text-gray-400 mt-1">Usado para calcular 13º e férias proporcionais</p>
               </div>
@@ -74,24 +74,24 @@ export default function ConversorCLTPJClient() {
             <p className="text-xs text-gray-400 mb-4">Preencha os benefícios que você recebe hoje</p>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Vale Refeição/Alimentação (Mensal R$)</label>
-                <input type="text" value={valeRefeicao} onChange={(e) => setValeRefeicao(e.target.value)}
+                <label htmlFor="vale-refeicao" className="block text-sm font-medium text-gray-700 mb-1">Vale Refeição/Alimentação (Mensal R$)</label>
+                <input id="vale-refeicao" type="text" value={valeRefeicao} onChange={(e) => setValeRefeicao(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="1000" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Plano de Saúde (Mensal R$)</label>
-                <input type="text" value={planoSaude} onChange={(e) => setPlanoSaude(e.target.value)}
+                <label htmlFor="plano-saude" className="block text-sm font-medium text-gray-700 mb-1">Plano de Saúde (Mensal R$)</label>
+                <input id="plano-saude" type="text" value={planoSaude} onChange={(e) => setPlanoSaude(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Plano Odontológico (Mensal R$)</label>
-                <input type="text" value={planoOdontologico} onChange={(e) => setPlanoOdontologico(e.target.value)}
+                <label htmlFor="plano-odontologico" className="block text-sm font-medium text-gray-700 mb-1">Plano Odontológico (Mensal R$)</label>
+                <input id="plano-odontologico" type="text" value={planoOdontologico} onChange={(e) => setPlanoOdontologico(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="80" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Vale Transporte (Mensal R$)</label>
+                <label htmlFor="vale-transporte" className="block text-sm font-medium text-gray-700 mb-1">Vale Transporte (Mensal R$)</label>
                 <div className="flex gap-3 items-center">
-                  <input type="text" value={valeTransporte} onChange={(e) => setValeTransporte(e.target.value)}
+                  <input id="vale-transporte" type="text" value={valeTransporte} onChange={(e) => setValeTransporte(e.target.value)}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="300" />
                   <label className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap">
                     <input type="checkbox" checked={receberVT} onChange={(e) => setReceberVT(e.target.checked)}
@@ -106,19 +106,19 @@ export default function ConversorCLTPJClient() {
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Gympass/Wellhub (Mensal R$)</label>
-                <input type="text" value={gympass} onChange={(e) => setGympass(e.target.value)}
+                <label htmlFor="gympass" className="block text-sm font-medium text-gray-700 mb-1">Gympass/Wellhub (Mensal R$)</label>
+                <input id="gympass" type="text" value={gympass} onChange={(e) => setGympass(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="100" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Outros Benefícios (Mensal R$)</label>
-                <input type="text" value={outrosBeneficios} onChange={(e) => setOutrosBeneficios(e.target.value)}
+                <label htmlFor="outros-beneficios" className="block text-sm font-medium text-gray-700 mb-1">Outros Benefícios (Mensal R$)</label>
+                <input id="outros-beneficios" type="text" value={outrosBeneficios} onChange={(e) => setOutrosBeneficios(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
                 <p className="text-xs text-gray-400 mt-1">Seguro de vida, auxílio creche, etc.</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Previsão de Bônus / PLR Anual (R$)</label>
-                <input type="text" value={plrAnual} onChange={(e) => setPlrAnual(e.target.value)}
+                <label htmlFor="plr-anual" className="block text-sm font-medium text-gray-700 mb-1">Previsão de Bônus / PLR Anual (R$)</label>
+                <input id="plr-anual" type="text" value={plrAnual} onChange={(e) => setPlrAnual(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
                 <p className="text-xs text-gray-400 mt-1">Será diluído em 12 meses no cálculo</p>
               </div>
@@ -129,8 +129,8 @@ export default function ConversorCLTPJClient() {
             <h2 className="text-lg font-semibold text-gray-900 mb-1">Extras/Custos PJ</h2>
             <p className="text-xs text-gray-400 mb-4">Custos que você terá como Pessoa Jurídica</p>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Custo com Contabilidade (Mensal R$)</label>
-              <input type="text" value={valorContador} onChange={(e) => setValorContador(e.target.value)}
+              <label htmlFor="valor-contador" className="block text-sm font-medium text-gray-700 mb-1">Custo com Contabilidade (Mensal R$)</label>
+              <input id="valor-contador" type="text" value={valorContador} onChange={(e) => setValorContador(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="100" />
             </div>
           </section>

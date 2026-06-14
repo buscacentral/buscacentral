@@ -158,12 +158,12 @@ export default function ClimaClient() {
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
               onFocus={() => resultados.length > 0 && setDropdownAberto(true)}
-              placeholder="Digite o nome da sua cidade..."
+              placeholder="Digite o nome da sua cidade…"
               className="w-full py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-base md:text-lg focus:ring-2 focus:ring-sky-500 outline-none transition"
             />
             {buscandoCidade && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" aria-live="polite">
-                Buscando...
+                Buscando…
               </span>
             )}
 
@@ -212,7 +212,7 @@ export default function ClimaClient() {
         {/* Resultado */}
         {!cidade || carregando ? (
           <div className="text-center py-12" aria-live="polite">
-            <p className="text-base text-slate-500">Consultando clima...</p>
+            <p className="text-base text-slate-500">Consultando clima…</p>
           </div>
         ) : erro ? (
           <div className="text-center py-12" role="alert">
