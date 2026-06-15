@@ -27,6 +27,27 @@ const artigos = [
     excerpt: 'Um guia completo e prático sobre os prós e contras de trabalhar com carteira assinada versus abrir a própria empresa e faturar como Pessoa Jurídica.',
     date: '10 de Junho, 2026',
     category: 'Trabalhista'
+  },
+  {
+    slug: 'por-que-empresas-precisam-gerar-cpf-para-testes',
+    title: 'Por que empresas precisam gerar CPF para testes?',
+    excerpt: 'Descubra por que o uso de CPFs reais em ambientes de teste é um risco de segurança e como os geradores ajudam empresas a validarem seus sistemas de forma ética.',
+    date: '15 de Junho, 2026',
+    category: 'Desenvolvimento'
+  },
+  {
+    slug: 'juros-compostos-o-segredo-dos-investimentos',
+    title: 'Juros Compostos: O segredo para multiplicar seu patrimônio',
+    excerpt: 'Entenda como a mágica dos juros sobre juros funciona e como o tempo é o seu maior aliado na construção de riqueza a longo prazo.',
+    date: '16 de Junho, 2026',
+    category: 'Financeiro'
+  },
+  {
+    slug: 'tamanho-ideal-textos-seo-redes-sociais',
+    title: 'SEO e Textos: O tamanho ideal para cada rede social',
+    excerpt: 'Saber a quantidade exata de caracteres para o Twitter, Instagram, SEO (Meta Titles) e anúncios faz toda a diferença no seu engajamento.',
+    date: '16 de Junho, 2026',
+    category: 'Marketing'
   }
 ];
 

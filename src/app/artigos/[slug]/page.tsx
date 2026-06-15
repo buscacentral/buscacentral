@@ -69,6 +69,68 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
         <p>Fazer essas contas no papel usando tabelas tributárias de 2024 é doloroso. É exatamente por isso que desenvolvemos nosso simulador de paridade. Use a nossa <Link href="/financeiro/conversor-clt-pj" className="text-blue-600 underline">Calculadora de Conversão CLT para PJ</Link>. Você insere quanto quer receber como PJ e a ferramenta diz na hora o exato salário CLT equivalente, descontando o imposto atualizado do Governo Federal.</p>
       </>
     )
+  },
+  'por-que-empresas-precisam-gerar-cpf-para-testes': {
+    title: 'Por que empresas precisam gerar CPF para testes?',
+    date: '15 de Junho, 2026',
+    isoDate: '2026-06-15T12:00:00.000Z',
+    category: 'Desenvolvimento',
+    description: 'Descubra por que o uso de CPFs reais em ambientes de teste é um risco de segurança e como os geradores de CPF ajudam empresas a validarem seus sistemas de forma ética.',
+    content: (
+      <>
+        <p>A Lei Geral de Proteção de Dados (LGPD) mudou drasticamente a forma como as empresas lidam com informações pessoais. Usar CPFs ou CNPJs reais para testar sistemas não é apenas antiético, é ilegal e pode render multas milionárias.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">O perigo do "banco de dados espelho"</h2>
+        <p>No passado, era comum que equipes de desenvolvimento fizessem uma cópia do banco de dados de produção para realizar testes localmente. Isso significava que os desenvolvedores tinham acesso a milhares de CPFs de clientes reais.</p>
+        <p>Hoje, isso é uma violação grave de segurança. Para testar formulários, integrações com meios de pagamento ou validações de cadastro, os programadores utilizam dados fictícios que obedecem à mesma lógica matemática dos dados reais, mas não pertencem a ninguém.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Como a matemática resolve o problema</h2>
+        <p>O CPF possui uma lógica matemática chamada de "Dígitos Verificadores" (os dois últimos números). Um gerador de CPF cria 9 números aleatórios e calcula os dois últimos para que a validação matemática passe perfeitamente nos testes, sem vazar os dados de uma pessoa real.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Precisa testar o seu sistema agora?</h3>
+          <p className="text-blue-800">Acesse nossa ferramenta gratuita para <Link href="/documentos/gerador-cpf" className="underline font-semibold hover:text-blue-900">Gerar CPF Válido</Link> e mantenha seus testes seguros e dentro da lei!</p>
+        </div>
+      </>
+    )
+  },
+  'juros-compostos-o-segredo-dos-investimentos': {
+    title: 'Juros Compostos: O segredo para multiplicar seu patrimônio',
+    date: '16 de Junho, 2026',
+    isoDate: '2026-06-16T12:00:00.000Z',
+    category: 'Financeiro',
+    description: 'Entenda como a mágica dos juros sobre juros funciona e como o tempo é o seu maior aliado na construção de riqueza a longo prazo.',
+    content: (
+      <>
+        <p>Albert Einstein teria dito certa vez que "os juros compostos são a oitava maravilha do mundo". Seja essa citação verdadeira ou não, a matemática por trás dos juros compostos é, sem dúvida, o motor principal do crescimento de patrimônio.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">O que são Juros Compostos?</h2>
+        <p>Diferente dos juros simples, onde o rendimento incide apenas sobre o valor inicial, nos juros compostos o rendimento de um mês é somado ao montante inicial, e no mês seguinte, os juros incidirão sobre esse novo valor (o montante total).</p>
+        <p>Isso gera o chamado "efeito bola de neve". No começo, o crescimento parece insignificante. Mas ao longo de 10, 20 ou 30 anos, a curva de crescimento torna-se exponencial.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Tempo: O ingrediente secreto</h2>
+        <p>Muitas pessoas acham que para investir é preciso ter muito dinheiro. A verdade é que o tempo é muito mais importante que o dinheiro nos juros compostos. Começar a investir R$ 100 por mês aos 20 anos pode resultar em um patrimônio muito maior do que começar a investir R$ 500 por mês aos 40 anos.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Faça as suas próprias simulações</h3>
+          <p className="text-blue-800">Descubra quanto dinheiro você terá no futuro utilizando nossa <Link href="/financeiro/juros-compostos" className="underline font-semibold hover:text-blue-900">Calculadora de Juros Compostos</Link>. Planeje sua independência financeira hoje!</p>
+        </div>
+      </>
+    )
+  },
+  'tamanho-ideal-textos-seo-redes-sociais': {
+    title: 'SEO e Textos: O tamanho ideal para cada rede social',
+    date: '16 de Junho, 2026',
+    isoDate: '2026-06-16T15:00:00.000Z',
+    category: 'Marketing',
+    description: 'Saber a quantidade exata de caracteres para o Twitter, Instagram, SEO (Meta Titles) e anúncios faz toda a diferença no seu engajamento.',
+    content: (
+      <>
+        <p>Em um mundo onde a atenção é escassa, acertar o tamanho do texto pode determinar se a sua mensagem será lida ou completamente ignorada. E mais: o tamanho correto evita que seu texto seja "cortado" (...), o que afeta drasticamente o SEO e as taxas de clique (CTR).</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Meta Title e Meta Description (SEO)</h2>
+        <p>Para o Google, um <strong>Meta Title</strong> deve ter idealmente entre 50 e 60 caracteres. Passou de 60, o Google irá truncar o título. Já a <strong>Meta Description</strong> (o textinho que aparece embaixo do título na pesquisa) tem seu ponto ideal entre 150 e 160 caracteres.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Twitter e Instagram</h2>
+        <p>O X (antigo Twitter) permite até 280 caracteres na versão gratuita, mas estudos indicam que tweets entre 71 e 100 caracteres engajam 17% a mais. Já no Instagram, os 125 primeiros caracteres da legenda são cruciais, pois é onde a plataforma insere o botão "Ver mais".</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Conte seus textos antes de publicar</h3>
+          <p className="text-blue-800">Não deixe seu texto ser cortado! Utilize o nosso <Link href="/utilidades/contador-caracteres" className="underline font-semibold hover:text-blue-900">Contador de Caracteres e Palavras</Link> para ajustar seus posts de forma milimétrica.</p>
+        </div>
+      </>
+    )
   }
 };
 
