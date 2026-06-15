@@ -216,6 +216,87 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
         </div>
       </>
     )
+  },
+  'como-funciona-um-extrator-de-emails': {
+    title: 'Extrator de E-mails: O que é, como funciona e cuidados',
+    date: '19 de Junho, 2026',
+    isoDate: '2026-06-19T10:00:00.000Z',
+    category: 'Marketing',
+    description: 'Aprenda como funcionam os extratores de e-mail a partir de blocos de texto e as práticas éticas para montar listas de contato.',
+    content: (
+      <>
+        <p>Ao trabalhar com Marketing Digital, Vendas (B2B) ou até mesmo recrutamento, é muito comum receber blocos imensos de texto, planilhas desformatadas ou páginas da web contendo dezenas de e-mails misturados no meio do texto. Puxar um por um manualmente é inviável e propenso a erros.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">A Lógica da Extração (Regex)</h2>
+        <p>Por trás de todo bom extrator de e-mails, existe uma "Expressão Regular" (Regex). O sistema analisa instantaneamente milhares de caracteres de um texto procurando pelo padrão universal: uma palavra, o símbolo de arroba (@), outra palavra e uma terminação de domínio (como .com, .br, .org).</p>
+        <p>Uma vez que os e-mails são localizados, a ferramenta os separa, limpa a sujeira do texto em volta, remove os e-mails que apareceram duplicados e os devolve em uma lista limpa, pronta para ser exportada para Excel ou CSV.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Ética e LGPD</h2>
+        <p>Extrair e-mails de um documento que a sua empresa possui é uma ferramenta de produtividade. No entanto, utilizar "robôs" para extrair milhões de e-mails da web para fazer "Cold Email" (Spam) em massa fere as diretrizes da Lei Geral de Proteção de Dados (LGPD). Construa suas listas de forma orgânica e ética, sempre oferecendo a opção de desinscrição.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Limpe seu texto agora mesmo</h3>
+          <p className="text-blue-800">Tem um bloco de texto cheio de e-mails perdidos? Cole no nosso <Link href="/utilidades/extrator-emails" className="underline font-semibold hover:text-blue-900">Extrator de E-mails</Link> e tenha a lista limpa em menos de um segundo.</p>
+        </div>
+      </>
+    )
+  },
+  'simulando-investimentos-tesouro-direto-vs-cdb': {
+    title: 'Simulando Investimentos: Tesouro Direto vs. CDB',
+    date: '19 de Junho, 2026',
+    isoDate: '2026-06-19T14:00:00.000Z',
+    category: 'Finanças',
+    description: 'Entenda as diferenças entre as duas principais portas de entrada para os investimentos de Renda Fixa no Brasil e aprenda a simular a rentabilidade.',
+    content: (
+      <>
+        <p>A poupança perde constantemente para a inflação. Por isso, quem quer proteger e multiplicar seu patrimônio deve migrar para a Renda Fixa. No Brasil, os dois investimentos mais comuns e seguros para isso são o Tesouro Direto e os CDBs (Certificados de Depósito Bancário).</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">O Tesouro Direto</h2>
+        <p>Ao investir no Tesouro Direto, você está, literalmente, emprestando dinheiro para o Governo Federal. Por isso, é considerado o investimento mais seguro do país. O "Tesouro Selic" segue a taxa básica de juros da economia, enquanto o "Tesouro IPCA+" protege o dinheiro contra a inflação e paga uma taxa fixa adicional.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">O que é o CDB?</h2>
+        <p>Já no CDB, você empresta o dinheiro para um Banco. Em troca, o banco te paga juros, geralmente atrelados a um indicador chamado CDI (que caminha colado à Selic). A vantagem do CDB é que muitos bancos menores oferecem rentabilidades acima de 100% do CDI, o que paga mais que o Tesouro Direto. O risco também é muito baixo, já que os CDBs contam com a proteção do Fundo Garantidor de Créditos (FGC) para valores até R$ 250 mil.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Simule a sua carteira</h3>
+          <p className="text-blue-800">Descubra quanto você terá em 1, 5 ou 10 anos aplicando um pouco por mês. Utilize nosso <Link href="/financeiro/simulador-investimentos" className="underline font-semibold hover:text-blue-900">Simulador de Investimentos</Link>.</p>
+        </div>
+      </>
+    )
+  },
+  'qr-code-tudo-que-voce-precisa-saber': {
+    title: 'QR Code: A tecnologia de matriz que dominou o mundo',
+    date: '20 de Junho, 2026',
+    isoDate: '2026-06-20T08:00:00.000Z',
+    category: 'Tecnologia',
+    description: 'Entenda como o Quick Response (QR) funciona, por que ele superou o código de barras tradicional e as melhores formas de gerá-lo.',
+    content: (
+      <>
+        <p>Você o vê em cardápios de restaurantes, placas do PIX e embalagens de produtos. O QR Code (Quick Response Code) foi inventado em 1994 pela Denso Wave (uma subsidiária da Toyota) para rastrear peças de carros durante a montagem. Hoje, ele está em todo lugar.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Código de Barras vs. QR Code</h2>
+        <p>O tradicional código de barras é "unidimensional" (1D). Ele lê os dados apenas horizontalmente. Já o QR Code é "bidimensional" (2D), lendo dados de cima para baixo e da esquerda para a direita. Essa diferença simples permite que um código de barras armazene, no máximo, cerca de 20 dígitos numéricos, enquanto um QR Code pode armazenar até 7.000 caracteres de texto denso!</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Tolerância a falhas</h2>
+        <p>A mágica mais brilhante do QR Code é a Correção de Erros Reed-Solomon. Ele foi projetado para continuar legível mesmo se estiver arranhado, rasgado ou sujo. Dependendo do nível de correção escolhido na hora de gerá-lo, até 30% da imagem pode ser destruída e a câmera do celular ainda conseguirá ler o conteúdo perfeitamente. É por isso que você consegue escanear um código amassado com tanta facilidade.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Crie o seu gratuitamente</h3>
+          <p className="text-blue-800">Quer gerar um código para o seu Wi-Fi, Cardápio ou WhatsApp? Use o nosso <Link href="/utilidades/gerador-qr-code" className="underline font-semibold hover:text-blue-900">Gerador de QR Code</Link> sem instalar nada.</p>
+        </div>
+      </>
+    )
+  },
+  'dolar-hoje-por-que-a-cotacao-oscila-tanto': {
+    title: 'Dólar Hoje: Entenda por que a Cotação da Moeda oscila todos os dias',
+    date: '20 de Junho, 2026',
+    isoDate: '2026-06-20T16:00:00.000Z',
+    category: 'Economia',
+    description: 'Aprenda os motivos econômicos e políticos que fazem as moedas globais flutuarem e como acompanhar a cotação em tempo real.',
+    content: (
+      <>
+        <p>A cotação do Dólar dita os rumos da economia mundial. Do pãozinho na padaria (pois o trigo é importado) até a passagem de avião e as peças de tecnologia, quase tudo que consumimos tem seu preço final influenciado pela moeda americana.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">O regime de Câmbio Flutuante</h2>
+        <p>Desde 1999, o Brasil adota o "câmbio flutuante". Isso significa que o preço do dólar é determinado pela simples lei da oferta e da demanda. Se muitas empresas estrangeiras querem investir no Brasil, elas precisam comprar Reais vendendo Dólares. Se há muitos Dólares no país, a moeda fica mais barata. Já se investidores tiram seu dinheiro daqui, os dólares saem do país, e a cotação sobe.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Juros, Risco Político e Inflação</h2>
+        <p>O fluxo de dólares que entra ou sai do país depende, majoritariamente, de três coisas: Os <strong>Juros</strong> (se o banco central americano paga juros altos, os investidores levam os dólares para os EUA), o <strong>Risco Político/Fiscal</strong> (incerteza afasta investidores, gerando fuga de capital) e o balanço de <strong>Exportações</strong> (o Brasil é um dos maiores exportadores agrícolas do mundo, o que traz uma enxurrada de dólares em épocas de safra).</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Acompanhe a variação ao vivo</h3>
+          <p className="text-blue-800">Verifique os valores precisos e atualizados. Acesse a <Link href="/financeiro/cotacao" className="underline font-semibold hover:text-blue-900">Cotação de Moedas Hoje</Link> do BuscaCentral.</p>
+        </div>
+      </>
+    )
   }
 };
 
