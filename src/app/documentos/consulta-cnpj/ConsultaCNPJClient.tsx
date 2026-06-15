@@ -197,7 +197,6 @@ export default function ConsultaCNPJClient() {
               onClick={handleConsultar}
               isLoading={status === 'loading'}
               className="w-full"
-              size="lg"
             >
               {status === 'loading' ? 'Consultando Receita Federal...' : 'Consultar CNPJ'}
             </Button>
