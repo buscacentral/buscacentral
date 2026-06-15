@@ -69,8 +69,13 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
   }
 };
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const article = articlesData[params.slug];
+type Props = {
+  params: Promise<{ slug: string }>
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const article = articlesData[slug];
   
   if (!article) {
     return { title: 'Página não encontrada' };
@@ -88,8 +93,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = articlesData[params.slug];
+export default async function ArticlePage({ params }: Props) {
+  const { slug } = await params;
+  const article = articlesData[slug];
 
   if (!article) {
     notFound();
