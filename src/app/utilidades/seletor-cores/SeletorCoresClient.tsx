@@ -110,7 +110,7 @@ export default function SeletorCoresClient() {
               <div key={fmt.label} className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-lg p-3 shadow-sm hover:border-sky-200 transition-colors group">
                 <span className="text-xs font-black text-slate-400 w-12 uppercase tracking-wider">{fmt.label}</span>
                 <code className="flex-1 font-mono text-sm text-slate-800">{fmt.value}</code>
-                <CopyButton text={fmt.value} label="Copiar" className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                <CopyButton text={fmt.value} label="Copiar" />
               </div>
             ))}
           </div>
