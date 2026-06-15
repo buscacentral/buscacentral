@@ -37,7 +37,7 @@ export default function GeradorCPFClient() {
             </label>
           </div>
 
-          <Button onClick={handleGenerate} className="w-full" size="lg">
+          <Button onClick={handleGenerate} className="w-full">
             Gerar Novo CPF
           </Button>
         </div>

@@ -150,7 +150,7 @@ export default function PIXCopiaColaClient() {
             </div>
           </div>
 
-          <Button onClick={generatePIX} className="w-full" size="lg">
+          <Button onClick={generatePIX} className="w-full">
             Gerar PIX Copia e Cola
           </Button>
         </div>

@@ -37,7 +37,7 @@ export default function GeradorCNPJClient() {
             </label>
           </div>
 
-          <Button onClick={handleGenerate} className="w-full" size="lg">
+          <Button onClick={handleGenerate} className="w-full">
             Gerar Novo CNPJ
           </Button>
         </div>

@@ -56,7 +56,6 @@ export default function RastreioClient() {
             onClick={handleRastrear}
             isLoading={carregando}
             className="w-full"
-            size="lg"
           >
             {carregando ? 'Buscando...' : 'Rastrear Objeto'}
           </Button>

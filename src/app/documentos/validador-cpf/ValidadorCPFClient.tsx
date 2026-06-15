@@ -51,7 +51,7 @@ export default function ValidadorCPFClient() {
             />
           </div>
 
-          <Button onClick={handleValidate} className="w-full" size="lg">
+          <Button onClick={handleValidate} className="w-full">
             Validar CPF
           </Button>
         </div>

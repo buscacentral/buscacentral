@@ -51,7 +51,7 @@ export default function ValidadorCNPJClient() {
             />
           </div>
 
-          <Button onClick={handleValidate} className="w-full" size="lg">
+          <Button onClick={handleValidate} className="w-full">
             Validar CNPJ
           </Button>
         </div>
