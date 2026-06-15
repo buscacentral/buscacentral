@@ -215,7 +215,7 @@ export default function FormatadorCodigoClient() {
             <Button onClick={handleCopy} disabled={!output} variant="outline" className="flex-1 sm:flex-none">
               {copied ? '✅ Copiado!' : '📋 Copiar'}
             </Button>
-            <Button onClick={handleClear} variant="ghost" className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50">
+            <Button onClick={handleClear} variant="outline" className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50">
               🗑️ Limpar
             </Button>
           </div>
