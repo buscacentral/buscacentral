@@ -42,10 +42,9 @@ export default function GeradorCNPJClient() {
           </Button>
         </div>
 
-        <Alert 
-          type="warning" 
-          message="Os dados gerados são fictícios, criados exclusivamente para fins de teste e desenvolvimento. É proibido utilizar estes dados para cadastros reais, fraudes ou qualquer atividade ilícita." 
-        />
+        <Alert variant="warning">
+          Os dados gerados são fictícios, criados exclusivamente para fins de teste e desenvolvimento. É proibido utilizar estes dados para cadastros reais, fraudes ou qualquer atividade ilícita.
+        </Alert>
       </div>
 
       <div className="lg:col-span-7">

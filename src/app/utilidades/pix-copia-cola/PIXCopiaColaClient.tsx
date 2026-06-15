@@ -155,10 +155,9 @@ export default function PIXCopiaColaClient() {
           </Button>
         </div>
         
-        <Alert 
-          type="warning" 
-          message="Esta ferramenta gera códigos PIX para fins educacionais e de teste. Use com responsabilidade. O código gerado segue o padrão EMV QR Code do Banco Central." 
-        />
+        <Alert variant="warning">
+          Esta ferramenta gera códigos PIX para fins educacionais e de teste. Use com responsabilidade. O código gerado segue o padrão EMV QR Code do Banco Central.
+        </Alert>
       </div>
 
       <div className="lg:col-span-6">

@@ -260,10 +260,9 @@ export default function TabelaFipeClient() {
 
         {error && (
           <Alert
-            type="error"
+            variant="error"
             title="Erro"
-            message={error}
-          />
+          >{error}</Alert>
         )}
       </div>
 
