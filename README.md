@@ -12,7 +12,10 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis (37)
+## 🛠️ Ferramentas disponíveis (51)
+
+Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado para artigos educativos e ajuda na provação do AdSense.
+
 
 ### 📋 Documentos
 - Gerador de CPF
