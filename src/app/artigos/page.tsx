@@ -105,6 +105,91 @@ const artigos = [
     date: '16 de Junho, 2026',
     category: 'Marketing'
   }
+,
+  {
+    slug: 'salario-bruto-vs-liquido-irrf-inss',
+    title: 'Salário Bruto vs. Líquido: Onde vai parar o seu dinheiro (INSS e IRRF)?',
+    date: '21 de Junho, 2026',
+    category: 'Trabalhista',
+    excerpt: 'Entenda os descontos obrigatórios na folha de pagamento e aprenda a calcular o seu salário líquido real.',
+  },
+  {
+    slug: 'guia-do-decimo-terceiro-salario',
+    title: 'Guia do 13º Salário: Quem tem direito e como é feito o cálculo',
+    date: '21 de Junho, 2026',
+    category: 'Trabalhista',
+    excerpt: 'Tudo o que você precisa saber sobre a gratificação natalina, os prazos de pagamento e os descontos da segunda parcela.',
+  },
+  {
+    slug: 'calculo-de-ferias-e-terco-constitucional',
+    title: 'Cálculo de Férias e Terço Constitucional: O que você precisa saber',
+    date: '22 de Junho, 2026',
+    category: 'Trabalhista',
+    excerpt: 'Aprenda como funciona o cálculo do seu pagamento de férias, incluindo o adicional de um terço e os descontos legais.',
+  },
+  {
+    slug: 'bitcoin-ethereum-volatilidade-mercado',
+    title: 'Bitcoin e Ethereum: Como acompanhar a cotação e entender a volatilidade',
+    date: '22 de Junho, 2026',
+    category: 'Economia',
+    excerpt: 'Desvende o mercado de criptoativos, entenda as diferenças entre as principais moedas e como a oferta e demanda ditam os preços.',
+  },
+  {
+    slug: 'financiamento-veiculos-tabela-price',
+    title: 'A ilusão das parcelas: Entenda a tabela Price no financiamento de veículos',
+    date: '23 de Junho, 2026',
+    category: 'Finanças',
+    excerpt: 'Entenda como os bancos calculam as prestações do seu carro novo e quanto você realmente está pagando de juros.',
+  },
+  {
+    slug: 'como-criar-uma-senha-forte',
+    title: 'Ataques de Força Bruta: Como criar uma senha impossível de ser hackeada',
+    date: '23 de Junho, 2026',
+    category: 'Segurança',
+    excerpt: 'Aprenda os conceitos de criptografia básica e o que realmente torna uma senha impenetrável contra robôs invasores.',
+  },
+  {
+    slug: 'como-consultar-situacao-cnpj',
+    title: 'Como consultar a situação de um CNPJ e evitar fraudes na internet',
+    date: '24 de Junho, 2026',
+    category: 'Segurança',
+    excerpt: 'Saiba interpretar o comprovante de situação cadastral e como identificar empresas de fachada antes de realizar compras ou contratos.',
+  },
+  {
+    slug: 'gerador-cartao-de-credito-testes',
+    title: 'Por que sistemas de teste usam algoritmos (Módulo 10) para gerar cartões virtuais?',
+    date: '24 de Junho, 2026',
+    category: 'Desenvolvimento',
+    excerpt: 'Entenda como funciona o Algoritmo de Luhn e a matemática que valida qualquer cartão de crédito do mundo instantaneamente.',
+  },
+  {
+    slug: 'criar-link-whatsapp-vendas',
+    title: 'API do WhatsApp: Como criar links diretos para aumentar as vendas',
+    date: '25 de Junho, 2026',
+    category: 'Marketing',
+    excerpt: 'Aprenda a utilizar a API Click to Chat (wa.me) para encurtar o caminho do seu cliente e automatizar o início da conversa.',
+  },
+  {
+    slug: 'pix-copia-e-cola-br-code',
+    title: 'A evolução do PIX: Como o sistema BR Code revolucionou os pagamentos',
+    date: '25 de Junho, 2026',
+    category: 'Tecnologia',
+    excerpt: 'Entenda os bastidores técnicos do Pix e como o sistema EMVCo / BR Code formata os dados de um Pix Copia e Cola.',
+  },
+  {
+    slug: 'rastreio-encomendas-correios',
+    title: 'A logística por trás dos Correios: Como funciona o sistema de rastreamento',
+    date: '26 de Junho, 2026',
+    category: 'Tecnologia',
+    excerpt: 'Desvende o significado das siglas dos Correios (PAC, SEDEX) e como os pacotes são bipados ao redor do país.',
+  },
+  {
+    slug: 'etanol-ou-gasolina-regra-dos-70',
+    title: 'Etanol ou Gasolina? A regra matemática dos 70% na hora de abastecer',
+    date: '26 de Junho, 2026',
+    category: 'Finanças',
+    excerpt: 'Entenda por que o etanol queima mais rápido e como saber matematicamente qual combustível está valendo mais a pena na bomba.',
+  }
 ];
 
 export default function ArtigosPage() {
