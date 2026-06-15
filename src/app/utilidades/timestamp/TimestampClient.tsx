@@ -55,7 +55,8 @@ export default function TimestampClient() {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <>
+      <div className="space-y-8 max-w-4xl mx-auto">
       {error && (
         <Alert type="error" message={error} />
       )}
