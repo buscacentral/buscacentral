@@ -155,20 +155,20 @@ export default function SimuladorInvestimentosClient() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           {resultado ? (
             <>
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm min-w-0">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Comparativo</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {resultado.investimentos.map((inv) => {
                     const isVencedor = inv.nome === resultado.vencedor.nome;
                     return (
-                      <div key={inv.nome} className={`rounded-xl p-5 text-center border ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200 shadow-sm' : 'bg-gray-50 border-gray-200'}`}>
+                      <div key={inv.nome} className={`rounded-xl p-5 text-center border min-w-0 ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200 shadow-sm' : 'bg-gray-50 border-gray-200'}`}>
                         <p className="text-2xl mb-2">{inv.icon}</p>
-                        <p className="text-sm font-semibold text-gray-500 mb-2">{inv.nome}</p>
-                        <p className="text-xl font-bold text-gray-900">{formatCurrency(inv.valorLiquido)}</p>
-                        <p className={`text-sm font-medium mt-1 ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <p className="text-sm font-semibold text-gray-500 mb-2 truncate" title={inv.nome}>{inv.nome}</p>
+                        <p className="text-xl font-bold text-gray-900 truncate" title={formatCurrency(inv.valorLiquido)}>{formatCurrency(inv.valorLiquido)}</p>
+                        <p className={`text-sm font-medium mt-1 truncate ${inv.rendimentoLiquido >= 0 ? 'text-green-600' : 'text-red-600'}`} title={formatCurrency(inv.rendimentoLiquido)}>
                           {formatCurrency(inv.rendimentoLiquido)}
                         </p>
                         <p className="text-sm text-gray-400">{formatPercent(inv.rendimentoPercentual)}</p>
