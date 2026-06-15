@@ -202,7 +202,7 @@ export default function ConsultaCNPJClient() {
             </Button>
 
             {status === 'error' && erro && (
-              <Alert type="error" message={erro} className="mt-6" />
+              <Alert variant="error" className="mt-6">{erro}</Alert>
             )}
           </div>
         </div>

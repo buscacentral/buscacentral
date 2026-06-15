@@ -221,7 +221,7 @@ export default function FormatadorCodigoClient() {
           </div>
 
           {error && (
-            <Alert type="error" message={error} className="mb-6" />
+            <Alert variant="error" className="mb-6">{error}</Alert>
           )}
 
           {output && (

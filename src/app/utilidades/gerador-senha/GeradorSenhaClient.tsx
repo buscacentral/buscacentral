@@ -119,7 +119,7 @@ export default function GeradorSenhaClient() {
         </div>
 
         {error && (
-          <Alert type="error" message={error} className="mb-4" />
+          <Alert variant="error" className="mb-4">{error}</Alert>
         )}
 
         {password && (

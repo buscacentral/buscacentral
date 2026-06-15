@@ -87,7 +87,7 @@ export default function WhatsAppLinkClient() {
         </Button>
 
         {error && (
-          <Alert type="error" message={error} className="mt-4" />
+          <Alert variant="error" className="mt-4">{error}</Alert>
         )}
 
         {link && (

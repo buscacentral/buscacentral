@@ -223,7 +223,7 @@ export default function ClimaClient() {
           </div>
         ) : erro ? (
           <div className="py-6">
-            <Alert type="error" message={erro} className="mb-4" />
+            <Alert variant="error" className="mb-4">{erro}</Alert>
             <Button
               onClick={fetchClima}
               variant="outline"

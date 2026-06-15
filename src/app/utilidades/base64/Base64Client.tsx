@@ -74,7 +74,7 @@ export default function Base64Client() {
         </Button>
 
         {error && (
-          <Alert type="error" message={error} className="mb-4" />
+          <Alert variant="error" className="mb-4">{error}</Alert>
         )}
 
         {output && (

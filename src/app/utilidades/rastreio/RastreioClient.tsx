@@ -62,7 +62,7 @@ export default function RastreioClient() {
           </Button>
 
           {resultado && !resultado.sucesso && resultado.mensagem && (
-            <Alert type="error" message={resultado.mensagem} className="mt-6" />
+            <Alert variant="error" className="mt-6">{resultado.mensagem}</Alert>
           )}
         </div>
       </div>

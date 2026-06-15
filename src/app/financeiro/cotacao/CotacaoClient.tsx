@@ -160,7 +160,7 @@ export default function CotacaoClient({
       </div>
 
       {error && (
-        <Alert type="error" message={error} className="mb-6" />
+        <Alert variant="error" className="mb-6">{error}</Alert>
       )}
 
       {/* Cards de moedas */}

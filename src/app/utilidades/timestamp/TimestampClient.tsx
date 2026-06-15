@@ -58,7 +58,7 @@ export default function TimestampClient() {
     <>
       <div className="space-y-8 max-w-4xl mx-auto">
       {error && (
-        <Alert type="error" message={error} />
+        <Alert variant="error">{error}</Alert>
       )}
 
       <ResultCard title="Timestamp Atual" className="border-sky-200 shadow-sm relative overflow-hidden group">

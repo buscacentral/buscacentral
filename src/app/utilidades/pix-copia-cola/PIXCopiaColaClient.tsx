@@ -73,7 +73,7 @@ export default function PIXCopiaColaClient() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-6 space-y-6">
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-          {error && <Alert type="error" message={error} className="mb-6" />}
+          {error && <Alert variant="error" className="mb-6">{error}</Alert>}
           
           <div className="space-y-4 mb-6">
             <div>

@@ -256,7 +256,7 @@ export default function DistanciaCidadesClient() {
         </div>
 
         {error && (
-          <Alert type="error" title="Erro" message={error} />
+          <Alert variant="error" title="Erro">{error}</Alert>
         )}
       </div>
 
@@ -393,7 +393,7 @@ export default function DistanciaCidadesClient() {
               </a>
             </div>
 
-            <Alert type="info" message="A distância em linha reta usa a fórmula de Haversine com coordenadas oficiais do IBGE. A estimativa rodoviária aplica um fator de 1.3x." />
+            <Alert variant="info">A distância em linha reta usa a fórmula de Haversine com coordenadas oficiais do IBGE. A estimativa rodoviária aplica um fator de 1.3x.</Alert>
           </ResultCard>
         ) : (
           <div className="h-full flex items-center justify-center min-h-[300px]">
