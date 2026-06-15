@@ -147,6 +147,24 @@ export default function ToolPageLayout({
         </section>
       )}
 
+      {/* Seção de Perguntas Frequentes (Visível e Otimizada para AdSense) */}
+      {faqItems && faqItems.length > 0 && (
+        <section className="mt-12 pt-8 border-t border-slate-200">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Perguntas Frequentes</h2>
+          <div className="space-y-6">
+            {faqItems.map((faq, idx) => (
+              <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                <h3 className="font-semibold text-lg text-slate-800 mb-2 flex items-start gap-2">
+                  <span className="text-sky-500">❓</span>
+                  {faq.question}
+                </h3>
+                <p className="text-slate-600 leading-relaxed pl-7">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Ferramentas Relacionadas */}
       {relatedTools && relatedTools.length > 0 && (
         <section className="mt-16 pt-12 border-t border-gray-200">

@@ -70,6 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/utilidades/json-csv',
     '/utilidades/calculadora-combustivel',
     '/utilidades/validador-email',
+    '/artigos',
     '/sobre',
     '/privacidade',
     '/termos',

@@ -72,6 +72,31 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* SEO Content Block para AdSense e Google Search */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="prose prose-slate max-w-none text-slate-600">
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">Por que usar o BuscaCentral?</h2>
+          <p className="mb-4 leading-relaxed">
+            O <strong>BuscaCentral</strong> é uma plataforma online gratuita dedicada a facilitar o seu dia a dia com dezenas de utilitários, calculadoras e geradores de dados. Nós acreditamos que tarefas simples — como calcular o salário líquido, formatar um documento JSON, gerar um CPF para testes de software ou sortear um número — não devem exigir a instalação de aplicativos complexos ou o preenchimento de cadastros invasivos.
+          </p>
+          
+          <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">100% Gratuito e Sem Cadastro</h3>
+          <p className="mb-4 leading-relaxed">
+            Todas as nossas {mainTools.length > 0 ? '51' : ''} ferramentas estão disponíveis gratuitamente 24 horas por dia, 7 dias por semana. Não exigimos criação de conta, login com redes sociais ou assinaturas premium. Basta acessar a página da utilidade que você precisa e utilizá-la imediatamente.
+          </p>
+          
+          <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">Privacidade e Segurança em Primeiro Lugar</h3>
+          <p className="mb-4 leading-relaxed">
+            A sua privacidade é nossa prioridade máxima. Nossas calculadoras financeiras, geradores de documentos e conversores processam os dados <strong>diretamente no seu navegador (Client-Side)</strong>. Nós não salvamos os textos que você compara, as senhas que você gera ou os valores salariais que você calcula. Todo o processamento é efêmero e desaparece assim que você fecha a aba.
+          </p>
+          
+          <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">Para Profissionais e Estudantes</h3>
+          <p className="leading-relaxed">
+            Seja você um desenvolvedor de software precisando de dados fictícios para testes em ambiente de homologação (Sandbox), um profissional de RH validando cálculos de férias e décimo terceiro, ou apenas alguém querendo rastrear uma encomenda, o BuscaCentral foi projetado para ser o seu canivete suíço digital favorito.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
