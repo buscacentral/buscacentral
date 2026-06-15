@@ -408,11 +408,19 @@ export default function TabelaCaloriasClient() {
               const mult = item.porcao / 100;
               return (
                 <div key={item.id} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 text-sm">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col flex-1">
                     <span className="font-bold text-slate-900">{item.nome}</span>
-                    <span className="text-xs text-slate-500 font-medium">Porção: {item.porcao}g ({item.categoria})</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+                      <span className="text-xs text-slate-500 font-medium">Porção: {item.porcao}g ({item.categoria})</span>
+                      <div className="text-[10px] text-slate-400 flex gap-2 mt-1 sm:mt-0 font-medium">
+                        <span className="text-blue-600">P: {(item.proteinas * mult).toFixed(1)}g</span>
+                        <span className="text-green-600">C: {(item.carboidratos * mult).toFixed(1)}g</span>
+                        <span className="text-yellow-600">G: {(item.gorduras * mult).toFixed(1)}g</span>
+                        <span className="text-purple-600">F: {(item.fibra * mult).toFixed(1)}g</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 ml-2">
                     <span className="font-mono font-bold text-slate-800 tabular-nums">
                       {(item.calorias * mult).toFixed(0)} kcal
                     </span>
