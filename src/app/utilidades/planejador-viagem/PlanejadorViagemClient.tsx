@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { calcularPlanejamento, sanitizeNumber } from '@/lib/planejador-viagem-logic';
+import { useState, useMemo, useEffect } from 'react';
+import { calcularPlanejamento, sanitizeNumber, calcularDias } from '@/lib/planejador-viagem-logic';
 import { formatCurrency } from '@/lib/formatters';
 
 export default function PlanejadorViagemClient() {
@@ -15,6 +15,17 @@ export default function PlanejadorViagemClient() {
   const [gastoTransporte, setGastoTransporte] = useState('30');
   const [gastoAtividades, setGastoAtividades] = useState('300');
   const [outrosGastos, setOutrosGastos] = useState('0');
+
+  useEffect(() => {
+    if (dataInicio && dataFim) {
+      const dias = calcularDias(dataInicio, dataFim);
+      if (dias > 0) {
+        setDiasHotel(Math.max(0, dias - 1).toString());
+      } else {
+        setDiasHotel('0');
+      }
+    }
+  }, [dataInicio, dataFim]);
 
   const resultado = useMemo(() => {
     return calcularPlanejamento({

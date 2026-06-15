@@ -40,7 +40,7 @@ export interface ResultadoViagem {
 export function sanitizeNumber(value: unknown, defaultValue: number = 0): number {
   if (value === null || value === undefined || value === '') return defaultValue;
   const num = typeof value === 'string'
-    ? parseFloat(value.replace(/[^\d.,-]/g, '').replace(',', '.'))
+    ? parseFloat(value.replace(/[^\d.,-]/g, '').replace(/\./g, '').replace(',', '.'))
     : Number(value);
   if (!Number.isFinite(num) || Number.isNaN(num) || num < 0) return defaultValue;
   return num;
@@ -102,13 +102,19 @@ export function calcularDiasParaViagem(dataInicio: string): number {
  * Calcula o resultado completo do planejamento de viagem.
  */
 export function calcularPlanejamento(input: InputViagem): ResultadoViagem {
-  const diasTotais = calcularDias(input.dataInicio, input.dataFim);
+  let diasTotais = calcularDias(input.dataInicio, input.dataFim);
+  const diasHotelNum = sanitizeNumber(input.diasHotel);
+  
+  if (diasTotais === 0) {
+    diasTotais = diasHotelNum > 0 ? diasHotelNum + 1 : 1;
+  }
+
   const diasUteis = calcularDiasUteis(input.dataInicio, input.dataFim);
   const diasParaViagem = calcularDiasParaViagem(input.dataInicio);
   const pessoas = Math.max(1, sanitizeNumber(input.numPessoas, 1));
 
   const custoPassagem = sanitizeNumber(input.custoPassagem) * pessoas;
-  const custoHospedagem = sanitizeNumber(input.diariasHotel) * sanitizeNumber(input.diasHotel);
+  const custoHospedagem = sanitizeNumber(input.diariasHotel) * diasHotelNum;
   const custoAlimentacao = sanitizeNumber(input.gastoAlimentacao) * diasTotais * pessoas;
   const custoTransporte = sanitizeNumber(input.gastoTransporte) * diasTotais;
   const custoAtividades = sanitizeNumber(input.gastoAtividades) * pessoas;
