@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const tools = [
   { name: 'Gerador de CPF', path: '/documentos/gerador-cpf', category: 'Documentos', keywords: ['cpf', 'gerar', 'documento'] },
@@ -55,13 +56,25 @@ const tools = [
   { name: 'Gerador de Cartão de Crédito', path: '/documentos/gerador-cartao-credito', category: 'Documentos', keywords: ['cartão', 'crédito', 'gerador', 'teste', 'cc'] },
   { name: 'Calculadora de Combustível', path: '/utilidades/calculadora-combustivel', category: 'Utilidades', keywords: ['combustível', 'gasolina', 'viagem', 'consumo', 'litros'] },
   { name: 'Validador de E-mail', path: '/utilidades/validador-email', category: 'Utilidades', keywords: ['email', 'validador', 'verificador', 'temporário', 'descartável'] },
+  { name: 'Calculadora de Churrasco', path: '/utilidades/calculadora-churrasco', category: 'Utilidades', keywords: ['churrasco', 'carne', 'bebida', 'festa', 'quantidade'] },
+  { name: 'Formatador de Dados', path: '/utilidades/formatador-dados', category: 'Utilidades', keywords: ['formatar', 'limpar', 'cpf', 'cnpj', 'telefone', 'celular', 'lote'] },
+  { name: 'Regra de Três', path: '/utilidades/regra-de-tres', category: 'Utilidades', keywords: ['regra de três', 'matemática', 'proporção', 'cálculo', 'simples'] },
+  { name: 'Consumo de Água', path: '/utilidades/consumo-agua', category: 'Utilidades', keywords: ['água', 'beber', 'hidratação', 'litros', 'saúde'] },
+  { name: 'Precificação de Receitas', path: '/financeiro/precificacao-receitas', category: 'Financeiro', keywords: ['preço', 'receita', 'custo', 'venda', 'lucro', 'markup', 'doces', 'salgados'] },
+  { name: 'Gerador de Recibos', path: '/documentos/gerador-recibos', category: 'Documentos', keywords: ['recibo', 'pagamento', 'pdf', 'comprovante', 'gerador', 'imprimir'] },
+  { name: 'Idade Gestacional', path: '/utilidades/idade-gestacional', category: 'Utilidades', keywords: ['idade gestacional', 'gravidez', 'semanas', 'dum', 'dpp', 'parto'] },
+  { name: 'Cronômetro Pomodoro', path: '/utilidades/pomodoro', category: 'Utilidades', keywords: ['pomodoro', 'foco', 'estudo', 'produtividade', 'timer', 'temporizador'] },
+  { name: 'Sorteador de Nomes', path: '/utilidades/sorteador-nomes', category: 'Utilidades', keywords: ['sorteio', 'nomes', 'rifa', 'instagram', 'aleatório'] },
+  { name: 'Calculadora do Amor', path: '/utilidades/calculadora-amor', category: 'Utilidades', keywords: ['amor', 'calculadora', 'casal', 'compatibilidade', 'nomes', 'crush', 'brincadeira'] },
 ];
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const filtered = query.length > 0
     ? tools.filter(tool =>
@@ -70,6 +83,10 @@ export default function SearchBar() {
         tool.keywords.some(kw => kw.includes(query.toLowerCase()))
       )
     : [];
+
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [query]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -81,6 +98,36 @@ export default function SearchBar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen || filtered.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev < filtered.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeIndex >= 0 && activeIndex < filtered.length) {
+        setIsOpen(false);
+        setQuery('');
+        router.push(filtered[activeIndex].path);
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeIndex >= 0 && resultsRef.current) {
+      const activeElement = resultsRef.current.children[activeIndex] as HTMLElement;
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [activeIndex]);
 
   return (
     <div className="relative w-full max-w-2xl mx-auto group">
@@ -98,6 +145,7 @@ export default function SearchBar() {
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
         className="w-full py-3 pl-11 pr-4 border-2 border-slate-200 rounded-full text-base shadow-sm outline-none transition-all duration-300 focus:border-blue-500 focus:shadow-md focus:ring-4 focus:ring-blue-50"
       />
       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors duration-300 group-focus-within:text-blue-500">
@@ -108,8 +156,9 @@ export default function SearchBar() {
         <div
           ref={resultsRef}
           className="absolute w-full bg-white border border-slate-200 rounded-2xl text-left block z-50 shadow-xl mt-3 max-h-[400px] overflow-y-auto divide-y divide-slate-100"
+          role="listbox"
         >
-          {filtered.map((tool) => (
+          {filtered.map((tool, index) => (
             <Link
               key={tool.path}
               href={tool.path}
@@ -117,9 +166,11 @@ export default function SearchBar() {
                 setIsOpen(false);
                 setQuery('');
               }}
-              className="flex items-center px-6 py-4 hover:bg-slate-50 transition-colors text-slate-800"
+              className={`flex items-center px-6 py-4 transition-colors text-slate-800 ${activeIndex === index ? 'bg-blue-50' : 'hover:bg-slate-50'}`}
+              role="option"
+              aria-selected={activeIndex === index}
             >
-              <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full mr-4 tracking-wide uppercase">
+              <span className="text-xs font-bold text-blue-700 bg-white border border-blue-100 px-3 py-1 rounded-full mr-4 tracking-wide uppercase">
                 {tool.category}
               </span>
               <span className="font-semibold text-base">{tool.name}</span>

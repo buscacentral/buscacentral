@@ -14,6 +14,7 @@ export default function ToolCard({ title, description, href, icon, color = 'blue
     green: 'bg-green-50 border-green-200 hover:border-green-400',
     purple: 'bg-purple-50 border-purple-200 hover:border-purple-400',
     orange: 'bg-orange-50 border-orange-200 hover:border-orange-400',
+    red: 'bg-red-50 border-red-200 hover:border-red-400',
   };
 
   return (
