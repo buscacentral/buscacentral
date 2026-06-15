@@ -131,6 +131,91 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
         </div>
       </>
     )
+  },
+  'calculadora-de-imc-e-peso-ideal': {
+    title: 'IMC e Saúde: Como calcular e entender seu peso ideal',
+    date: '17 de Junho, 2026',
+    isoDate: '2026-06-17T10:00:00.000Z',
+    category: 'Saúde',
+    description: 'Entenda como funciona o Índice de Massa Corporal (IMC), suas limitações para atletas e como usá-lo como um guia inicial para a sua saúde.',
+    content: (
+      <>
+        <p>O Índice de Massa Corporal (IMC) é uma métrica criada no século 19 pelo matemático Adolphe Quetelet e, até hoje, é o padrão utilizado pela Organização Mundial da Saúde (OMS) para classificar o peso das populações.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Como a matemática do IMC funciona?</h2>
+        <p>O cálculo é extremamente simples: basta dividir o seu peso (em quilos) pela sua altura (em metros) elevada ao quadrado. O número resultante encaixa você em uma tabela de classificação que vai de "Abaixo do peso" até "Obesidade Grau III".</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">A limitação para Atletas</h2>
+        <p>Apesar de ser excelente para dados populacionais, o IMC falha miseravelmente ao analisar atletas ou pessoas com grande volume de massa muscular (hipertrofia). Como músculos pesam mais que gordura (em relação ao volume), um fisiculturista pode ser classificado como "Obeso" no IMC, mesmo tendo apenas 8% de gordura corporal.</p>
+        <p>Por isso, o IMC deve ser usado como um indicador inicial de saúde, mas nunca substituir exames como bioimpedância ou a avaliação dobras cutâneas.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Descubra o seu IMC agora mesmo</h3>
+          <p className="text-blue-800">Calcule em menos de 5 segundos utilizando a nossa <Link href="/utilidades/calculadora-imc" className="underline font-semibold hover:text-blue-900">Calculadora de IMC Online</Link> e veja em qual classificação você se encontra.</p>
+        </div>
+      </>
+    )
+  },
+  'o-que-e-base64-e-como-funciona': {
+    title: 'O que é Base64 e por que ele é onipresente na web?',
+    date: '17 de Junho, 2026',
+    isoDate: '2026-06-17T12:00:00.000Z',
+    category: 'Desenvolvimento',
+    description: 'Descubra como a codificação Base64 transforma imagens, arquivos e dados binários em texto simples para transitarem de forma segura pela internet.',
+    content: (
+      <>
+        <p>Se você já analisou o código fonte de uma página web ou inspecionou um e-mail com anexos, provavelmente já se deparou com um bloco gigante de letras e números aleatórios acompanhados de um `data:image/png;base64,`. Isso é a magia do Base64 em ação.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Por que precisamos de texto?</h2>
+        <p>Protocolos antigos da internet (como o SMTP para e-mails) foram desenhados para trafegar apenas texto em inglês (tabela ASCII). Eles entram em pânico se tentarem transmitir um dado "binário" cru, como um arquivo de áudio ou uma imagem. É aí que entra o Base64.</p>
+        <p>O Base64 é um algoritmo de <strong>codificação</strong> (não confunda com criptografia) que pega dados binários ilegíveis e os converte num conjunto de 64 caracteres seguros (A-Z, a-z, 0-9, + e /). Assim, um arquivo ZIP pode "fingir" ser um texto normal e passar livremente por qualquer sistema de e-mail ou API JSON.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Codificação não é Criptografia</h2>
+        <p>Muitos desenvolvedores novatos cometem o erro catastrófico de "proteger" senhas convertendo-as para Base64. Lembre-se: o Base64 é universal e bidirecional. Qualquer pessoa no planeta consegue reverter um Base64 para o seu estado original em milissegundos, pois não há nenhuma "chave secreta" envolvida.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Ferramenta de Conversão Rápida</h3>
+          <p className="text-blue-800">Precisa encodar ou decodar uma string ou token JWT? Use o nosso <Link href="/utilidades/base64" className="underline font-semibold hover:text-blue-900">Conversor Base64 Gratuito</Link> e tenha o resultado na mesma hora, diretamente no seu navegador.</p>
+        </div>
+      </>
+    )
+  },
+  'como-funciona-api-de-cep-correios': {
+    title: 'Como funciona a estrutura e a busca de um CEP no Brasil?',
+    date: '18 de Junho, 2026',
+    isoDate: '2026-06-18T09:00:00.000Z',
+    category: 'Tecnologia',
+    description: 'Entenda a lógica por trás dos 8 dígitos do Código de Endereçamento Postal brasileiro e como sistemas integram essas buscas na hora do frete.',
+    content: (
+      <>
+        <p>O Código de Endereçamento Postal (CEP) foi criado pelos Correios em 1971 para acelerar e organizar a entrega de correspondências em um país com dimensões continentais como o Brasil. Mas aqueles 8 dígitos estão longe de serem números aleatórios.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">A anatomia de um CEP</h2>
+        <p>O Brasil é dividido em 10 regiões postais (o primeiro dígito). Por exemplo, CEPs começando com 0 são da Grande São Paulo, enquanto os começando com 2 cobrem o Rio de Janeiro e Espírito Santo.</p>
+        <p>Os 5 primeiros dígitos indicam o roteamento macrorregional (Região, Sub-região, Setor, Subsetor e Divisor de Subsetor). Já os 3 últimos dígitos, após o hífen, representam ruas específicas ou, em cidades muito pequenas, um código geral para toda a cidade (geralmente terminados em -000).</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">APIs de CEP no E-commerce</h2>
+        <p>Quando você digita o seu CEP num e-commerce e a sua rua aparece quase como mágica, existe um sistema fazendo uma chamada rápida a uma "API" (uma ponte de dados). O sistema cruza os 8 números com o banco de dados oficial dos Correios (o DNE - Diretório Nacional de Endereços) para popular o formulário de frete sem que você precise digitar a rua, o bairro ou a cidade.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Consulte qualquer endereço</h3>
+          <p className="text-blue-800">Descubra a rua exata de qualquer CEP do Brasil em tempo real usando nossa página rápida de <Link href="/localizacao/busca-cep" className="underline font-semibold hover:text-blue-900">Busca de CEP</Link>.</p>
+        </div>
+      </>
+    )
+  },
+  'entenda-o-calculo-de-rescisao-de-contrato': {
+    title: 'Demissão ou Pedido de Contas: Como calcular a Rescisão Trabalhista',
+    date: '18 de Junho, 2026',
+    isoDate: '2026-06-18T14:00:00.000Z',
+    category: 'Trabalhista',
+    description: 'Aprenda os conceitos básicos do acerto trabalhista na CLT. Saiba o que muda nos seus direitos quando você é demitido sem justa causa ou decide pedir demissão.',
+    content: (
+      <>
+        <p>O momento da rescisão do contrato de trabalho gera ansiedade tanto para o funcionário quanto para o empregador. Compreender a matemática e a lei por trás das verbas rescisórias evita surpresas e garante que os direitos de ambas as partes sejam respeitados.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Demissão sem Justa Causa</h2>
+        <p>Neste cenário, a empresa decide encerrar o vínculo com o funcionário. É a rescisão mais favorável financeiramente ao trabalhador. Ele tem direito a receber o saldo de salário dos dias trabalhados, férias vencidas e proporcionais (acrescidas de 1/3), 13º salário proporcional, e o aviso prévio (que pode ser trabalhado ou indenizado).</p>
+        <p>Além disso, o funcionário tem acesso liberado ao seu saldo do FGTS acumulado, acrescido da famosa <strong>multa de 40%</strong> sobre esse total, e pode requerer o Seguro-Desemprego.</p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Pedido de Demissão</h2>
+        <p>Quando a vontade de sair parte do funcionário, a lei retira algumas proteções que antes oneravam a empresa. No pedido de demissão, o funcionário perde o direito de sacar o saldo do FGTS, perde a multa de 40% e não pode acionar o Seguro-Desemprego.</p>
+        <p>Além disso, ele deve cumprir o aviso prévio à empresa. Se decidir sair imediatamente e não cumprir os 30 dias de aviso, a empresa tem o direito de <strong>descontar</strong> esse valor do seu acerto final, o que muitas vezes faz a rescisão do funcionário zerar.</p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Simule seu Acerto Trabalhista</h3>
+          <p className="text-blue-800">Calcule os valores exatos e evite surpresas. Use a nossa <Link href="/financeiro/rescisao-trabalhista" className="underline font-semibold hover:text-blue-900">Calculadora de Rescisão do Contrato de Trabalho</Link> de forma 100% gratuita.</p>
+        </div>
+      </>
+    )
   }
 };
 
