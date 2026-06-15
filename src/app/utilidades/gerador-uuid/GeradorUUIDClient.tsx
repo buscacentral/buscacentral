@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function GeradorUUIDClient() {
   const [count, setCount] = useState(1);
@@ -41,30 +44,42 @@ export default function GeradorUUIDClient() {
           />
         </div>
 
-        <button
+        <Button
           onClick={handleGenerate}
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-6"
+          fullWidth
+          className="mb-6 group"
+          leftIcon={<span className="group-hover:rotate-180 transition-transform duration-500 inline-block">🔄</span>}
         >
           Gerar UUID{count > 1 ? 's' : ''}
-        </button>
+        </Button>
 
-        {uuids.length > 0 && (
-          <div className="space-y-3">
-            {uuids.map((uuid, index) => (
-              <div key={index} className="flex items-center gap-3 bg-gray-50 rounded-lg p-4">
-                <code className="flex-1 font-mono text-sm text-gray-900 break-all">{uuid}</code>
-                <CopyButton text={uuid} label="Copiar" />
-              </div>
-            ))}
-            {uuids.length > 1 && (
-              <button
-                onClick={() => navigator.clipboard.writeText(uuids.join('\n'))}
-                className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-              >
-                Copiar todos
-              </button>
-            )}
-          </div>
+        {uuids.length > 0 ? (
+          <ResultCard title={`UUIDs Gerados (${uuids.length})`}>
+            <div className="space-y-3">
+              {uuids.map((uuid, index) => (
+                <div key={index} className="flex items-center gap-3 bg-white border border-gray-100 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow transition-shadow">
+                  <code className="flex-1 font-mono text-xs sm:text-sm font-semibold text-gray-800 break-all">{uuid}</code>
+                  <CopyButton text={uuid} label="Copiar" />
+                </div>
+              ))}
+              {uuids.length > 1 && (
+                <Button
+                  onClick={() => navigator.clipboard.writeText(uuids.join('\n'))}
+                  variant="outline"
+                  fullWidth
+                  className="mt-4"
+                >
+                  📋 Copiar Todos
+                </Button>
+              )}
+            </div>
+          </ResultCard>
+        ) : (
+          <EmptyState
+            icon="🔑"
+            title="Nenhum UUID gerado"
+            description="Selecione a quantidade desejada e clique em Gerar UUIDs para começar."
+          />
         )}
       </div>
 

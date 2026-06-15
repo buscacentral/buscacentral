@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 function getClassificacao(imc: number): { label: string; cor: string; bg: string; border: string } {
   if (imc < 18.5) return { label: 'Abaixo do Peso', cor: 'text-yellow-700', bg: 'bg-yellow-50', border: 'border-yellow-200' };
@@ -85,8 +88,8 @@ export default function CalculadoraIMCClient() {
                 <button
                   key={s}
                   onClick={() => setSexo(sexo === s ? '' : s)}
-                  className={`flex-1 py-3 rounded-lg font-medium transition-colors ${
-                    sexo === s ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  className={`flex-1 py-3 rounded-lg font-medium transition-all duration-300 ${
+                    sexo === s ? 'bg-blue-600 text-white shadow-md scale-[1.02]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {s}
@@ -174,9 +177,9 @@ export default function CalculadoraIMCClient() {
             </div>
           )}
 
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+          <ResultCard title="Detalhes da Avaliação" className="p-0 border-0 shadow-none bg-transparent">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Classificação OMS</h3>
-            <table className="w-full text-sm">
+            <table className="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
               <tbody>
                 {[
                   { faixa: 'Abaixo de 18,5', label: 'Abaixo do Peso', color: 'bg-yellow-100 text-yellow-800' },
@@ -188,29 +191,31 @@ export default function CalculadoraIMCClient() {
                 ].map((row) => {
                   const isCurrent = resultado.classificacao.label === row.label;
                   return (
-                    <tr key={row.label} className={`border-b border-gray-50 ${isCurrent ? 'font-bold' : ''}`}>
-                      <td className="py-2 text-gray-600">{row.faixa}</td>
-                      <td className="py-2">
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${row.color}`}>
+                    <tr key={row.label} className={`border-b border-gray-50 last:border-0 ${isCurrent ? 'bg-blue-50/50' : ''}`}>
+                      <td className="py-3 px-4 text-gray-600">{row.faixa}</td>
+                      <td className="py-3 px-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.color}`}>
                           {row.label}
                         </span>
                       </td>
-                      {isCurrent && <td className="py-2 text-right text-blue-600 text-xs">← Você</td>}
+                      {isCurrent && <td className="py-3 px-4 text-right text-blue-600 text-xs font-bold animate-pulse">← Você</td>}
                     </tr>
                   );
                 })}
               </tbody>
             </table>
-          </div>
+          </ResultCard>
 
-          <p className="text-xs text-gray-400 text-center">
+          <p className="text-xs text-gray-400 text-center mt-4">
             O IMC é um indicador geral. Consulte um médico para avaliação completa.
           </p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <p className="text-gray-500 text-center py-4">Informe seu peso e altura para calcular o IMC.</p>
-        </div>
+        <EmptyState
+          icon="⚖️"
+          title="Pronto para calcular seu IMC"
+          description="Informe seu peso e altura nos campos acima para ver sua classificação e dicas de saúde personalizadas."
+        />
       )}
 
       <article className="mt-12 prose prose-gray max-w-none">

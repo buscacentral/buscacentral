@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 function formatDateISO(date: Date): string {
   const y = date.getFullYear();
@@ -148,101 +150,123 @@ export default function DiasUteisClient() {
   };
 
   return (
-    <>
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Data Inicial</label>
-            <input
-              type="date"
-              value={dataInicio}
-              onChange={(e) => setDataInicio(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-4 space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="space-y-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Data Inicial</label>
+              <input
+                type="date"
+                value={dataInicio}
+                onChange={(e) => setDataInicio(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Data Final</label>
+              <input
+                type="date"
+                value={dataFim}
+                onChange={(e) => setDataFim(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Data Final</label>
-            <input
-              type="date"
-              value={dataFim}
-              onChange={(e) => setDataFim(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+
+          <div className="mb-6">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={incluirFeriados}
+                  onChange={(e) => setIncluirFeriados(e.target.checked)}
+                  className="peer w-5 h-5 border-2 border-slate-300 rounded-md appearance-none checked:bg-sky-600 checked:border-sky-600 transition-colors cursor-pointer"
+                />
+                <svg className="absolute w-3 h-3 text-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">Incluir feriados nacionais</span>
+            </label>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Atalhos (Hoje até...)</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: '+30 dias', action: () => setAtalho(30) },
+                { label: '+60 dias', action: () => setAtalho(60) },
+                { label: '+90 dias', action: () => setAtalho(90) },
+                { label: '+6 meses', action: () => setAtalhoMeses(6) },
+                { label: '+1 ano', action: () => setAtalhoMeses(12) },
+              ].map((atalho) => (
+                <button
+                  key={atalho.label}
+                  onClick={atalho.action}
+                  className="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded-lg hover:bg-sky-100 hover:text-sky-700 transition-colors"
+                >
+                  {atalho.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="mb-6">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={incluirFeriados}
-              onChange={(e) => setIncluirFeriados(e.target.checked)}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-            />
-            <span className="text-sm text-gray-700">Incluir feriados nacionais</span>
-          </label>
-        </div>
-
-        <div className="mb-6">
-          <p className="text-sm text-gray-500 mb-2">Atalhos &ldquo;Hoje até...&rdquo;</p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { label: '30 dias', action: () => setAtalho(30) },
-              { label: '60 dias', action: () => setAtalho(60) },
-              { label: '90 dias', action: () => setAtalho(90) },
-              { label: '6 meses', action: () => setAtalhoMeses(6) },
-              { label: '1 ano', action: () => setAtalhoMeses(12) },
-            ].map((atalho) => (
-              <button
-                key={atalho.label}
-                onClick={atalho.action}
-                className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition-colors"
-              >
-                {atalho.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
+      <div className="lg:col-span-8">
         {resultado ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-blue-700">{resultado.diasCorridos}</p>
-                <p className="text-xs text-blue-600 mt-1">Dias Corridos</p>
+          <ResultCard title="Resultado do Período">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+              <div className="bg-sky-50 border border-sky-100 rounded-xl p-4 text-center hover:shadow-md transition-all">
+                <p className="text-3xl font-black text-sky-700 mb-1">{resultado.diasCorridos}</p>
+                <p className="text-xs font-medium text-sky-600 uppercase tracking-wide">Dias Corridos</p>
               </div>
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-green-700">{resultado.diasUteis}</p>
-                <p className="text-xs text-green-600 mt-1">Dias Úteis</p>
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-center shadow-[0_0_15px_rgba(16,185,129,0.1)] hover:shadow-md hover:shadow-emerald-100 transition-all">
+                <p className="text-3xl font-black text-emerald-700 mb-1">{resultado.diasUteis}</p>
+                <p className="text-xs font-medium text-emerald-600 uppercase tracking-wide">Dias Úteis</p>
               </div>
-              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-orange-700">{resultado.finaisSemana}</p>
-                <p className="text-xs text-orange-600 mt-1">Finais de Semana</p>
+              <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-center hover:shadow-md transition-all">
+                <p className="text-3xl font-black text-amber-700 mb-1">{resultado.finaisSemana}</p>
+                <p className="text-xs font-medium text-amber-600 uppercase tracking-wide">Finais Semana</p>
               </div>
-              <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-purple-700">{resultado.qtdFeriados}</p>
-                <p className="text-xs text-purple-600 mt-1">Feriados</p>
+              <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 text-center hover:shadow-md transition-all">
+                <p className="text-3xl font-black text-purple-700 mb-1">{resultado.qtdFeriados}</p>
+                <p className="text-xs font-medium text-purple-600 uppercase tracking-wide">Feriados</p>
               </div>
             </div>
 
-            {resultado.listaFeriados.length > 0 && (
-              <div className="bg-gray-50 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Feriados no período</h3>
-                <ul className="space-y-1">
+            {resultado.listaFeriados.length > 0 ? (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-purple-600">🎉</span> Feriados no período
+                </h3>
+                <ul className="space-y-2">
                   {resultado.listaFeriados.map((f, idx) => (
-                    <li key={idx} className="flex justify-between text-sm">
-                      <span className="text-gray-600">{f.data}</span>
-                      <span className="text-gray-900 font-medium">{f.nome}</span>
+                    <li key={idx} className="flex justify-between items-center text-sm py-2 border-b border-slate-200/60 last:border-0 last:pb-0">
+                      <span className="font-medium text-slate-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-100">{f.data}</span>
+                      <span className="text-slate-900 font-semibold">{f.nome}</span>
                     </li>
                   ))}
                 </ul>
               </div>
+            ) : (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
+                <p className="text-sm text-slate-500 font-medium">Nenhum feriado encontrado no período selecionado.</p>
+              </div>
             )}
-          </div>
+          </ResultCard>
         ) : (
-          <p className="text-gray-500 text-center py-4">Selecione as datas para ver o resultado.</p>
+          <div className="h-full flex items-center justify-center min-h-[300px]">
+            <EmptyState
+              icon="📅"
+              title="Calcule os Dias Úteis"
+              description="Selecione as datas à esquerda para ver a contagem de dias úteis, corridos e feriados."
+            />
+          </div>
         )}
       </div>
+    </div>
 
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>Como calcular dias úteis?</h2>

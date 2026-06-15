@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { Alert } from '@/components/ui/Alert';
 
 export default function GeradorSenhaClient() {
   const [length, setLength] = useState(16);
@@ -104,29 +107,29 @@ export default function GeradorSenhaClient() {
         </div>
 
         <div className="flex gap-4 mb-6">
-          <button
+          <Button
             onClick={generatePassword}
-            className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            fullWidth
+            className="flex-1 group"
+            leftIcon={<span className="group-hover:rotate-180 transition-transform duration-500 inline-block">🔄</span>}
           >
             Gerar Senha
-          </button>
+          </Button>
           {password && <CopyButton text={password} />}
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 mb-4">
-            ❌ {error}
-          </div>
+          <Alert type="error" message={error} className="mb-4" />
         )}
 
         {password && (
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-500">Força:</span>
-              <span className={`text-sm font-semibold ${strength.color}`}>{strength.label}</span>
+          <ResultCard title="Sua Senha Segura">
+            <div className="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+              <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Nível de Força</span>
+              <span className={`text-sm font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-50 ${strength.color}`}>{strength.label}</span>
             </div>
-            <p className="text-2xl font-mono font-bold text-gray-900 break-all">{password}</p>
-          </div>
+            <p className="text-2xl sm:text-3xl font-mono font-black text-gray-900 break-all bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-inner text-center">{password}</p>
+          </ResultCard>
         )}
       </div>
 

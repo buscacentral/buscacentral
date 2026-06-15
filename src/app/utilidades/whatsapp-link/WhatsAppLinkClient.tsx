@@ -4,6 +4,9 @@ import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
 import QRCode from 'qrcode';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function WhatsAppLinkClient() {
   const [phone, setPhone] = useState('');
@@ -74,44 +77,48 @@ export default function WhatsAppLinkClient() {
           </div>
         </div>
 
-        <button
+        <Button
           onClick={handleGenerate}
-          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+          fullWidth
+          className="bg-green-600 hover:bg-green-700 mt-4 group"
+          leftIcon={<span className="group-hover:scale-110 transition-transform duration-300">💬</span>}
         >
           Gerar Link
-        </button>
+        </Button>
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-            ❌ {error}
-          </div>
+          <Alert type="error" message={error} className="mt-4" />
         )}
 
         {link && (
-          <div className="mt-6 space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">Link gerado:</span>
-                <CopyButton text={link} label="Copiar link" />
+          <ResultCard title="Seu Link do WhatsApp" className="mt-6 border-green-100">
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-700">Link gerado:</span>
+                  <CopyButton text={link} label="Copiar link" />
+                </div>
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block bg-green-50 border border-green-200 rounded-lg p-4 text-green-800 font-mono text-sm sm:text-base break-all hover:bg-green-100 transition-colors shadow-inner"
+                >
+                  {link}
+                </a>
               </div>
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 font-mono text-sm break-all hover:bg-green-100 transition-colors"
-              >
-                {link}
-              </a>
-            </div>
 
-            {qrDataUrl && (
-              <div className="text-center">
-                <p className="text-sm font-medium text-gray-700 mb-2">QR Code:</p>
-                <Image src={qrDataUrl} alt="QR Code WhatsApp" width={300} height={300} unoptimized className="inline-block" />
-                <p className="text-xs text-gray-500 mt-2">Escaneie para abrir o WhatsApp</p>
-              </div>
-            )}
-          </div>
+              {qrDataUrl && (
+                <div className="text-center pt-4 border-t border-gray-100">
+                  <p className="text-sm font-medium text-gray-700 mb-4">QR Code para acesso rápido:</p>
+                  <div className="inline-block p-4 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <Image src={qrDataUrl} alt="QR Code WhatsApp" width={240} height={240} unoptimized className="block mx-auto" />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-4">Aponte a câmera do celular para abrir o WhatsApp</p>
+                </div>
+              )}
+            </div>
+          </ResultCard>
         )}
       </div>
 

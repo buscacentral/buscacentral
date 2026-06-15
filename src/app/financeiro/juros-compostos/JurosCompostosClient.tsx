@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function JurosCompostosClient() {
   const [aporteInicial, setAporteInicial] = useState('1000');
@@ -97,16 +99,16 @@ export default function JurosCompostosClient() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setTipoTempo('meses')}
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-colors ${
-                      tipoTempo === 'meses' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      tipoTempo === 'meses' ? 'bg-blue-600 text-white shadow-md scale-[1.02]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     Meses
                   </button>
                   <button
                     onClick={() => setTipoTempo('anos')}
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-colors ${
-                      tipoTempo === 'anos' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      tipoTempo === 'anos' ? 'bg-blue-600 text-white shadow-md scale-[1.02]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     Anos
@@ -117,49 +119,56 @@ export default function JurosCompostosClient() {
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Resultado</h2>
+        <div className="flex flex-col">
           {resultado ? (
-            <div className="space-y-4">
-              <div className="bg-green-50 rounded-lg p-4 text-center">
-                <p className="text-sm text-green-600 mb-1">Montante Final</p>
-                <p className="text-3xl font-bold text-green-700">{formatCurrency(resultado.montanteFinal)}</p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-gray-500 mb-1">Total Investido</p>
-                  <p className="text-xl font-bold text-gray-900">{formatCurrency(resultado.totalInvestido)}</p>
+            <ResultCard title="Projeção de Rendimento" className="h-full">
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-100 rounded-xl p-5 text-center">
+                  <p className="text-sm font-semibold text-green-600 uppercase tracking-wider mb-1">Montante Final</p>
+                  <p className="text-4xl font-black text-green-700">{formatCurrency(resultado.montanteFinal)}</p>
                 </div>
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-blue-600 mb-1">Total em Juros</p>
-                  <p className="text-xl font-bold text-blue-700">{formatCurrency(resultado.totalJuros)}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Investido</p>
+                    <p className="text-xl font-bold text-gray-900">{formatCurrency(resultado.totalInvestido)}</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+                    <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">Total em Juros</p>
+                    <p className="text-xl font-bold text-blue-700">{formatCurrency(resultado.totalJuros)}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Evolução</h3>
-                <div className="h-48 flex items-end gap-1">
-                  {resultado.pontos.filter((_, i) => i % Math.max(1, Math.floor(resultado.pontos.length / 24)) === 0 || i === resultado.pontos.length - 1).map((ponto) => {
-                    const altura = (ponto.total / maximoGrafico) * 100;
-                    const alturaInvestido = (ponto.investido / maximoGrafico) * 100;
-                    return (
-                      <div key={ponto.mes} className="flex-1 flex flex-col items-center justify-end h-full" title={`Mês ${ponto.mes}: ${formatCurrency(ponto.total)}`}>
-                        <div className="w-full relative" style={{ height: `${altura}%` }}>
-                          <div className="absolute bottom-0 w-full bg-blue-200 rounded-t" style={{ height: `${(alturaInvestido / altura) * 100}%` }} />
-                          <div className="absolute bottom-0 w-full bg-blue-500 rounded-t" style={{ height: '100%' }} />
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-4">Evolução do Patrimônio</h3>
+                  <div className="h-48 flex items-end gap-1">
+                    {resultado.pontos.filter((_, i) => i % Math.max(1, Math.floor(resultado.pontos.length / 24)) === 0 || i === resultado.pontos.length - 1).map((ponto) => {
+                      const altura = (ponto.total / maximoGrafico) * 100;
+                      const alturaInvestido = (ponto.investido / maximoGrafico) * 100;
+                      return (
+                        <div key={ponto.mes} className="flex-1 flex flex-col items-center justify-end h-full group" title={`Mês ${ponto.mes}: ${formatCurrency(ponto.total)}`}>
+                          <div className="w-full relative transition-all duration-300 group-hover:opacity-80" style={{ height: `${altura}%` }}>
+                            <div className="absolute bottom-0 w-full bg-blue-200 rounded-b" style={{ height: `${(alturaInvestido / altura) * 100}%` }} />
+                            <div className="absolute bottom-0 w-full bg-blue-500 rounded-t" style={{ height: '100%' }} />
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>Início</span>
-                  <span>{tipoTempo === 'anos' ? `${tempo} anos` : `${tempo} meses`}</span>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-between text-xs font-semibold text-gray-400 mt-2">
+                    <span>Hoje</span>
+                    <span>{tipoTempo === 'anos' ? `${tempo} anos` : `${tempo} meses`}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </ResultCard>
           ) : (
-            <p className="text-gray-500 text-center py-8">Preencha os parâmetros para ver o resultado.</p>
+            <div className="h-full">
+              <EmptyState
+                icon="📈"
+                title="Simule seus investimentos"
+                description="Preencha os valores ao lado para visualizar a mágica dos juros compostos atuando no seu patrimônio."
+              />
+            </div>
           )}
         </div>
       </div>

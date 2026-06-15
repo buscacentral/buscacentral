@@ -3,6 +3,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { calcularCustoViagem, sanitizeNumber } from '@/lib/viagem-logic';
 import { formatCurrency, formatDecimal } from '@/lib/formatters';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { Alert } from '@/components/ui/Alert';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface City {
   n: string;
@@ -149,209 +153,199 @@ export default function DistanciaCidadesClient() {
     setResult(null);
   };
 
-  return (
-    <>
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <div className="space-y-4">
-          <div ref={originRef} className="relative">
-            <label htmlFor="cidade-origem" className="block text-sm font-medium text-gray-700 mb-2">
-              Cidade de Origem
-              <span className="text-gray-400 font-normal ml-2">({cities.length} cidades)</span>
-            </label>
-            <div className="relative">
-              <input
-                id="cidade-origem"
-                type="text"
-                value={originSearch}
-                onChange={(e) => handleOriginSearch(e.target.value)}
-                onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
-                placeholder="Ex: São Paulo, Uberaba, Curitiba…"
-                className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-              />
-              {originCity && (
-                <span className="absolute right-3 top-3.5 text-green-500">✓</span>
+  return (    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-5 space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="space-y-4">
+            <div ref={originRef} className="relative">
+              <label htmlFor="cidade-origem" className="block text-sm font-medium text-slate-700 mb-2">
+                Cidade de Origem
+                <span className="text-slate-400 font-normal ml-2">({cities.length} cidades)</span>
+              </label>
+              <div className="relative">
+                <input
+                  id="cidade-origem"
+                  type="text"
+                  value={originSearch}
+                  onChange={(e) => handleOriginSearch(e.target.value)}
+                  onFocus={() => originSearch.length >= 2 && setShowOriginDropdown(true)}
+                  placeholder="Ex: São Paulo, Uberaba, Curitiba…"
+                  className="w-full px-4 py-3 pr-10 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
+                />
+                {originCity && (
+                  <span className="absolute right-3 top-3.5 text-emerald-500">✓</span>
+                )}
+              </div>
+              {showOriginDropdown && filteredOrigin.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                  {filteredOrigin.map((city, idx) => (
+                    <button
+                      key={`${city.n}-${city.u}-${idx}`}
+                      onClick={() => selectOrigin(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-sky-50 transition-colors border-b border-slate-50 last:border-0 flex items-center justify-between"
+                    >
+                      <span>
+                        <span className="font-medium text-slate-800">{highlightMatch(city.n, originSearch)}</span>
+                        <span className="text-slate-400 ml-1 text-sm">- {city.u}</span>
+                      </span>
+                      <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{city.u}</span>
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
-            {showOriginDropdown && filteredOrigin.length > 0 && (
-              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
-                {filteredOrigin.map((city, idx) => (
-                  <button
-                    key={`${city.n}-${city.u}-${idx}`}
-                    onClick={() => selectOrigin(city)}
-                    className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
-                  >
-                    <span>
-                      <span className="font-medium">{highlightMatch(city.n, originSearch)}</span>
-                      <span className="text-gray-400 ml-1 text-sm">- {city.u}</span>
-                    </span>
-                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.u}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
-          <div className="flex justify-center">
-            <button
-              onClick={handleSwap}
-              className="p-2.5 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-              title="Inverter cidades"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-              </svg>
-            </button>
-          </div>
-
-          <div ref={destRef} className="relative">
-            <label htmlFor="cidade-destino" className="block text-sm font-medium text-gray-700 mb-2">Cidade de Destino</label>
-            <div className="relative">
-              <input
-                id="cidade-destino"
-                type="text"
-                value={destSearch}
-                onChange={(e) => handleDestSearch(e.target.value)}
-                onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
-                placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus…"
-                className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-              />
-              {destCity && (
-                <span className="absolute right-3 top-3.5 text-green-500">✓</span>
-              )}
-            </div>
-            {showDestDropdown && filteredDest.length > 0 && (
-              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
-                {filteredDest.map((city, idx) => (
-                  <button
-                    key={`${city.n}-${city.u}-${idx}`}
-                    onClick={() => selectDest(city)}
-                    className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 flex items-center justify-between"
-                  >
-                    <span>
-                      <span className="font-medium">{highlightMatch(city.n, destSearch)}</span>
-                      <span className="text-gray-400 ml-1 text-sm">- {city.u}</span>
-                    </span>
-                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{city.u}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={handleCalculate}
-            disabled={!originCity || !destCity || calculating}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {calculating ? (
-              <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            <div className="flex justify-center">
+              <button
+                onClick={handleSwap}
+                className="p-2.5 rounded-full bg-slate-100 hover:bg-sky-100 hover:text-sky-600 transition-colors"
+                title="Inverter cidades"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                 </svg>
-                Calculando…
-              </>
-            ) : (
-              'Calcular Distância'
-            )}
-          </button>
+              </button>
+            </div>
+
+            <div ref={destRef} className="relative">
+              <label htmlFor="cidade-destino" className="block text-sm font-medium text-slate-700 mb-2">Cidade de Destino</label>
+              <div className="relative">
+                <input
+                  id="cidade-destino"
+                  type="text"
+                  value={destSearch}
+                  onChange={(e) => handleDestSearch(e.target.value)}
+                  onFocus={() => destSearch.length >= 2 && setShowDestDropdown(true)}
+                  placeholder="Ex: Rio de Janeiro, Fortaleza, Manaus…"
+                  className="w-full px-4 py-3 pr-10 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
+                />
+                {destCity && (
+                  <span className="absolute right-3 top-3.5 text-emerald-500">✓</span>
+                )}
+              </div>
+              {showDestDropdown && filteredDest.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                  {filteredDest.map((city, idx) => (
+                    <button
+                      key={`${city.n}-${city.u}-${idx}`}
+                      onClick={() => selectDest(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-sky-50 transition-colors border-b border-slate-50 last:border-0 flex items-center justify-between"
+                    >
+                      <span>
+                        <span className="font-medium text-slate-800">{highlightMatch(city.n, destSearch)}</span>
+                        <span className="text-slate-400 ml-1 text-sm">- {city.u}</span>
+                      </span>
+                      <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{city.u}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Button
+              onClick={handleCalculate}
+              disabled={!originCity || !destCity || calculating}
+              isLoading={calculating}
+              fullWidth
+            >
+              Calcular Distância
+            </Button>
+          </div>
         </div>
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-center gap-2">
-            <span>❌</span> {error}
-          </div>
+          <Alert type="error" title="Erro" message={error} />
         )}
+      </div>
 
-        {calculating && !result && (
-          <div className="mt-6 space-y-4 animate-pulse">
+      <div className="lg:col-span-7">
+        {calculating && !result ? (
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4 animate-pulse">
             <div className="text-center">
-              <div className="h-6 w-48 bg-gray-200 rounded mx-auto mb-2" />
-              <div className="h-8 w-64 bg-gray-200 rounded mx-auto" />
+              <div className="h-6 w-48 bg-slate-200 rounded mx-auto mb-2" />
+              <div className="h-8 w-64 bg-slate-200 rounded mx-auto" />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-100 rounded-xl h-32" />
-              <div className="bg-gray-100 rounded-xl h-32" />
+              <div className="bg-slate-100 rounded-xl h-32" />
+              <div className="bg-slate-100 rounded-xl h-32" />
             </div>
           </div>
-        )}
-
-        {result && originCity && destCity && !calculating && (
-          <div className="mt-6">
+        ) : result && originCity && destCity ? (
+          <ResultCard title="Informações da Rota">
             <div className="text-center mb-6">
-              <p className="text-sm text-gray-500 mb-1">Distância calculada</p>
-              <p className="text-lg font-bold text-gray-900">{originCity.n} - {originCity.u}</p>
+              <p className="text-sm text-slate-500 mb-1">Distância calculada</p>
+              <p className="text-lg font-bold text-slate-900">{originCity.n} - {originCity.u}</p>
               <div className="flex items-center justify-center gap-2 my-2">
-                <div className="h-px w-12 bg-gray-300" />
-                <span className="text-gray-400">→</span>
-                <div className="h-px w-12 bg-gray-300" />
+                <div className="h-px w-12 bg-slate-300" />
+                <span className="text-slate-400">→</span>
+                <div className="h-px w-12 bg-slate-300" />
               </div>
-              <p className="text-lg font-bold text-gray-900">{destCity.n} - {destCity.u}</p>
+              <p className="text-lg font-bold text-slate-900">{destCity.n} - {destCity.u}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-5 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-5 text-center shadow-sm">
                 <div className="text-3xl mb-2">📏</div>
                 <p className="text-sm font-medium text-blue-700 mb-1">Distância em Linha Reta</p>
                 <p className="text-4xl font-bold text-blue-600">
                   {result.distance.toLocaleString('pt-BR')}
                 </p>
-                <p className="text-sm text-blue-500 mt-1">quilômetros (Haversine)</p>
+                <p className="text-sm text-blue-500 mt-1">quilômetros</p>
               </div>
 
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-5 text-center">
-                <div className="text-3xl mb-2">🚗</div>
-                <p className="text-sm font-medium text-green-700 mb-1">Estimativa Rodoviária</p>
-                <p className="text-4xl font-bold text-green-600">
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-xl p-5 text-center shadow-sm">
+                <div className="text-3xl mb-2">🛣️</div>
+                <p className="text-sm font-medium text-emerald-700 mb-1">Estimativa Rodoviária</p>
+                <p className="text-4xl font-bold text-emerald-600">
                   {result.estimatedRoad.toLocaleString('pt-BR')}
                 </p>
-                <p className="text-sm text-green-500 mt-1">quilômetros (× 1.3)</p>
+                <p className="text-sm text-emerald-500 mt-1">quilômetros</p>
               </div>
             </div>
 
             {/* Tempo estimado de viagem */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-5 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-5 text-center hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-2">🚗</div>
-                <p className="text-sm font-medium text-purple-700 mb-1">De Carro (80 km/h)</p>
-                <p className="text-2xl font-bold text-purple-600">
+                <p className="text-sm font-medium text-slate-600 mb-1">De Carro (80 km/h)</p>
+                <p className="text-2xl font-bold text-slate-800">
                   {Math.floor(result.estimatedRoad / 80)}h {Math.round((result.estimatedRoad % 80) * 60 / 80)}min
                 </p>
-                <p className="text-sm text-purple-500 mt-1">tempo estimado</p>
+                <p className="text-xs text-slate-400 mt-1">tempo estimado</p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-5 text-center">
+              <div className="bg-white border border-slate-200 rounded-xl p-5 text-center hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-2">🚌</div>
-                <p className="text-sm font-medium text-orange-700 mb-1">De Ônibus (60 km/h)</p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-sm font-medium text-slate-600 mb-1">De Ônibus (60 km/h)</p>
+                <p className="text-2xl font-bold text-slate-800">
                   {Math.floor(result.estimatedRoad / 60)}h {Math.round((result.estimatedRoad % 60) * 60 / 60)}min
                 </p>
-                <p className="text-sm text-orange-500 mt-1">tempo estimado</p>
+                <p className="text-xs text-slate-400 mt-1">tempo estimado</p>
               </div>
             </div>
 
             {/* Calculadora de combustível */}
-            <div className="mt-4 bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">⛽ Calculadora de Combustível</h3>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+              <h3 className="text-sm font-bold text-slate-800 mb-4">⛽ Calculadora de Combustível</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Consumo (km/l)</label>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Consumo (km/l)</label>
                   <input
                     type="number"
                     value={consumo}
                     onChange={(e) => setConsumo(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                     min="1"
                     step="0.5"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Gasolina (R$/litro)</label>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Preço Gasolina (R$)</label>
                   <input
                     type="number"
                     value={precoGasolina}
                     onChange={(e) => setPrecoGasolina(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                     min="0.01"
                     step="0.10"
                   />
@@ -369,13 +363,13 @@ export default function DistanciaCidadesClient() {
                 });
                 return (
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-amber-50 rounded-lg p-3 text-center">
-                      <p className="text-xs text-amber-600 mb-1">Litros Necessários</p>
-                      <p className="text-xl font-bold text-amber-700">{formatDecimal(viagem.litrosNecessarios)}L</p>
+                    <div className="bg-amber-50 rounded-lg p-3 text-center border border-amber-100">
+                      <p className="text-xs font-medium text-amber-700 mb-1">Litros Necessários</p>
+                      <p className="text-xl font-bold text-amber-600">{formatDecimal(viagem.litrosNecessarios)}L</p>
                     </div>
-                    <div className="bg-red-50 rounded-lg p-3 text-center">
-                      <p className="text-xs text-red-600 mb-1">Custo Total</p>
-                      <p className="text-xl font-bold text-red-700">{formatCurrency(viagem.custoTotal)}</p>
+                    <div className="bg-rose-50 rounded-lg p-3 text-center border border-rose-100">
+                      <p className="text-xs font-medium text-rose-700 mb-1">Custo Combustível</p>
+                      <p className="text-xl font-bold text-rose-600">{formatCurrency(viagem.custoTotal)}</p>
                     </div>
                   </div>
                 );
@@ -383,29 +377,33 @@ export default function DistanciaCidadesClient() {
             </div>
 
             {/* Botão Google Maps */}
-            <div className="mt-4">
+            <div className="mb-4">
               <a
                 href={`https://maps.google.com/maps?saddr=${encodeURIComponent(originCity.n + ' - ' + originCity.u)}&daddr=${encodeURIComponent(destCity.n + ' - ' + destCity.u)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 px-6 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all"
+                className="flex items-center justify-center gap-2 w-full py-3 px-6 bg-slate-800 text-white rounded-xl font-semibold hover:bg-slate-900 transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                Ver rota no Google Maps
+                Ver Rota no Google Maps
               </a>
             </div>
 
-            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm text-amber-800">
-                <strong>💡 Como calculamos:</strong> A distância em linha reta usa a fórmula de Haversine 
-                com coordenadas oficiais do IBGE. A estimativa rodoviária aplica um fator de 1.3x.
-              </p>
-            </div>
+            <Alert type="info" message="A distância em linha reta usa a fórmula de Haversine com coordenadas oficiais do IBGE. A estimativa rodoviária aplica um fator de 1.3x." />
+          </ResultCard>
+        ) : (
+          <div className="h-full flex items-center justify-center min-h-[300px]">
+            <EmptyState
+              icon="🗺️"
+              title="Calcule uma Distância"
+              description="Escolha a cidade de origem e a de destino para ver a distância e os custos de viagem."
+            />
           </div>
         )}
       </div>
+    </div>
 
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>Sobre a ferramenta</h2>

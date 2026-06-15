@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const parseBRL = (v: string) => parseFloat(v.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
 const formatCurrency = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -238,8 +240,7 @@ export default function RescisaoTrabalhistaClient() {
         <div className="space-y-4">
           {resultado ? (
             <>
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Verbas Rescisórias</h2>
+              <ResultCard title="Verbas Rescisórias" className="mb-4">
                 <table className="w-full text-sm">
                   <tbody>
                     {resultado.verbas.map((v, i) => (
@@ -255,9 +256,9 @@ export default function RescisaoTrabalhistaClient() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ResultCard>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <ResultCard title="Resumo" className="mb-4">
                 <dl className="space-y-3">
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Total Bruto</dt>
@@ -274,9 +275,9 @@ export default function RescisaoTrabalhistaClient() {
                     <dd className="font-bold text-green-700 text-xl">{formatCurrency(resultado.totalLiquido)}</dd>
                   </div>
                 </dl>
-              </div>
+              </ResultCard>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-4 hover:shadow-sm transition-shadow">
                 <h3 className="text-sm font-semibold text-blue-800 mb-2">Informações Adicionais</h3>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>FGTS total depositado: {formatCurrency(resultado.fgtsTotal)}</li>
@@ -291,8 +292,12 @@ export default function RescisaoTrabalhistaClient() {
               </p>
             </>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <p className="text-gray-500 text-center py-8">Preencha os dados para ver o resultado.</p>
+            <div className="h-full flex flex-col items-center justify-center">
+              <EmptyState
+                icon="💼"
+                title="Aguardando dados"
+                description="Preencha as informações do contrato de trabalho para calcular a rescisão."
+              />
             </div>
           )}
         </div>

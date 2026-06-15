@@ -9,6 +9,9 @@ import {
   type Parcela,
 } from '@/lib/financiamento-logic';
 import { formatCurrency } from '@/lib/formatters';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const parseBRL = (v: string) => sanitizeNumber(v);
 
@@ -213,15 +216,18 @@ export default function FinanciamentoCarroClient() {
                 </p>
               </div>
 
-              <button
+              <Button
                 onClick={() => setMostrarTabela(!mostrarTabela)}
-                className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                variant="outline"
+                fullWidth
+                className="mt-6"
+                leftIcon={<span className={`transition-transform duration-300 inline-block ${mostrarTabela ? 'rotate-180' : ''}`}>⬇️</span>}
               >
                 {mostrarTabela ? 'Ocultar' : 'Mostrar'} Tabela de Amortização
-              </button>
+              </Button>
 
               {mostrarTabela && tabelaAtiva && (
-                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm overflow-x-auto">
+                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm overflow-x-auto mt-4">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-gray-200">
@@ -247,13 +253,17 @@ export default function FinanciamentoCarroClient() {
                 </div>
               )}
 
-              <p className="text-xs text-gray-400 text-center">
+              <p className="text-xs text-gray-400 text-center mt-6">
                 Simulação para fins informativos. Condições reais variam conforme a instituição financeira.
               </p>
             </>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <p className="text-gray-500 text-center py-8">Preencha os dados para ver o resultado.</p>
+            <div className="h-full flex flex-col items-center justify-center">
+              <EmptyState
+                icon="🚗"
+                title="Pronto para simular"
+                description="Preencha os dados do veículo e da entrada para calcular o financiamento."
+              />
             </div>
           )}
         </div>

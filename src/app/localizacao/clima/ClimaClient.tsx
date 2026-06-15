@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { buscarClima, traduzirCodigoTempo, type DadosClima } from '@/lib/clima-logic';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface Cidade {
   nome: string;
@@ -211,18 +214,23 @@ export default function ClimaClient() {
 
         {/* Resultado */}
         {!cidade || carregando ? (
-          <div className="text-center py-12" aria-live="polite">
-            <p className="text-base text-slate-500">Consultando clima…</p>
+          <div className="py-12">
+            <EmptyState
+              icon="🌤️"
+              title="Consultando clima..."
+              description="Aguarde um momento enquanto buscamos as informações mais atualizadas."
+            />
           </div>
         ) : erro ? (
-          <div className="text-center py-12" role="alert">
-            <p className="text-base text-rose-600 font-medium">{erro}</p>
-            <button
+          <div className="py-6">
+            <Alert type="error" message={erro} className="mb-4" />
+            <Button
               onClick={fetchClima}
-              className="mt-4 px-6 py-2 bg-sky-600 text-white rounded-lg font-medium hover:bg-sky-700 transition-colors"
+              variant="outline"
+              className="mx-auto block"
             >
               Tentar novamente
-            </button>
+            </Button>
           </div>
         ) : dados ? (
           <div className="space-y-6">

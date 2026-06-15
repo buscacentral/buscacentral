@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { Alert } from '@/components/ui/Alert';
 
 interface CurrencyRate {
   code: string;
@@ -159,9 +160,7 @@ export default function CotacaoClient({
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 mb-6">
-          ❌ {error}
-        </div>
+        <Alert type="error" message={error} className="mb-6" />
       )}
 
       {/* Cards de moedas */}

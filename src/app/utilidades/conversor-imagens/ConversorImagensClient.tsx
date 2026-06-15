@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 import NextImage from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function ConversorImagensClient() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -91,104 +93,115 @@ export default function ConversorImagensClient() {
     <>
       <canvas ref={canvasRef} className="hidden" />
 
-      <div
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6 hover:border-blue-400 transition-colors cursor-pointer"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-        {originalImage ? (
-          <div>
-            <NextImage src={originalImage} alt="Original" width={300} height={200} unoptimized className="max-h-48 w-auto mx-auto mb-4 rounded" />
-            <p className="text-sm text-gray-500">{fileName} ({formatSize(originalSize)})</p>
-          </div>
-        ) : (
-          <div>
-            <p className="text-4xl mb-2">🖼️</p>
-            <p className="text-gray-600">Arraste uma imagem ou clique para selecionar</p>
-            <p className="text-sm text-gray-400 mt-1">PNG, JPG, WebP, GIF</p>
-          </div>
-        )}
-      </div>
-
-      {originalImage && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-          <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-12">
+        <div
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+          className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          {originalImage ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Formato de saída</label>
-              <div className="flex gap-2">
-                {(['image/webp', 'image/png', 'image/jpeg'] as const).map((fmt) => (
-                  <button
-                    key={fmt}
-                    onClick={() => setFormat(fmt)}
-                    className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-colors ${
-                      format === fmt ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {fmt.split('/')[1].toUpperCase()}
-                  </button>
-                ))}
-              </div>
+              <NextImage src={originalImage} alt="Original" width={300} height={200} unoptimized className="max-h-48 w-auto mx-auto mb-4 rounded-lg shadow-sm" />
+              <p className="text-sm font-medium text-slate-700">{fileName} ({formatSize(originalSize)})</p>
+              <p className="text-xs text-sky-600 mt-2 font-medium">Clique para trocar a imagem</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Qualidade: {quality}%
-              </label>
-              <input
-                type="range"
-                min="10"
-                max="100"
-                value={quality}
-                onChange={(e) => setQuality(parseInt(e.target.value))}
-                className="w-full"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              onClick={convertImage}
-              className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Converter Imagem
-            </button>
-            {convertedImage && (
-              <button
-                onClick={handleDownload}
-                className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-              >
-                Download
-              </button>
-            )}
-          </div>
-
-          {convertedImage && (
-            <div className="mt-4 bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-500">Original:</span>
-                <span className="font-medium">{formatSize(originalSize)}</span>
-              </div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-500">Convertido:</span>
-                <span className="font-medium">{formatSize(convertedSize)}</span>
-              </div>
-              {reduction > 0 && (
-                <div className="flex items-center justify-between text-green-600 font-bold">
-                  <span>Redução:</span>
-                  <span>{reduction}%</span>
-                </div>
-              )}
+          ) : (
+            <div className="py-8">
+              <p className="text-5xl mb-4">🖼️</p>
+              <p className="text-lg font-medium text-slate-800">Arraste uma imagem ou clique para selecionar</p>
+              <p className="text-sm text-slate-500 mt-2 font-medium">Formatos suportados: PNG, JPG, WebP, GIF</p>
             </div>
           )}
         </div>
+      </div>
+
+      {originalImage && (
+        <div className="lg:col-span-12">
+          <ResultCard title="Opções de Conversão">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Formato de saída</label>
+                <div className="flex gap-2">
+                  {(['image/webp', 'image/png', 'image/jpeg'] as const).map((fmt) => (
+                    <button
+                      key={fmt}
+                      onClick={() => setFormat(fmt)}
+                      className={`flex-1 py-2.5 px-3 rounded-lg font-medium text-sm transition-colors ${
+                        format === fmt ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      }`}
+                    >
+                      {fmt.split('/')[1].toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Qualidade: <span className="text-sky-700 font-bold">{quality}%</span>
+                </label>
+                <input
+                  type="range"
+                  min="10"
+                  max="100"
+                  value={quality}
+                  onChange={(e) => setQuality(parseInt(e.target.value))}
+                  className="w-full accent-sky-600"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <Button onClick={convertImage} className="flex-1">
+                Converter Imagem
+              </Button>
+              {convertedImage && (
+                <Button
+                  onClick={handleDownload}
+                  variant="success"
+                  className="flex-1"
+                >
+                  Fazer Download
+                </Button>
+              )}
+            </div>
+
+            {convertedImage && (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                  <span className="text-sm font-medium text-slate-600">Tamanho Original:</span>
+                  <span className="font-bold text-slate-800">{formatSize(originalSize)}</span>
+                </div>
+                <div className="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                  <span className="text-sm font-medium text-slate-600">Tamanho Convertido:</span>
+                  <span className="font-bold text-sky-700">{formatSize(convertedSize)}</span>
+                </div>
+                {reduction > 0 && (
+                  <div className="flex items-center justify-between text-emerald-600 font-bold pt-1">
+                    <span>Redução de Tamanho:</span>
+                    <span>{reduction}% menor</span>
+                  </div>
+                )}
+                {reduction <= 0 && (
+                  <div className="flex items-center justify-between text-amber-600 font-bold pt-1 text-sm">
+                    <span>Nota:</span>
+                    <span>A imagem convertida ficou maior.</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </ResultCard>
+        </div>
       )}
+    </div>
     </>
   );
 }

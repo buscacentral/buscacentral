@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface DiffResult {
   type: 'equal' | 'added' | 'removed';
@@ -71,44 +74,58 @@ export default function ComparadorTextosClient() {
         </div>
       </div>
 
-      <button
+      <Button
         onClick={computeDiff}
         disabled={!text1 && !text2}
-        className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 mb-6"
+        fullWidth
+        className="mb-6 group"
+        leftIcon={<span className="group-hover:rotate-180 transition-transform duration-500 inline-block">⚖️</span>}
       >
         Comparar Textos
-      </button>
+      </Button>
 
-      {showDiff && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div className="flex gap-4 mb-4">
-            <span className="text-sm font-medium text-green-600">+ {stats.added} adicionadas</span>
-            <span className="text-sm font-medium text-red-600">- {stats.removed} removidas</span>
-            <span className="text-sm font-medium text-gray-500">{stats.equal} iguais</span>
+      {showDiff ? (
+        <ResultCard title="Resultado da Comparação">
+          <div className="flex flex-wrap gap-4 mb-4 pb-4 border-b border-gray-100">
+            <span className="flex items-center text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+              <span className="mr-2">+</span> {stats.added} linhas adicionadas
+            </span>
+            <span className="flex items-center text-sm font-medium text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
+              <span className="mr-2">-</span> {stats.removed} linhas removidas
+            </span>
+            <span className="flex items-center text-sm font-medium text-slate-500 bg-slate-50 px-3 py-1 rounded-full">
+              <span className="mr-2">=</span> {stats.equal} linhas iguais
+            </span>
           </div>
           
-          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-            <pre className="text-sm font-mono">
+          <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner border border-slate-800">
+            <pre className="text-sm font-mono leading-relaxed">
               {diff.map((line, i) => (
                 <div
                   key={i}
-                  className={`px-2 py-0.5 ${
+                  className={`px-2 py-0.5 rounded-sm ${
                     line.type === 'added'
-                      ? 'bg-green-900/50 text-green-300'
+                      ? 'bg-emerald-900/40 text-emerald-300'
                       : line.type === 'removed'
-                      ? 'bg-red-900/50 text-red-300'
-                      : 'text-gray-300'
+                      ? 'bg-rose-900/40 text-rose-300'
+                      : 'text-slate-300'
                   }`}
                 >
-                  <span className="inline-block w-6 text-gray-500">
+                  <span className="inline-block w-6 text-slate-500 select-none">
                     {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}
                   </span>
-                  {line.text || ' '}
+                  <span className="break-all whitespace-pre-wrap">{line.text || ' '}</span>
                 </div>
               ))}
             </pre>
           </div>
-        </div>
+        </ResultCard>
+      ) : (
+        <EmptyState
+          icon="🔍"
+          title="Pronto para comparar"
+          description="Preencha os dois campos acima e clique em Comparar Textos para ver a diferença detalhada entre eles."
+        />
       )}
 
       <article className="mt-12 prose prose-gray max-w-none">

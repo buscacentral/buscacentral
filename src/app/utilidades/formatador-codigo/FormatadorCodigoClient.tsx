@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
 
 type Tab = 'json' | 'xml';
 
@@ -200,28 +202,26 @@ export default function FormatadorCodigoClient() {
             />
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            <button onClick={handleFormat} className="bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm">
+          <div className="flex flex-wrap gap-3 mb-6">
+            <Button onClick={handleFormat} variant="primary" className="flex-1 sm:flex-none">
               Formatar
-            </button>
-            <button onClick={handleMinify} className="bg-gray-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors text-sm">
+            </Button>
+            <Button onClick={handleMinify} variant="secondary" className="flex-1 sm:flex-none bg-slate-800 text-white hover:bg-slate-900 border-none">
               Minificar
-            </button>
-            <button onClick={handleValidate} className="bg-green-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors text-sm">
+            </Button>
+            <Button onClick={handleValidate} className="flex-1 sm:flex-none bg-emerald-600 text-white hover:bg-emerald-700 border-none">
               Validar
-            </button>
-            <button onClick={handleCopy} disabled={!output} className="bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm disabled:opacity-50">
+            </Button>
+            <Button onClick={handleCopy} disabled={!output} variant="outline" className="flex-1 sm:flex-none">
               {copied ? '✅ Copiado!' : '📋 Copiar'}
-            </button>
-            <button onClick={handleClear} className="bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm">
+            </Button>
+            <Button onClick={handleClear} variant="ghost" className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50">
               🗑️ Limpar
-            </button>
+            </Button>
           </div>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-              ❌ {error}
-            </div>
+            <Alert type="error" message={error} className="mb-6" />
           )}
 
           {output && (

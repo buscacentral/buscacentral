@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function Base64Client() {
   const [input, setInput] = useState('');
@@ -61,29 +64,29 @@ export default function Base64Client() {
           />
         </div>
 
-        <button
+        <Button
           onClick={handleConvert}
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-6"
+          fullWidth
+          className="mb-6 group"
+          leftIcon={<span className="group-hover:rotate-180 transition-transform duration-500 inline-block">🔄</span>}
         >
           {mode === 'encode' ? 'Codificar' : 'Decodificar'}
-        </button>
+        </Button>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 mb-4">
-            ❌ {error}
-          </div>
+          <Alert type="error" message={error} className="mb-4" />
         )}
 
         {output && (
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Resultado:</span>
+          <ResultCard title="Resultado">
+            <div className="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+              <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Texto Final</span>
               <CopyButton text={output} />
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="font-mono text-sm text-gray-900 break-all">{output}</p>
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 shadow-inner">
+              <p className="font-mono text-sm sm:text-base text-gray-900 break-all">{output}</p>
             </div>
-          </div>
+          </ResultCard>
         )}
       </div>
 

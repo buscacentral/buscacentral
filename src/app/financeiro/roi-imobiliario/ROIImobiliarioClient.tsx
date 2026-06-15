@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { calcularROIImobiliario, sanitizeNumber } from '@/lib/roi-imobiliario-logic';
 import { formatCurrency } from '@/lib/formatters';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function ROIImobiliarioClient() {
   const [valorCompra, setValorCompra] = useState('350000');
@@ -97,55 +98,53 @@ export default function ROIImobiliarioClient() {
       </section>
 
       {/* Resultados */}
-      <section className="lg:col-span-2 space-y-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200">
-        <h2 className="text-lg md:text-xl font-bold text-slate-900 border-b border-slate-200 pb-2">
-          Desempenho Estimado
-        </h2>
+      <section className="lg:col-span-2">
+        <ResultCard title="Desempenho Estimado" className="h-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                Cap Rate Anual (Líquido)
+              </div>
+              <div className="text-3xl font-black text-blue-600 mt-1">
+                {resultado.capRatePercentual.toFixed(2)}%
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Retorno imediato baseado apenas no fluxo de caixa do aluguel.
+              </p>
+            </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Cap Rate Anual (Líquido)
+            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                ROI Anual Total Estimado
+              </div>
+              <div className="text-3xl font-black text-emerald-600 mt-1">
+                {resultado.roiAnualPercentual.toFixed(2)}%
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Retorno real combinado (lucro do aluguel + valorização do imóvel).
+              </p>
             </div>
-            <div className="text-3xl font-black text-sky-600 mt-1">
-              {resultado.capRatePercentual.toFixed(2)}%
-            </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Retorno imediato baseado apenas no fluxo de caixa do aluguel.
-            </p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              ROI Anual Total Estimado
+          <div className="bg-gray-50 p-5 rounded-xl border border-gray-100 space-y-3 text-sm md:text-base text-gray-600">
+            <div className="flex justify-between border-b border-gray-200 pb-2">
+              <span>Capital Total Injetado:</span>
+              <strong className="text-gray-900">{formatCurrency(resultado.investimentoTotal)}</strong>
             </div>
-            <div className="text-3xl font-black text-emerald-600 mt-1">
-              {resultado.roiAnualPercentual.toFixed(2)}%
+            <div className="flex justify-between border-b border-gray-200 pb-2">
+              <span>Ganho Líquido de Aluguel (Ano):</span>
+              <strong className="text-gray-900">{formatCurrency(resultado.ganhoAluguelAnualLiquido)}</strong>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Retorno real combinado (lucro do aluguel + valorização do imóvel).
-            </p>
+            <div className="flex justify-between border-b border-gray-200 pb-2">
+              <span>Ganho por Valorização Patrimonial (Ano):</span>
+              <strong className="text-gray-900">{formatCurrency(resultado.valorizacaoPatrimonialAnual)}</strong>
+            </div>
+            <div className="flex justify-between pt-2 text-base md:text-lg text-gray-900 font-bold">
+              <span>Retorno Financeiro Total (12 meses):</span>
+              <span className="text-gray-950">{formatCurrency(resultado.retornoAnualTotal)}</span>
+            </div>
           </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3 text-sm md:text-base text-slate-600">
-          <div className="flex justify-between border-b border-slate-100 pb-2">
-            <span>Capital Total Injetado:</span>
-            <strong className="text-slate-900">{formatCurrency(resultado.investimentoTotal)}</strong>
-          </div>
-          <div className="flex justify-between border-b border-slate-100 pb-2">
-            <span>Ganho Líquido de Aluguel (Ano):</span>
-            <strong className="text-slate-900">{formatCurrency(resultado.ganhoAluguelAnualLiquido)}</strong>
-          </div>
-          <div className="flex justify-between border-b border-slate-100 pb-2">
-            <span>Ganho por Valorização Patrimonial (Ano):</span>
-            <strong className="text-slate-900">{formatCurrency(resultado.valorizacaoPatrimonialAnual)}</strong>
-          </div>
-          <div className="flex justify-between pt-2 text-base md:text-lg text-slate-900 font-bold">
-            <span>Retorno Financeiro Total (12 meses):</span>
-            <span className="text-slate-950">{formatCurrency(resultado.retornoAnualTotal)}</span>
-          </div>
-        </div>
+        </ResultCard>
       </section>
     </div>
   );
