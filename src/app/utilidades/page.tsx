@@ -13,6 +13,7 @@ const subcategorias = [
     ferramentas: [
       { title: 'Calculadora de Porcentagem', description: 'Calcule porcentagem, variação, acréscimo e desconto.', href: '/utilidades/calculadora-porcentagem', icon: '🔢' },
       { title: 'Calculadora de Desconto', description: 'Veja o preço final com desconto e quanto economiza.', href: '/utilidades/calculadora-desconto', icon: '🏷️' },
+      { title: 'Calculadora de Regra de Três', description: 'Calcule regras de três diretamente ou inversamente proporcionais com passo a passo.', href: '/utilidades/regra-de-tres', icon: '✖️' },
     ],
   },
   {
@@ -20,6 +21,7 @@ const subcategorias = [
     icon: '💻',
     ferramentas: [
       { title: 'Formatador de JSON e XML', description: 'Formate, minifique e valide JSON e XML.', href: '/utilidades/formatador-codigo', icon: '📋' },
+      { title: 'Formatador em Lote (CPF/CNPJ/Tel)', description: 'Limpe e formate grandes listas de dados instantaneamente.', href: '/utilidades/formatador-dados', icon: '🧹' },
       { title: 'Conversor JSON ↔ CSV', description: 'Converta arquivos JSON em CSV ou CSV em JSON de forma local.', href: '/utilidades/json-csv', icon: '🔄' },
       { title: 'Codificador Base64', description: 'Codifique ou decodifique textos em Base64.', href: '/utilidades/base64', icon: '🔄' },
       { title: 'Contador de Palavras e Caracteres', description: 'Conte caracteres, palavras, linhas e estime tempo de leitura.', href: '/utilidades/contador-caracteres', icon: '🔢' },
@@ -44,10 +46,18 @@ const subcategorias = [
     ],
   },
   {
+    nome: 'Dia a Dia',
+    icon: '☀️',
+    ferramentas: [
+      { title: 'Calculadora de Churrasco', description: 'Calcule a quantidade exata de carne, bebida e carvão para o seu evento.', href: '/utilidades/calculadora-churrasco', icon: '🍖' },
+    ],
+  },
+  {
     nome: 'Bem-estar',
     icon: '❤️',
     ferramentas: [
       { title: 'Calculadora de IMC', description: 'Calcule seu IMC, classificação OMS e TMB.', href: '/utilidades/calculadora-imc', icon: '⚖️' },
+      { title: 'Calculadora de Água Diária', description: 'Descubra quantos litros de água beber por dia baseado no seu peso.', href: '/utilidades/consumo-agua', icon: '💧' },
       { title: 'Tabela de Calorias', description: 'Consulte calorias e nutrientes de 200 alimentos (TACO/IBGE).', href: '/utilidades/tabela-calorias', icon: '🍎' },
     ],
   },
