@@ -1,6 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ResultCard } from '@/components/ui/ResultCard';
 import CopyButton from '@/components/CopyButton';
 
 interface CEPData {
@@ -122,24 +126,24 @@ export default function BuscaCEPClient() {
             <label htmlFor="cep" className="block text-sm font-medium text-gray-700 mb-2">
               Digite o CEP
             </label>
-            <div className="flex gap-4">
+            <div className="flex gap-2 mb-6">
               <input
                 id="cep"
                 type="text"
                 value={cep}
                 onChange={(e) => setCep(formatCEP(e.target.value))}
-                placeholder="00000-000"
+                placeholder="Ex: 01001-000"
                 maxLength={9}
-                spellCheck={false}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-mono"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg"
               />
-              <button
+              <Button
                 onClick={handleSearchByCEP}
-                disabled={loading}
-                className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                isLoading={loading}
+                disabled={cep.length < 9}
+                className="min-w-[120px]"
               >
-                {loading ? 'Buscando…' : 'Buscar'}
-              </button>
+                Buscar
+              </Button>
             </div>
           </div>
         ) : (
@@ -182,34 +186,45 @@ export default function BuscaCEPClient() {
                   onChange={(e) => setEstado(e.target.value.toUpperCase().slice(0, 2))}
                   placeholder="SP"
                   maxLength={2}
-                  spellCheck={false}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
                 />
               </div>
             </div>
-            <button
+            <Button
               onClick={handleSearchByAddress}
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+              isLoading={loading}
+              className="w-full"
             >
-              {loading ? 'Buscando…' : 'Buscar CEP'}
-            </button>
+              Buscar CEP
+            </Button>
           </div>
         )}
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-            ❌ {error}
-          </div>
+          <Alert variant="error" className="mt-6 mb-6">
+            {error}
+          </Alert>
+        )}
+
+        {!result && results.length === 0 && !error && !loading && (
+          <EmptyState
+            icon="📍"
+            title="Pronto para buscar"
+            description="Digite um CEP ou um endereço acima para encontrar as informações completas de localização."
+            minHeight="min-h-[250px]"
+          />
         )}
 
         {result && (
-          <div className="mt-6 bg-gray-50 rounded-lg p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-gray-900">{result.cep}</h3>
-              <CopyButton text={formatAddress(result)} label="Copiar endereço" />
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+          <ResultCard
+            title={
+              <div className="flex items-center justify-between w-full">
+                <span className="flex items-center gap-2 font-bold text-xl">{result.cep}</span>
+                <CopyButton text={formatAddress(result)} label="Copiar endereço" />
+              </div>
+            }
+          >
+            <div className="grid grid-cols-2 gap-4 text-sm mt-4">
               <div>
                 <span className="text-gray-500">Logradouro:</span>
                 <p className="font-medium">{result.logradouro || '-'}</p>
@@ -235,14 +250,14 @@ export default function BuscaCEPClient() {
                 <p className="font-medium">{result.ibge || '-'}</p>
               </div>
             </div>
-          </div>
+          </ResultCard>
         )}
 
         {results.length > 0 && (
           <div className="mt-6 space-y-4">
             <h3 className="font-semibold text-gray-900">{results.length} resultado(s) encontrado(s)</h3>
             {results.map((item, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-4">
+              <ResultCard key={index} className="mb-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-bold text-lg">{item.cep}</p>
@@ -250,7 +265,7 @@ export default function BuscaCEPClient() {
                   </div>
                   <CopyButton text={`${item.cep} - ${formatAddress(item)}`} label="Copiar" />
                 </div>
-              </div>
+              </ResultCard>
             ))}
           </div>
         )}

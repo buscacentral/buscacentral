@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Button } from '@/components/ui/Button';
 
 interface ItemPrato extends Alimento {
   porcao: number;
@@ -333,44 +336,56 @@ export default function TabelaCaloriasClient() {
   return (
     <>
       {/* Seção Meu Prato */}
-      {isClient && prato.length > 0 && (
+      {isClient && (
         <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 md:p-6 text-white mb-8 shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between border-b border-white/20 pb-4 mb-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl" aria-hidden="true">🍽️</span>
               <h2 className="text-lg md:text-xl font-bold tracking-tight">Meu Prato / Refeição</h2>
             </div>
-            <button
-              onClick={limparPrato}
-              className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg font-semibold transition border border-white/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              Limpar Prato
-            </button>
+            {prato.length > 0 && (
+              <button
+                onClick={limparPrato}
+                className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg font-semibold transition border border-white/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95"
+              >
+                Limpar Prato
+              </button>
+            )}
           </div>
 
-          {/* Totais do Prato */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center mb-6">
-            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
-              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Calorias</p>
-              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.calorias.toFixed(0)} <span className="text-xs font-normal">kcal</span></p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
-              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Proteínas</p>
-              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.proteinas.toFixed(1)}<span className="text-xs font-normal">g</span></p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
-              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Carbos</p>
-              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.carboidratos.toFixed(1)}<span className="text-xs font-normal">g</span></p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
-              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Gorduras</p>
-              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.gorduras.toFixed(1)}<span className="text-xs font-normal">g</span></p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm col-span-2 sm:col-span-1">
-              <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Fibras</p>
-              <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.fibra.toFixed(1)}<span className="text-xs font-normal">g</span></p>
-            </div>
-          </div>
+          {prato.length === 0 ? (
+            <EmptyState
+              icon="🥗"
+              title="Seu prato está vazio"
+              description="Busque alimentos abaixo e clique em &quot;Adicionar ao Prato&quot; para calcular os totais da sua refeição."
+              className="bg-white/10 border-white/10 text-white"
+              minHeight="min-h-[200px]"
+            />
+          ) : (
+            <div className="animate-in slide-in-from-top-2 fade-in duration-300">
+              {/* Totais do Prato */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center mb-6">
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+                  <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Calorias</p>
+                  <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.calorias.toFixed(0)} <span className="text-xs font-normal">kcal</span></p>
+                </div>
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+                  <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Proteínas</p>
+                  <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.proteinas.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+                </div>
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+                  <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Carbos</p>
+                  <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.carboidratos.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+                </div>
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm">
+                  <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Gorduras</p>
+                  <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.gorduras.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+                </div>
+                <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/10 shadow-sm col-span-2 sm:col-span-1">
+                  <p className="text-[10px] text-blue-100 font-bold uppercase tracking-wider mb-1">Fibras</p>
+                  <p className="text-xl md:text-2xl font-black tabular-nums">{totaisPrato.fibra.toFixed(1)}<span className="text-xs font-normal">g</span></p>
+                </div>
+              </div>
 
           {/* Distribuição Gráfica do Prato */}
           {totaisPrato.peso > 0 && (
@@ -412,11 +427,11 @@ export default function TabelaCaloriasClient() {
                     <span className="font-bold text-slate-900">{item.nome}</span>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
                       <span className="text-xs text-slate-500 font-medium">Porção: {item.porcao}g ({item.categoria})</span>
-                      <div className="text-[10px] text-slate-400 flex gap-2 mt-1 sm:mt-0 font-medium">
-                        <span className="text-blue-600">P: {(item.proteinas * mult).toFixed(1)}g</span>
-                        <span className="text-green-600">C: {(item.carboidratos * mult).toFixed(1)}g</span>
-                        <span className="text-yellow-600">G: {(item.gorduras * mult).toFixed(1)}g</span>
-                        <span className="text-purple-600">F: {(item.fibra * mult).toFixed(1)}g</span>
+                      <div className="mt-2 sm:mt-0 grid grid-cols-4 sm:flex gap-2 font-semibold">
+                        <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] whitespace-nowrap">Proteína: {(item.proteinas * mult).toFixed(1)}g</span>
+                        <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded text-[11px] whitespace-nowrap">Carbos: {(item.carboidratos * mult).toFixed(1)}g</span>
+                        <span className="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded text-[11px] whitespace-nowrap">Gorduras: {(item.gorduras * mult).toFixed(1)}g</span>
+                        <span className="bg-purple-50 text-purple-700 px-2 py-0.5 rounded text-[11px] whitespace-nowrap">Fibras: {(item.fibra * mult).toFixed(1)}g</span>
                       </div>
                     </div>
                   </div>
@@ -436,6 +451,8 @@ export default function TabelaCaloriasClient() {
               );
             })}
           </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -543,7 +560,7 @@ export default function TabelaCaloriasClient() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {alimentosExibidos.map((alimento) => (
-          <div key={alimento.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+          <div key={alimento.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
             <div>
               <div className="flex justify-between items-start mb-2">
                 <div>
@@ -593,12 +610,14 @@ export default function TabelaCaloriasClient() {
             </div>
 
             {/* Ação: Adicionar ao prato */}
-            <button
+            <Button
+              variant="secondary"
               onClick={() => adicionarAoPrato(alimento)}
-              className="w-full mt-4 bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-600 py-2 rounded-lg font-semibold text-xs transition border border-slate-200 hover:border-blue-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="w-full mt-4 group"
+              leftIcon={<span className="group-hover:scale-125 group-hover:rotate-90 transition-transform duration-300 inline-block">＋</span>}
             >
-              <span>＋ Adicionar ao Prato</span>
-            </button>
+              Adicionar ao Prato
+            </Button>
           </div>
         ))}
       </div>
@@ -606,19 +625,37 @@ export default function TabelaCaloriasClient() {
       {/* Carregar Mais */}
       {alimentosFiltrados.length > limiteExibicao && (
         <div className="text-center mt-8">
-          <button
+          <Button
+            variant="outline"
             onClick={() => setLimiteExibicao((prev) => prev + 24)}
-            className="px-6 py-3 bg-white border border-slate-300 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition shadow-sm text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="px-8 shadow-sm"
           >
             Carregar mais alimentos…
-          </button>
+          </Button>
         </div>
       )}
 
       {alimentosFiltrados.length === 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl p-10 shadow-sm text-center">
-          <p className="text-gray-500 font-medium">Nenhum alimento encontrado com esses filtros.</p>
-        </div>
+        <EmptyState
+          icon="🔍"
+          title="Nenhum alimento encontrado"
+          description="Não encontramos nenhum alimento correspondente aos seus filtros. Tente buscar com outros termos ou limpar as opções selecionadas."
+          action={
+            <Button 
+              variant="outline"
+              onClick={() => { 
+                setBusca(''); 
+                setCategoriaFiltro('Todas'); 
+                setFiltroProteico(false); 
+                setFiltroLowCarb(false); 
+                setFiltroBaixaCaloria(false); 
+                setFiltroFibras(false); 
+              }} 
+            >
+              Limpar todos os filtros
+            </Button>
+          }
+        />
       )}
 
       <article className="mt-12 prose prose-gray max-w-none">

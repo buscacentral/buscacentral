@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 const parseBRL = (v: string) => parseFloat(v.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
 const formatCurrency = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -117,8 +119,7 @@ export default function SimuladorInvestimentosClient() {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Parâmetros</h2>
+        <ResultCard title="Parâmetros" animateIn={false}>
           <div className="space-y-4">
             <div>
               <label htmlFor="valor-inicial" className="block text-sm font-medium text-gray-700 mb-1">Valor Inicial (R$)</label>
@@ -153,18 +154,17 @@ export default function SimuladorInvestimentosClient() {
               <p className="text-xs text-gray-400 mt-1">Poupança: {(parseFloat(taxaSelic.replace(',', '.')) * 0.7).toFixed(1)}% a.a. (70% SELIC)</p>
             </div>
           </div>
-        </div>
+        </ResultCard>
 
         <div className="space-y-4 min-w-0">
           {resultado ? (
             <>
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm min-w-0">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Comparativo</h2>
+              <ResultCard title="Comparativo" className="min-w-0">
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                   {resultado.investimentos.map((inv) => {
                     const isVencedor = inv.nome === resultado.vencedor.nome;
                     return (
-                      <div key={inv.nome} className={`rounded-xl p-4 text-center border flex-1 min-w-[140px] ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200 shadow-sm' : 'bg-gray-50 border-gray-200'}`}>
+                      <div key={inv.nome} className={`rounded-xl p-4 text-center border flex-1 min-w-[140px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${isVencedor ? 'bg-green-50 border-green-300 ring-2 ring-green-200 shadow-sm' : 'bg-gray-50 border-gray-200 hover:bg-white'}`}>
                         <p className="text-2xl mb-1">{inv.icon}</p>
                         <p className="text-sm font-semibold text-gray-500 mb-2 leading-tight break-words">{inv.nome}</p>
                         <p className="text-lg font-bold text-gray-900 break-words">{formatCurrency(inv.valorLiquido)}</p>
@@ -177,10 +177,9 @@ export default function SimuladorInvestimentosClient() {
                     );
                   })}
                 </div>
-              </div>
+              </ResultCard>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-sm font-semibold text-gray-500 mb-3">Evolução</h2>
+              <ResultCard title="Evolução">
                 <div className="h-48 relative">
                   {resultado.investimentos.map((inv) => (
                     <svg key={inv.nome} className="absolute inset-0 w-full h-full" viewBox={`0 0 ${resultado.meses} 100`} preserveAspectRatio="none">
@@ -201,10 +200,9 @@ export default function SimuladorInvestimentosClient() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </ResultCard>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Detalhes</h2>
+              <ResultCard title="Detalhes">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm min-w-[500px]">
                     <thead>
@@ -249,16 +247,19 @@ export default function SimuladorInvestimentosClient() {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </ResultCard>
 
               <p className="text-xs text-gray-400 text-center">
                 Simulação para fins educativos. Não constitui recomendação de investimento.
               </p>
             </>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <p className="text-gray-500 text-center py-8">Preencha os parâmetros para ver o resultado.</p>
-            </div>
+            <EmptyState
+              icon="📈"
+              title="Aguardando dados..."
+              description="Preencha os parâmetros ao lado para ver o comparativo detalhado e a evolução dos seus investimentos ao longo do tempo."
+              minHeight="min-h-[400px]"
+            />
           )}
         </div>
       </div>

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Alert } from '@/components/ui/Alert';
+import { ResultCard } from '@/components/ui/ResultCard';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -168,18 +170,18 @@ export default function CriptomoedasClient() {
     }
   };
 
-  const formatPrice = (price: number) =>
-    price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const formatPrice = useCallback((price: number) =>
+    price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), []);
 
-  const formatCompact = (n: number) => {
+  const formatCompact = useCallback((n: number) => {
     if (n >= 1e12) return `R$ ${(n / 1e12).toFixed(2)}T`;
     if (n >= 1e9) return `R$ ${(n / 1e9).toFixed(2)}B`;
     if (n >= 1e6) return `R$ ${(n / 1e6).toFixed(2)}M`;
     return `R$ ${formatPrice(n)}`;
-  };
+  }, [formatPrice]);
 
-  const formatSupply = (n: number) =>
-    n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+  const formatSupply = useCallback((n: number) =>
+    n.toLocaleString('pt-BR', { maximumFractionDigits: 0 }), []);
 
   const getConvertedValue = () => {
     const value = parseFloat(brlValue.replace(',', '.'));
@@ -241,7 +243,7 @@ export default function CriptomoedasClient() {
     <>
       {/* Fear & Greed Index */}
       {fearGreed && (
-        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 shadow-sm">
+        <ResultCard className="mb-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h2 className="text-sm font-medium text-gray-500 mb-1">Fear & Greed Index</h2>
@@ -276,7 +278,7 @@ export default function CriptomoedasClient() {
               preceder recuperações, enquanto <strong>ganância extrema</strong> pode indicar correção próxima.
             </p>
           </div>
-        </div>
+        </ResultCard>
       )}
 
       {/* Header */}
@@ -294,15 +296,46 @@ export default function CriptomoedasClient() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 mb-4">
+        <Alert variant="error" className="mb-4">
           {error}
-        </div>
+        </Alert>
       )}
 
       {/* Tabela */}
       {loading && cryptos.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Carregando dados do CoinGecko…</p>
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden mb-4 shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">#</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase">Moeda</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase">Preço (BRL)</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase">24h</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase">Detalhes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse bg-white">
+                    <td className="px-4 py-4"><div className="w-4 h-4 bg-gray-200 rounded"></div></td>
+                    <td className="px-4 py-4">
+                      <div className="flex gap-2 items-center">
+                        <div className="w-7 h-7 bg-gray-200 rounded-full"></div>
+                        <div className="space-y-1.5">
+                          <div className="w-20 h-4 bg-gray-200 rounded"></div>
+                          <div className="w-10 h-3 bg-gray-200 rounded"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4"><div className="w-24 h-4 bg-gray-200 rounded ml-auto"></div></td>
+                    <td className="px-4 py-4"><div className="w-12 h-4 bg-gray-200 rounded ml-auto"></div></td>
+                    <td className="px-4 py-4"><div className="w-16 h-4 bg-gray-200 rounded mx-auto"></div></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : (
         <>
@@ -360,8 +393,7 @@ export default function CriptomoedasClient() {
           {/* Conversor + Calculadora */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
             {/* Conversor */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-semibold text-gray-900 mb-3">Conversor BRL → Cripto</h2>
+            <ResultCard title="Conversor BRL → Cripto" animateIn={false} className="h-full">
               <div className="space-y-3">
                 <div>
                   <label htmlFor="brl-value-converter" className="block text-sm text-gray-600 mb-1">Valor em Reais (R$)</label>
@@ -405,13 +437,10 @@ export default function CriptomoedasClient() {
                   </div>
                 </div>
               </div>
-            </div>
+            </ResultCard>
 
             {/* Calculadora de Lucro */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-semibold text-gray-900 mb-3">
-                Calculadora de Lucro/Perda ({cryptos.find(c => c.id === selectedCrypto)?.name || 'Cripto'})
-              </h2>
+            <ResultCard title={`Calculadora de Lucro/Perda (${cryptos.find(c => c.id === selectedCrypto)?.name || 'Cripto'})`} animateIn={false} className="h-full">
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -463,7 +492,7 @@ export default function CriptomoedasClient() {
                   <p className="text-sm text-gray-400">Preencha os campos acima para calcular</p>
                 )}
               </div>
-            </div>
+            </ResultCard>
           </div>
         </>
       )}
@@ -471,7 +500,7 @@ export default function CriptomoedasClient() {
   );
 }
 
-function CryptoRow({
+const CryptoRow = memo(function CryptoRow({
   crypto,
   expanded,
   onToggle,
@@ -509,7 +538,9 @@ function CryptoRow({
         tabIndex={0}
         role="button"
         aria-pressed={selected}
-        className={`cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${selected ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
+        className={`cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${
+          selected ? 'bg-blue-50' : 'hover:bg-blue-50/40 hover:-translate-y-[1px] hover:shadow-sm relative z-10 hover:z-20 bg-white'
+        }`}
       >
         <td className="px-4 py-3 text-sm text-gray-500">
           {crypto.market_cap_rank}
@@ -624,4 +655,4 @@ function CryptoRow({
       )}
     </>
   );
-}
+});

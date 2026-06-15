@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import QRCode from 'qrcode';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function GeradorQRCodeClient() {
   const [text, setText] = useState('');
@@ -50,38 +53,54 @@ export default function GeradorQRCodeClient() {
             id="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="https://buscacentral.com.br ou qualquer texto"
+            placeholder="Cole aqui o link do seu site, seu perfil do Instagram ou um texto qualquer..."
             rows={3}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all focus:shadow-md"
           />
         </div>
 
         <div className="flex gap-4 mb-6">
-          <button
+          <Button
             onClick={handleGenerate}
-            className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            leftIcon="✨"
+            className="flex-1"
           >
             Gerar QR Code
-          </button>
+          </Button>
           {qrDataUrl && (
-            <button
+            <Button
               onClick={handleDownload}
-              className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+              variant="success"
+              leftIcon="📥"
             >
               Download PNG
-            </button>
+            </Button>
           )}
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 mb-4">
-            ❌ {error}
-          </div>
+          <Alert variant="error" className="mb-4">
+            {error}
+          </Alert>
+        )}
+
+        {!qrDataUrl && !error && (
+          <EmptyState
+            icon="📱"
+            title="Aguardando dados"
+            description="Seu QR Code aparecerá aqui. Digite um texto ou URL acima e clique em gerar."
+            minHeight="min-h-[250px]"
+          />
         )}
 
         {qrDataUrl && (
-          <div className="flex justify-center p-6 bg-gray-50 rounded-lg">
-            <Image src={qrDataUrl} alt="QR Code gerado" width={300} height={300} unoptimized className="max-w-[300px] h-auto" />
+          <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg animate-in zoom-in-95 fade-in duration-500">
+            <div className="bg-white p-4 rounded-xl shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer" onClick={handleDownload} title="Clique para baixar">
+              <Image src={qrDataUrl} alt="QR Code gerado" width={300} height={300} unoptimized className="max-w-[300px] h-auto rounded-lg" />
+            </div>
+            <p className="text-sm text-green-600 font-medium mt-6 flex items-center gap-2">
+              <span className="text-lg">✨</span> QR Code gerado com sucesso!
+            </p>
           </div>
         )}
       </div>

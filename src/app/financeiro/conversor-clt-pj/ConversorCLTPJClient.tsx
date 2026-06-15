@@ -8,6 +8,8 @@ import {
   type InputPJ,
 } from '@/lib/clt-pj-logic';
 import { formatCurrency } from '@/lib/formatters';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function ConversorCLTPJClient() {
   const [salarioBruto, setSalarioBruto] = useState('5000');
@@ -139,9 +141,8 @@ export default function ConversorCLTPJClient() {
         {/* Resultados */}
         <div className="space-y-4">
           {resultado ? (
-            <>
-              <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">CLT — Composição do Ganho Real</h2>
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <ResultCard title="CLT — Composição do Ganho Real" animateIn={false}>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Salário Bruto</dt>
@@ -179,7 +180,7 @@ export default function ConversorCLTPJClient() {
                       <dd className="text-green-700">+ {formatCurrency(resultado.clt.planoOdontologico)}</dd>
                     </div>
                   )}
-                  {resultado.clt.valeTransporte > 0 && resultado.clt.descontoVT === 0 && (
+                  {resultado.clt.valeTransporte > 0 && (
                     <div className="flex justify-between">
                       <dt className="text-green-600">(+) Vale Transporte</dt>
                       <dd className="text-green-700">+ {formatCurrency(resultado.clt.valeTransporte)}</dd>
@@ -204,7 +205,7 @@ export default function ConversorCLTPJClient() {
                     <dd className="font-bold text-blue-700 text-lg">{formatCurrency(resultado.clt.ganhoRealCLT)}</dd>
                   </div>
                 </dl>
-              </section>
+              </ResultCard>
 
               <section className="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
                 <h3 className="text-sm font-semibold text-blue-900 mb-3">Provisão Anual CLT (que o PJ não tem)</h3>
@@ -240,8 +241,7 @@ export default function ConversorCLTPJClient() {
                 </dl>
               </section>
 
-              <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">PJ — Faturamento Necessário</h2>
+              <ResultCard title="PJ — Faturamento Necessário" animateIn={false}>
                 <dl className="space-y-2 text-sm">
                   <div className="bg-green-50 rounded-lg p-4 text-center mb-4">
                     <p className="text-sm text-green-600 mb-1">Faturamento Mensal Necessário (Simples Nacional 6%)</p>
@@ -260,10 +260,12 @@ export default function ConversorCLTPJClient() {
                     <dd className="font-bold text-green-700 text-lg">{formatCurrency(resultado.pj.liquido)}</dd>
                   </div>
                 </dl>
-              </section>
+              </ResultCard>
 
-              <section className={`border-2 rounded-xl p-6 shadow-sm ${resultado.vantagem === 'PJ' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'}`}>
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">Comparação Final</h2>
+              <section className={`border-2 rounded-xl p-6 shadow-sm transition-all duration-300 ${resultado.vantagem === 'PJ' ? 'bg-green-50 border-green-300 hover:shadow-md' : 'bg-blue-50 border-blue-300 hover:shadow-md'}`}>
+                <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center justify-center gap-2">
+                  <span className="text-2xl animate-bounce">🏆</span> Comparação Final
+                </h2>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Ganho Real CLT</p>
@@ -279,8 +281,8 @@ export default function ConversorCLTPJClient() {
                   <p className={`text-3xl font-bold ${resultado.diferenca >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                     {resultado.diferenca >= 0 ? '+' : ''}{formatCurrency(resultado.diferenca)}
                   </p>
-                  <p className={`text-sm mt-1 ${resultado.diferenca >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {resultado.vantagem === 'PJ' ? 'PJ é mais vantajoso' : 'CLT é mais vantajoso'} ({resultado.percentual >= 0 ? '+' : ''}{resultado.percentual.toFixed(1)}%)
+                  <p className={`text-sm mt-1 font-medium ${resultado.vantagem === 'PJ' ? 'text-green-600' : 'text-blue-600'}`}>
+                    {resultado.vantagem === 'PJ' ? 'PJ coloca mais dinheiro no seu bolso' : 'CLT oferece melhor pacote de ganhos'} ({resultado.percentual >= 0 ? '+' : ''}{resultado.percentual.toFixed(1)}%)
                   </p>
                 </div>
                 <p className="text-xs text-gray-400 text-center mt-4">
@@ -291,11 +293,13 @@ export default function ConversorCLTPJClient() {
               <p className="text-xs text-gray-400 text-center">
                 Valores estimados para planejamento. Consulte um contador para decisões financeiras.
               </p>
-            </>
+            </div>
           ) : (
-            <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <p className="text-gray-500 text-center py-8">Preencha o salário bruto para ver o comparativo detalhado.</p>
-            </section>
+            <EmptyState
+              icon="⚖️"
+              title="CLT ou PJ? Qual compensa mais?"
+              description="Preencha os dados do seu salário ou proposta no formulário ao lado para descobrir qual regime de contratação coloca mais dinheiro no seu bolso no final do ano."
+            />
           )}
         </div>
       </div>

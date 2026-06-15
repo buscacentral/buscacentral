@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function ExtratorEmailsClient() {
   const [input, setInput] = useState('');
@@ -34,31 +37,42 @@ export default function ExtratorEmailsClient() {
             id="input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Cole qualquer texto, HTML, código ou documento que contenha emails…"
+            placeholder="Onde estão os emails? Cole qualquer texto, HTML, código ou documento..."
             rows={10}
             spellCheck={false}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm transition-all focus:shadow-md"
           />
         </div>
 
         <div className="flex gap-3 mb-6">
-          <button
+          <Button
             onClick={extractEmails}
             disabled={!input.trim()}
-            className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            leftIcon="🔍"
+            className="flex-1"
           >
             Extrair Emails
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleClear}
-            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            variant="secondary"
           >
             Limpar
-          </button>
+          </Button>
         </div>
 
+        {!input && emails.length === 0 && (
+          <EmptyState
+            icon="📧"
+            title=""
+            description="Cole um texto acima para buscar por endereços de email válidos."
+            className="mt-4"
+            minHeight="min-h-[200px]"
+          />
+        )}
+
         {emails.length > 0 && (
-          <div>
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex gap-4">
                 <span className="text-sm text-gray-500">
@@ -76,15 +90,17 @@ export default function ExtratorEmailsClient() {
                 {emails.map((email, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between bg-white rounded-lg px-4 py-2 border border-gray-100"
+                    className="group flex items-center justify-between bg-white rounded-lg px-4 py-2 border border-gray-100 transition-all duration-200 hover:shadow-sm hover:border-blue-200 hover:bg-blue-50/50"
                   >
                     <a
                       href={`mailto:${email}`}
-                      className="text-blue-600 hover:underline font-mono text-sm"
+                      className="text-gray-700 group-hover:text-blue-600 hover:underline font-mono text-sm transition-colors truncate pr-4"
                     >
                       {email}
                     </a>
-                    <CopyButton text={email} label="Copiar" />
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <CopyButton text={email} label="Copiar" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -93,9 +109,9 @@ export default function ExtratorEmailsClient() {
         )}
 
         {input && emails.length === 0 && (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800">
-            Nenhum email encontrado no texto informado.
-          </div>
+          <Alert variant="warning" className="mt-4">
+            Nenhum email encontrado no texto informado. Verifique se o formato está correto.
+          </Alert>
         )}
       </div>
 

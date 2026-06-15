@@ -272,8 +272,11 @@ export function calcularBeneficios(
   outrosBeneficios: number,
   salarioBruto: number,
 ): { totalBeneficios: number; descontoVT: number } {
+  // Se recebe VT e tem valor informado, conta como benefício.
+  // Se não checkar "receberVT", aplica o desconto de 6%. Mas o valor do VT continua sendo um benefício (ex: gasta 300, a empresa dá 300, desconta 6%).
   const descontoVT = receberVT ? 0 : Math.min(valeTransporte, salarioBruto * PERCENTUAL_VT);
-  const vtComoBeneficio = receberVT ? valeTransporte : 0;
+  const vtComoBeneficio = valeTransporte; // Sempre é um benefício se for > 0
+  
   const totalBeneficios = valeRefeicao + planoSaude + planoOdontologico + vtComoBeneficio + gympass + outrosBeneficios;
   return { totalBeneficios, descontoVT };
 }
