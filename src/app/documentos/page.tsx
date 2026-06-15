@@ -7,11 +7,12 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-  { title: 'Gerador de CPF', description: 'Gere CPFs válidos e formatados para testes e desenvolvimento.', href: '/documentos/gerador-cpf', icon: '📄', color: 'bg-blue-50 border-blue-200' },
-  { title: 'Validador de CPF', description: 'Verifique se um CPF é válido usando o algoritmo de dígito verificador.', href: '/documentos/validador-cpf', icon: '✅', color: 'bg-green-50 border-green-200' },
-  { title: 'Gerador de CNPJ', description: 'Gere CNPJs válidos para testes de sistemas e cadastros.', href: '/documentos/gerador-cnpj', icon: '🏢', color: 'bg-purple-50 border-purple-200' },
-  { title: 'Validador de CNPJ', description: 'Valide CNPJs com verificação oficial de dígito verificador.', href: '/documentos/validador-cnpj', icon: '🔍', color: 'bg-orange-50 border-orange-200' },
-  { title: 'Consulta CNPJ', description: 'Consulte razão social, situação cadastral e endereço pela Receita Federal.', href: '/documentos/consulta-cnpj', icon: '🔎', color: 'bg-blue-50 border-blue-200' },
+  { title: 'Gerador de CPF', description: 'Gere números de CPF válidos para testes de software.', href: '/documentos/gerador-cpf', icon: '👤', color: 'bg-blue-50 border-blue-200' },
+  { title: 'Validador de CPF', description: 'Verifique se um CPF é válido e veja seu estado de origem.', href: '/documentos/validador-cpf', icon: '✅', color: 'bg-green-50 border-green-200' },
+  { title: 'Gerador de CNPJ', description: 'Gere números de CNPJ válidos para testes.', href: '/documentos/gerador-cnpj', icon: '🏢', color: 'bg-purple-50 border-purple-200' },
+  { title: 'Validador de CNPJ', description: 'Valide a autenticidade de um CNPJ rapidamente.', href: '/documentos/validador-cnpj', icon: '✔️', color: 'bg-orange-50 border-orange-200' },
+  { title: 'Consulta de CNPJ', description: 'Busque todos os dados públicos de uma empresa pelo CNPJ.', href: '/documentos/consulta-cnpj', icon: '🔍', color: 'bg-blue-50 border-blue-200' },
+  { title: 'Gerador de Cartão de Crédito', description: 'Gere números de cartão válidos para testes de sistemas.', href: '/documentos/gerador-cartao-credito', icon: '💳', color: 'bg-rose-50 border-rose-200' },
 ];
 
 const sugestoes = [

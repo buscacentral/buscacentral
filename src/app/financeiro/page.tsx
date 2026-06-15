@@ -36,6 +36,34 @@ const tools = [
     color: 'bg-purple-50 border-purple-200'
   },
   {
+    title: 'Cálculo de Salário Líquido',
+    description: 'Calcule seu salário líquido com os descontos de INSS e IRPF de 2024.',
+    href: '/financeiro/salario-liquido',
+    icon: '💰',
+    color: 'bg-emerald-50 border-emerald-200'
+  },
+  {
+    title: 'Cálculo de Férias',
+    description: 'Descubra o valor das suas férias, com opções de venda e abono.',
+    href: '/financeiro/ferias',
+    icon: '🏖️',
+    color: 'bg-sky-50 border-sky-200'
+  },
+  {
+    title: '13º Salário',
+    description: 'Calcule o valor exato da 1ª e 2ª parcela do 13º salário.',
+    href: '/financeiro/decimo-terceiro',
+    icon: '🎁',
+    color: 'bg-indigo-50 border-indigo-200'
+  },
+  {
+    title: 'Horas Extras e DSR',
+    description: 'Calcule o valor das horas extras a 50% e 100% com reflexo no DSR.',
+    href: '/financeiro/horas-extras',
+    icon: '⏱️',
+    color: 'bg-rose-50 border-rose-200'
+  },
+  {
     title: 'Conversor CLT para PJ',
     description: 'Descubra quanto cobrar como PJ para equivaler ao salário CLT.',
     href: '/financeiro/conversor-clt-pj',
@@ -60,8 +88,8 @@ const tools = [
     title: 'Simulador de Investimentos',
     description: 'Compare CDB, Tesouro Selic e Poupança.',
     href: '/financeiro/simulador-investimentos',
-    icon: '💰',
-    color: 'bg-blue-50 border-blue-200'
+    icon: '📈',
+    color: 'bg-teal-50 border-teal-200'
   },
   {
     title: 'ROI Imobiliário',

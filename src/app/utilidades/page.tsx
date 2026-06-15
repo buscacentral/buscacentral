@@ -8,13 +8,23 @@ export const metadata: Metadata = {
 
 const subcategorias = [
   {
+    nome: 'Calculadoras',
+    icon: '🧮',
+    ferramentas: [
+      { title: 'Calculadora de Porcentagem', description: 'Calcule porcentagem, variação, acréscimo e desconto.', href: '/utilidades/calculadora-porcentagem', icon: '🔢' },
+      { title: 'Calculadora de Desconto', description: 'Veja o preço final com desconto e quanto economiza.', href: '/utilidades/calculadora-desconto', icon: '🏷️' },
+    ],
+  },
+  {
     nome: 'Texto e Código',
     icon: '💻',
     ferramentas: [
-      { title: 'Codificador Base64', description: 'Codifique ou decodifique textos em Base64.', href: '/utilidades/base64', icon: '🔄' },
       { title: 'Formatador de JSON e XML', description: 'Formate, minifique e valide JSON e XML.', href: '/utilidades/formatador-codigo', icon: '📋' },
+      { title: 'Conversor JSON ↔ CSV', description: 'Converta arquivos JSON em CSV ou CSV em JSON de forma local.', href: '/utilidades/json-csv', icon: '🔄' },
+      { title: 'Codificador Base64', description: 'Codifique ou decodifique textos em Base64.', href: '/utilidades/base64', icon: '🔄' },
+      { title: 'Contador de Palavras e Caracteres', description: 'Conte caracteres, palavras, linhas e estime tempo de leitura.', href: '/utilidades/contador-caracteres', icon: '🔢' },
       { title: 'Comparador de Textos', description: 'Compare dois textos e veja as diferenças.', href: '/utilidades/comparador-textos', icon: '📝' },
-      { title: 'Contador de Caracteres', description: 'Conte caracteres, palavras e linhas.', href: '/utilidades/contador-caracteres', icon: '🔢' },
+      { title: 'Validador de E-mail', description: 'Verifique a sintaxe e identifique e-mails descartáveis.', href: '/utilidades/validador-email', icon: '✉️' },
       { title: 'Removedor de Duplicatas', description: 'Remova linhas duplicadas e ordene listas.', href: '/utilidades/removedor-duplicatas', icon: '🧹' },
       { title: 'Conversor de Caixa', description: 'Transforme texto em MAIÚSCULO, minúsculo, etc.', href: '/utilidades/conversor-caixa', icon: '🔡' },
     ],
@@ -23,11 +33,14 @@ const subcategorias = [
     nome: 'Geradores',
     icon: '⚡',
     ferramentas: [
+      { title: 'Sorteador Online', description: 'Sorteie números ou nomes de forma justa e aleatória.', href: '/utilidades/sorteador', icon: '🎲' },
+      { title: 'Calculadora de Combustível', description: 'Saiba quantos litros vai gastar e o custo total da viagem.', href: '/utilidades/calculadora-combustivel', icon: '⛽' },
       { title: 'Gerador de QR Code', description: 'Gere QR Codes a partir de textos ou URLs.', href: '/utilidades/gerador-qr-code', icon: '📱' },
       { title: 'Gerador de Senha', description: 'Gere senhas seguras e aleatórias.', href: '/utilidades/gerador-senha', icon: '🔐' },
       { title: 'Gerador de UUID', description: 'Gere UUIDs v4 aleatórios.', href: '/utilidades/gerador-uuid', icon: '🆔' },
       { title: 'Gerador de Link WhatsApp', description: 'Crie links e QR Codes para WhatsApp.', href: '/utilidades/whatsapp-link', icon: '💬' },
       { title: 'PIX Copia e Cola', description: 'Gere códigos PIX no padrão EMV.', href: '/utilidades/pix-copia-cola', icon: '💳' },
+      { title: 'Gerador de Lorem Ipsum', description: 'Gere textos placeholder para design e desenvolvimento.', href: '/utilidades/gerador-lorem-ipsum', icon: '📝' },
     ],
   },
   {
@@ -42,15 +55,23 @@ const subcategorias = [
     nome: 'Datas e Tempo',
     icon: '📅',
     ferramentas: [
+      { title: 'Cronômetro e Temporizador', description: 'Meça o tempo com precisão ou use o alarme.', href: '/utilidades/cronometro', icon: '⏱️' },
       { title: 'Calculadora de Dias Úteis', description: 'Calcule dias úteis entre duas datas com feriados.', href: '/utilidades/dias-uteis', icon: '📅' },
       { title: 'Conversor de Timestamp', description: 'Converta entre timestamp Unix e data/hora.', href: '/utilidades/timestamp', icon: '⏰' },
+    ],
+  },
+  {
+    nome: 'Conversores',
+    icon: '🔄',
+    ferramentas: [
+      { title: 'Conversor de Unidades', description: 'Comprimento, peso, temperatura, área, volume e mais.', href: '/utilidades/conversor-unidades', icon: '📐' },
+      { title: 'Conversor de Imagens', description: 'Converta imagens entre WebP, PNG e JPG.', href: '/utilidades/conversor-imagens', icon: '🖼️' },
     ],
   },
   {
     nome: 'Mídia',
     icon: '🎨',
     ferramentas: [
-      { title: 'Conversor de Imagens', description: 'Converta imagens entre WebP, PNG e JPG.', href: '/utilidades/conversor-imagens', icon: '🖼️' },
       { title: 'Seletor de Cores', description: 'Esquemas de cores em HEX, RGB e HSL.', href: '/utilidades/seletor-cores', icon: '🎨' },
       { title: 'Extrator de Emails', description: 'Extraia emails de qualquer texto ou documento.', href: '/utilidades/extrator-emails', icon: '📧' },
     ],

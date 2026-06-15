@@ -20,6 +20,10 @@ const tools = [
   { name: 'Conversor CLT PJ', path: '/financeiro/conversor-clt-pj', category: 'Financeiro', keywords: ['clt', 'pj', 'salário', 'faturamento', 'impostos'] },
   { name: 'Financiamento de Carro', path: '/financeiro/financiamento-carro', category: 'Financeiro', keywords: ['financiamento', 'carro', 'veículo', 'parcelas', 'price', 'sac'] },
   { name: 'ROI Imobiliário', path: '/financeiro/roi-imobiliario', category: 'Financeiro', keywords: ['roi', 'imóvel', 'aluguel', 'cap rate', 'investimento', 'imobiliário'] },
+  { name: 'Salário Líquido', path: '/financeiro/salario-liquido', category: 'Financeiro', keywords: ['salário líquido', 'inss', 'irpf', 'descontos', 'trabalhista', 'calculadora salário'] },
+  { name: 'Cálculo de Férias', path: '/financeiro/ferias', category: 'Financeiro', keywords: ['férias', 'cálculo', 'abono', 'vender férias', 'trabalhista'] },
+  { name: '13º Salário', path: '/financeiro/decimo-terceiro', category: 'Financeiro', keywords: ['13', 'décimo terceiro', 'salário', 'parcela', 'trabalhista'] },
+  { name: 'Horas Extras e DSR', path: '/financeiro/horas-extras', category: 'Financeiro', keywords: ['horas extras', 'dsr', 'trabalhista', '50%', '100%'] },
   { name: 'Rescisão Trabalhista', path: '/financeiro/rescisao-trabalhista', category: 'Financeiro', keywords: ['rescisão', 'demissão', 'fgts', 'aviso', 'trabalhista', 'verbas'] },
   { name: 'Simulador de Investimentos', path: '/financeiro/simulador-investimentos', category: 'Financeiro', keywords: ['investimento', 'cdb', 'tesouro', 'selic', 'poupança', 'rendimento'] },
   { name: 'Gerador de QR Code', path: '/utilidades/gerador-qr-code', category: 'Utilidades', keywords: ['qr', 'code', 'qrcode'] },
@@ -41,6 +45,16 @@ const tools = [
   { name: 'Formatador JSON XML', path: '/utilidades/formatador-codigo', category: 'Utilidades', keywords: ['json', 'xml', 'formatar', 'minificar', 'validar', 'código'] },
   { name: 'Calculadora de IMC', path: '/utilidades/calculadora-imc', category: 'Utilidades', keywords: ['imc', 'peso', 'altura', 'massa corporal', 'obesidade', 'saúde'] },
   { name: 'Tabela de Calorias', path: '/utilidades/tabela-calorias', category: 'Utilidades', keywords: ['calorias', 'taco', 'alimentos', 'nutrição', 'proteínas', 'carboidratos'] },
+  { name: 'Calculadora de Porcentagem', path: '/utilidades/calculadora-porcentagem', category: 'Utilidades', keywords: ['porcentagem', 'cálculo', 'matemática', 'percentual'] },
+  { name: 'Calculadora de Desconto', path: '/utilidades/calculadora-desconto', category: 'Utilidades', keywords: ['desconto', 'preço', 'economia', 'oferta', 'promoção'] },
+  { name: 'Conversor de Unidades', path: '/utilidades/conversor-unidades', category: 'Utilidades', keywords: ['conversor', 'unidades', 'medidas', 'peso', 'comprimento', 'temperatura'] },
+  { name: 'Gerador de Lorem Ipsum', path: '/utilidades/gerador-lorem-ipsum', category: 'Utilidades', keywords: ['lorem', 'ipsum', 'texto', 'placeholder', 'gerador', 'design'] },
+  { name: 'Sorteador Online', path: '/utilidades/sorteador', category: 'Utilidades', keywords: ['sorteador', 'sortear', 'aleatório', 'nomes', 'números'] },
+  { name: 'Cronômetro e Timer', path: '/utilidades/cronometro', category: 'Utilidades', keywords: ['cronômetro', 'timer', 'temporizador', 'alarme', 'tempo'] },
+  { name: 'Conversor JSON CSV', path: '/utilidades/json-csv', category: 'Utilidades', keywords: ['json', 'csv', 'converter', 'dados'] },
+  { name: 'Gerador de Cartão de Crédito', path: '/documentos/gerador-cartao-credito', category: 'Documentos', keywords: ['cartão', 'crédito', 'gerador', 'teste', 'cc'] },
+  { name: 'Calculadora de Combustível', path: '/utilidades/calculadora-combustivel', category: 'Utilidades', keywords: ['combustível', 'gasolina', 'viagem', 'consumo', 'litros'] },
+  { name: 'Validador de E-mail', path: '/utilidades/validador-email', category: 'Utilidades', keywords: ['email', 'validador', 'verificador', 'temporário', 'descartável'] },
 ];
 
 export default function SearchBar() {
