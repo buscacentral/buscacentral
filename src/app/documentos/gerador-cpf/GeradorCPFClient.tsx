@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { generateCPF } from '@/lib/cpf';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function GeradorCPFClient() {
   const [cpf, setCpf] = useState('');
@@ -13,43 +16,65 @@ export default function GeradorCPFClient() {
   };
 
   return (
-    <>
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <div className="flex items-center gap-4 mb-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formatted}
-              onChange={(e) => setFormatted(e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-sm text-gray-700">Formatado (000.000.000-00)</span>
-          </label>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-5 space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="mb-6">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formatted}
+                  onChange={(e) => setFormatted(e.target.checked)}
+                  className="peer w-5 h-5 border-2 border-slate-300 rounded-md appearance-none checked:bg-sky-600 checked:border-sky-600 transition-colors cursor-pointer"
+                />
+                <svg className="absolute w-3 h-3 text-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 transition-colors">Formatado (000.000.000-00)</span>
+            </label>
+          </div>
+
+          <Button onClick={handleGenerate} className="w-full" size="lg">
+            Gerar Novo CPF
+          </Button>
         </div>
 
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={handleGenerate}
-            className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Gerar CPF
-          </button>
-          {cpf && <CopyButton text={cpf} />}
-        </div>
+        <Alert 
+          type="warning" 
+          message="Os dados gerados são fictícios, criados exclusivamente para fins de teste e desenvolvimento. É proibido utilizar estes dados para cadastros reais, fraudes ou qualquer atividade ilícita." 
+        />
+      </div>
 
+      <div className="lg:col-span-7">
         {cpf && (
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-3xl font-mono font-bold text-gray-900">{cpf}</p>
+          <ResultCard title="CPF Gerado" className="animate-fade-in">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Número Válido</span>
+                <CopyButton text={cpf} />
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center shadow-inner relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-sky-500 rounded-l-xl"></div>
+                <p className="text-4xl font-mono font-black text-slate-800 tracking-wider relative z-10 selection:bg-sky-200 selection:text-sky-900">
+                  {cpf}
+                </p>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-100/50 pointer-events-none z-0"></div>
+              </div>
+            </div>
+          </ResultCard>
+        )}
+        {!cpf && (
+          <div className="h-full flex items-center justify-center min-h-[250px] border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+             <div className="text-center p-6 opacity-60">
+               <span className="text-4xl mb-3 block">🧑</span>
+               <p className="text-sm font-medium text-slate-600">Clique em "Gerar" para criar um CPF.</p>
+             </div>
           </div>
         )}
       </div>
-
-      <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <p className="text-sm text-yellow-800">
-          <strong>Aviso:</strong> Os dados gerados são fictícios, criados exclusivamente para fins de teste e desenvolvimento. 
-          É proibido utilizar estes dados para cadastros reais, fraudes ou qualquer atividade ilícita.
-        </p>
-      </div>
+    </div>
 
       <article className="mt-12 prose prose-gray max-w-none">
         <h2>Como funciona o Gerador de CPF?</h2>

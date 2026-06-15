@@ -2,6 +2,10 @@
 
 import { useState, useRef } from 'react';
 import { buscarRastreio, type EventoRastreio, type ResultadoRastreio } from '@/lib/rastreio-logic';
+import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { ResultCard } from '@/components/ui/ResultCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function RastreioClient() {
   const [codigo, setCodigo] = useState('');
@@ -28,81 +32,81 @@ export default function RastreioClient() {
   };
 
   return (
-    <section className="w-full max-w-4xl mx-auto px-4 sm:px-6">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-        {/* Campo de busca */}
-        <div className="max-w-xl mx-auto mb-8">
-          <div className="flex flex-col sm:flex-row gap-3">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-5 space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="mb-6">
+            <label htmlFor="codigo" className="block text-sm font-medium text-slate-700 mb-2">
+              Código de Rastreio
+            </label>
             <input
+              id="codigo"
               ref={inputRef}
               type="text"
               value={codigo}
               onChange={(e) => setCodigo(e.target.value.toUpperCase())}
               onKeyDown={handleKeyDown}
               placeholder="Ex: BR123456789BR"
-              aria-label="Código de rastreio"
               spellCheck={false}
-              className="flex-1 py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-base md:text-lg font-semibold uppercase focus:ring-2 focus:ring-sky-500 outline-none transition"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-lg font-mono uppercase transition-colors"
             />
-            <button
-              onClick={handleRastrear}
-              disabled={carregando}
-              className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-base transition shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {carregando ? 'Buscando…' : 'Rastrear Objeto'}
-            </button>
           </div>
 
+          <Button
+            onClick={handleRastrear}
+            isLoading={carregando}
+            className="w-full"
+            size="lg"
+          >
+            {carregando ? 'Buscando...' : 'Rastrear Objeto'}
+          </Button>
+
           {resultado && !resultado.sucesso && resultado.mensagem && (
-            <p className="text-sm md:text-base text-rose-600 font-medium mt-3" role="alert">
-              {resultado.mensagem}
-            </p>
+            <Alert type="error" message={resultado.mensagem} className="mt-6" />
           )}
         </div>
+      </div>
 
-        {/* Timeline */}
+      <div className="lg:col-span-7">
         {resultado && resultado.sucesso && resultado.eventos.length > 0 && (
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-4">
-              Histórico de Movimentações
-            </h2>
+          <ResultCard title={`Rastreio: ${codigo}`} className="animate-fade-in">
             <div className="relative border-l-2 border-slate-200 pl-6 ml-4 space-y-6 md:space-y-8">
               {resultado.eventos.map((evento: EventoRastreio, idx: number) => (
-                <article key={idx} className="relative">
-                  <div className="absolute -left-[31px] bg-sky-500 w-4 h-4 rounded-full border-4 border-white" />
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <article key={idx} className="relative group">
+                  <div className="absolute -left-[31px] bg-sky-500 w-4 h-4 rounded-full border-4 border-white group-hover:scale-125 group-hover:bg-sky-400 transition-transform" />
+                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-sky-200 transition-colors shadow-sm">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <time className="text-sm font-bold text-sky-600">{evento.data}</time>
-                      <span className="text-sm text-slate-400">{evento.hora}</span>
+                      <span className="text-sm text-slate-400 font-medium">{evento.hora}</span>
                     </div>
                     <h3 className="text-base font-bold text-slate-900 mb-1">{evento.status}</h3>
-                    <p className="text-sm text-slate-500">{evento.local}</p>
+                    <p className="text-sm text-slate-600">{evento.local}</p>
                     {evento.detalhe && (
-                      <p className="text-sm text-slate-400 mt-1">{evento.detalhe}</p>
+                      <p className="text-sm text-slate-500 mt-2 bg-white p-2 rounded border border-slate-100">{evento.detalhe}</p>
                     )}
                   </div>
                 </article>
               ))}
             </div>
-          </div>
+          </ResultCard>
         )}
 
-        {/* Estado vazio com mensagem */}
         {resultado && resultado.sucesso && resultado.eventos.length === 0 && resultado.mensagem && (
-          <div className="max-w-2xl mx-auto text-center py-8">
-            <p className="text-base text-slate-500">{resultado.mensagem}</p>
-          </div>
+          <EmptyState
+            icon="ℹ️"
+            title="Nenhum evento encontrado"
+            description={resultado.mensagem}
+          />
         )}
 
-        {/* Estado inicial */}
         {!resultado && !carregando && (
-          <div className="max-w-2xl mx-auto text-center py-8">
-            <p className="text-base text-slate-400">
-              Digite o código de rastreio e clique em &quot;Rastrear Objeto&quot; para ver o histórico de movimentações.
-            </p>
-          </div>
+          <EmptyState
+            icon="📦"
+            title="Rastreamento de Encomendas"
+            description="Digite o código de rastreio à esquerda e clique em 'Rastrear' para ver o histórico de movimentações da sua encomenda."
+          />
         )}
       </div>
-    </section>
+    </div>
   );
 }

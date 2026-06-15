@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
+import { Button } from '@/components/ui/Button';
+import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function RemovedorDuplicatasClient() {
   const [input, setInput] = useState('');
@@ -38,77 +40,84 @@ export default function RemovedorDuplicatasClient() {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Lista Original</label>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">Lista Original</label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Cole sua lista aqui (um item por linha)..."
             rows={12}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none font-mono text-sm shadow-inner transition-colors"
           />
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-gray-700">Resultado</label>
-            {output && <CopyButton text={output} label="Copiar" />}
+
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            <Button
+              onClick={() => processList('remove-duplicates')}
+              variant="outline"
+              className="w-full text-sm font-bold border-sky-200 text-sky-700 hover:bg-sky-50"
+            >
+              🧹 Remover Duplicatas
+            </Button>
+            <Button
+              onClick={() => processList('sort-asc')}
+              variant="outline"
+              className="w-full text-sm font-bold border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+            >
+              ⬇️ Ordenar A-Z
+            </Button>
+            <Button
+              onClick={() => processList('sort-desc')}
+              variant="outline"
+              className="w-full text-sm font-bold border-purple-200 text-purple-700 hover:bg-purple-50"
+            >
+              ⬆️ Ordenar Z-A
+            </Button>
+            <Button
+              onClick={() => processList('both')}
+              className="w-full text-sm font-bold"
+            >
+              ✨ Limpar + Ordenar
+            </Button>
           </div>
-          <textarea
-            value={output}
-            readOnly
-            rows={12}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono text-sm"
-          />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        <button
-          onClick={() => processList('remove-duplicates')}
-          className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-        >
-          Remover Duplicatas
-        </button>
-        <button
-          onClick={() => processList('sort-asc')}
-          className="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-        >
-          Ordenar A-Z
-        </button>
-        <button
-          onClick={() => processList('sort-desc')}
-          className="flex-1 bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-        >
-          Ordenar Z-A
-        </button>
-        <button
-          onClick={() => processList('both')}
-          className="flex-1 bg-orange-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
-        >
-          Remover + Ordenar
-        </button>
-      </div>
-
-      {stats.original > 0 && (
-        <div className="bg-gray-50 rounded-lg p-4 flex gap-6">
-          <div>
-            <span className="text-sm text-gray-500">Original:</span>
-            <span className="ml-2 font-bold">{stats.original} linhas</span>
-          </div>
-          <div>
-            <span className="text-sm text-gray-500">Resultado:</span>
-            <span className="ml-2 font-bold">{stats.final} linhas</span>
-          </div>
-          {stats.removed > 0 && (
-            <div>
-              <span className="text-sm text-gray-500">Removidas:</span>
-              <span className="ml-2 font-bold text-red-600">{stats.removed} duplicatas</span>
+      <div className="space-y-6">
+        <ResultCard title="Resultado" className="h-full">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-end mb-3">
+              {output && <CopyButton text={output} label="Copiar Texto" />}
             </div>
-          )}
-        </div>
-      )}
-    </>
+            
+            <textarea
+              value={output}
+              readOnly
+              rows={12}
+              placeholder="O resultado aparecerá aqui..."
+              className="w-full px-4 py-3 border border-slate-200 rounded-lg bg-slate-50 resize-none font-mono text-sm text-slate-800 shadow-inner flex-grow focus:outline-none"
+            />
+
+            {stats.original > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-2 bg-sky-50 rounded-lg p-3 border border-sky-100">
+                <div className="text-center p-2 bg-white rounded shadow-sm">
+                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Original</span>
+                  <span className="block font-black text-slate-800 text-lg">{stats.original}</span>
+                </div>
+                <div className="text-center p-2 bg-white rounded shadow-sm">
+                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Final</span>
+                  <span className="block font-black text-sky-600 text-lg">{stats.final}</span>
+                </div>
+                <div className="text-center p-2 bg-white rounded shadow-sm">
+                  <span className="block text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Removidas</span>
+                  <span className="block font-black text-rose-500 text-lg">{stats.removed}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </ResultCard>
+      </div>
+    </div>
   );
 }
