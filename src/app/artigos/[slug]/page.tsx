@@ -3,10 +3,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 // Mocked articles database for AdSense approval
-const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; category: string; description: string }> = {
+const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; isoDate: string; category: string; description: string }> = {
   'o-que-e-uuid-e-por-que-e-seguro': {
     title: 'O que é um UUID e por que ele é seguro?',
     date: '15 de Junho, 2026',
+    isoDate: '2026-06-15T12:00:00.000Z',
     category: 'Tecnologia',
     description: 'Entenda como funcionam os Identificadores Únicos Universais, por que eles são vitais para o desenvolvimento de software e a probabilidade quase nula de uma colisão.',
     content: (
@@ -28,6 +29,7 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
   'como-funciona-tabela-fipe': {
     title: 'Como funciona a Tabela FIPE na prática?',
     date: '14 de Junho, 2026',
+    isoDate: '2026-06-14T12:00:00.000Z',
     category: 'Financeiro',
     description: 'Descubra como a Fundação Instituto de Pesquisas Econômicas calcula o preço médio dos veículos no Brasil e como usar isso a seu favor na hora da negociação.',
     content: (
@@ -49,6 +51,7 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
   'diferenca-clt-e-pj': {
     title: 'CLT vs PJ: Qual vale mais a pena?',
     date: '10 de Junho, 2026',
+    isoDate: '2026-06-10T12:00:00.000Z',
     category: 'Trabalhista',
     description: 'Um guia completo e prático sobre os prós e contras de trabalhar com carteira assinada versus abrir a própria empresa e faturar como Pessoa Jurídica.',
     content: (
@@ -88,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: article.title,
       description: article.description,
       type: 'article',
-      publishedTime: new Date(article.date).toISOString(),
+      publishedTime: article.isoDate,
     }
   };
 }
