@@ -145,10 +145,10 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
                   key={stock.symbol}
                   onClick={() => fetchStock(stock.symbol)}
                   className={`relative bg-white p-5 rounded-2xl border border-slate-200 hover:border-transparent cursor-pointer flex flex-col items-center text-center group transition-all duration-500 ease-out animate-in fade-in slide-in-from-bottom-4`}
-                  style={{ animationDelay: \`\${idx * 75}ms\`, animationFillMode: 'both' }}
+                  style={{ animationDelay: `${idx * 75}ms`, animationFillMode: 'both' }}
                 >
                   {/* Subtle glowing background spell */}
-                  <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none \${
+                  <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
                     isPositive 
                       ? 'bg-gradient-to-b from-emerald-500/5 to-transparent shadow-[0_8px_30px_rgb(16,185,129,0.12)]' 
                       : 'bg-gradient-to-b from-rose-500/5 to-transparent shadow-[0_8px_30px_rgb(244,63,94,0.12)]'
@@ -178,7 +178,7 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
                       <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Preço</span>
                       <span className="font-bold text-slate-800">{formatCurrency(stock.regularMarketPrice)}</span>
                     </div>
-                    <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold \${
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold ${
                       isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
                     }`}>
                       <span>{isPositive ? '↗' : '↘'}</span>
