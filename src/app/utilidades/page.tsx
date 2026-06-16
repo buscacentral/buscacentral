@@ -4,6 +4,15 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Central de Utilidades',
   description: 'Ferramentas úteis gratuitas: QR Code, senhas, UUID, textos, imagens e muito mais.',
+  alternates: { canonical: '/utilidades' },
+  openGraph: {
+    title: 'Central de Utilidades | BuscaCentral',
+    description: 'Ferramentas úteis gratuitas: QR Code, senhas, UUID, textos, imagens e muito mais.',
+    url: 'https://buscacentral.com.br/utilidades',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
 };
 
 const subcategorias = [

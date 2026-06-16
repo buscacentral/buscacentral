@@ -4,6 +4,15 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Central Financeira',
   description: 'Ferramentas financeiras gratuitas: cotações, criptomoedas, tabela FIPE e simuladores.',
+  alternates: { canonical: '/financeiro' },
+  openGraph: {
+    title: 'Central Financeira | BuscaCentral',
+    description: 'Ferramentas financeiras gratuitas: cotações, criptomoedas, tabela FIPE e simuladores.',
+    url: 'https://buscacentral.com.br/financeiro',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
 };
 
 const tools = [
