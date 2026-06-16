@@ -98,6 +98,27 @@ const tools = [
     icon: '🏠',
     color: 'bg-amber-50 border-amber-200'
   },
+  {
+    title: 'Painel B3 (Ações e FIIs)',
+    description: 'Acompanhe as cotações em tempo real da bolsa brasileira.',
+    href: '/financeiro/painel-b3',
+    icon: '📈',
+    color: 'bg-blue-50 border-blue-200'
+  },
+  {
+    title: 'Indicadores Econômicos',
+    description: 'Consulte a Taxa Selic, IPCA, CDI e Poupança atualizados.',
+    href: '/financeiro/indicadores-economicos',
+    icon: '📊',
+    color: 'bg-cyan-50 border-cyan-200'
+  },
+  {
+    title: 'Notícias Financeiras',
+    description: 'Últimas notícias do mercado financeiro e de criptomoedas.',
+    href: '/financeiro/noticias-financeiras',
+    icon: '📰',
+    color: 'bg-gray-50 border-gray-200'
+  },
 ];
 
 export default function FinanceiroPage() {
