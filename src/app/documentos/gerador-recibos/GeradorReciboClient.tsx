@@ -169,7 +169,7 @@ export default function GeradorReciboClient() {
 
           <div id="print-area" className="bg-white border-2 border-slate-800 p-8 rounded-none shadow-md max-w-[800px] mx-auto text-black font-sans">
             <div className="flex justify-between items-center mb-8 border-b-2 border-slate-800 pb-4">
-              <h1 className="text-4xl font-extrabold uppercase tracking-widest text-slate-900">RECIBO</h1>
+              <div role="presentation" className="text-4xl font-extrabold uppercase tracking-widest text-slate-900">RECIBO</div>
               <div className="border-2 border-slate-800 p-3 rounded-md min-w-[200px] text-center bg-slate-50">
                 <span className="text-sm font-bold text-slate-500 block uppercase mb-1">Valor</span>
                 <span className="text-2xl font-bold text-slate-900">{valor ? extenso(valor) : 'R$ 0,00'}</span>

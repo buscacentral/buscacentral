@@ -3,20 +3,19 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Alert } from '@/components/ui/Alert';
 import { ResultCard } from '@/components/ui/ResultCard';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import type { ChartData } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip);
+const LineChartLazy = dynamic(() => import('@/components/LineChartLazy'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+      Carregando gráfico…
+    </div>
+  ),
+});
 
 interface Crypto {
   id: string;
@@ -527,7 +526,7 @@ const CryptoRow = memo(function CryptoRow({
   crypto: Crypto;
   expanded: boolean;
   onToggle: () => void;
-  chartData: ReturnType<typeof Line>['props']['data'] | null;
+  chartData: ChartData<'line'> | null;
   chartLoading: boolean;
   formatPrice: (n: number) => string;
   formatCompact: (n: number) => string;
@@ -604,7 +603,7 @@ const CryptoRow = memo(function CryptoRow({
                   </div>
                 ) : chartData ? (
                   <div className="h-40">
-                    <Line
+                    <LineChartLazy
                       data={chartData}
                       options={{
                         responsive: true,
