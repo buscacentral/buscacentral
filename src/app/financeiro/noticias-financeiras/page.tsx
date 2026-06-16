@@ -7,13 +7,14 @@ export const metadata: Metadata = {
 };
 
 export default async function NoticiasFinanceirasPage() {
-  const apiKey = '45f51f703fea4d6a81ec8ca9b2e942c4';
+  const apiKey = process.env.NEWSAPI_KEY;
   
   // Server-Side Fetching para SEO e Performance
   let initialNews = [];
   let cryptoNews = [];
 
   try {
+    if (!apiKey) throw new Error('NEWSAPI_KEY não configurada.');
     // Usando endpoint 'everything' para garantir resultados diários no Brasil
     const res = await fetch(`https://newsapi.org/v2/everything?q=economia OR "mercado financeiro"&language=pt&sortBy=publishedAt&apiKey=${apiKey}`, {
       next: { revalidate: 3600 } // Faz o cache por 1 hora
@@ -32,6 +33,7 @@ export default async function NoticiasFinanceirasPage() {
   }
 
   try {
+    if (!apiKey) throw new Error('NEWSAPI_KEY não configurada.');
     // Buscando criptomoedas no servidor também para evitar bloqueio de CORS do NewsAPI no cliente
     const resCrypto = await fetch(`https://newsapi.org/v2/everything?q=criptomoedas OR bitcoin OR ethereum&language=pt&sortBy=publishedAt&apiKey=${apiKey}`, {
       next: { revalidate: 3600 }

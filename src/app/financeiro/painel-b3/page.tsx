@@ -7,23 +7,27 @@ export const metadata: Metadata = {
 };
 
 export default async function PainelB3Page() {
-  const apiKey = 'ma5LADevQ1H7H4r9UCa8if';
+  const apiKey = process.env.BRAPI_TOKEN;
   const tickers = ['PETR4', 'VALE3', 'ITUB4', 'MXRF11'];
   let initialStocks: any[] = [];
 
-  try {
-    const promises = tickers.map(t => 
-      fetch(`https://brapi.dev/api/quote/${t}?token=${apiKey}`, {
-        next: { revalidate: 60 } // Atualiza a cada 60 segundos
-      }).then(r => r.json())
-    );
-    
-    const results = await Promise.all(promises);
-    initialStocks = results
-      .filter(d => d && d.results && d.results.length > 0)
-      .map(d => d.results[0]);
-  } catch (error) {
-    console.error("Erro ao buscar ações iniciais:", error);
+  if (apiKey) {
+    try {
+      const promises = tickers.map(t =>
+        fetch(`https://brapi.dev/api/quote/${t}?token=${apiKey}`, {
+          next: { revalidate: 60 } // Atualiza a cada 60 segundos
+        }).then(r => r.json())
+      );
+
+      const results = await Promise.all(promises);
+      initialStocks = results
+        .filter(d => d && d.results && d.results.length > 0)
+        .map(d => d.results[0]);
+    } catch (error) {
+      console.error("Erro ao buscar ações iniciais:", error);
+    }
+  } else {
+    console.warn("BRAPI_TOKEN não configurado. O Painel B3 iniciará sem dados pré-carregados.");
   }
 
   // Schema Markup (JSON-LD) para SEO (FAQ e WebPage)
