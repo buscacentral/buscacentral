@@ -1,26 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function ConsultaProcessosClient() {
   const [nome, setNome] = useState('');
   const [linksGerados, setLinksGerados] = useState<{ jusbrasil: string; escavador: string; google: string } | null>(null);
 
-  const formatNameForUrl = (name: string) => {
-    return name
-      .trim()
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // remove acentos
-      .replace(/[^a-z0-9\s]/g, '') // remove caracteres especiais
-      .replace(/\s+/g, '-'); // substitui espaços por traços
-  };
-
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome.trim() || nome.trim().split(' ').length < 2) return;
 
-    const formattedName = formatNameForUrl(nome);
     const googleQuery = encodeURIComponent(`"${nome.trim()}" processo OR jusbrasil OR tj`);
 
     setLinksGerados({
@@ -161,9 +151,9 @@ export default function ConsultaProcessosClient() {
           <h4 className="font-bold text-blue-900 mb-2">Quer ler mais sobre o assunto?</h4>
           <p className="text-blue-800">
             Preparamos um artigo completo explicando passo a passo o que fazer se você descobrir que está sendo processado. Leia nosso artigo:{' '}
-            <a href="/artigos/como-saber-se-estou-sendo-processado" className="font-bold underline hover:text-blue-900">
+            <Link href="/artigos/como-saber-se-estou-sendo-processado" className="font-bold underline hover:text-blue-900">
               Como saber se estou sendo processado?
-            </a>
+            </Link>
           </p>
         </div>
       </article>

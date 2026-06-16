@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 
 interface Ingredient {
   id: string;
@@ -11,6 +11,27 @@ interface Ingredient {
   usedQty: number;
   usedUnit: string;
 }
+
+const convertToSameUnit = (qty: number, fromUnit: string, toUnit: string) => {
+  if (fromUnit === toUnit) return qty;
+
+  // Convert everything to base units (g, ml, un)
+  let baseQty = qty;
+  if (fromUnit === 'kg') baseQty = qty * 1000;
+  if (fromUnit === 'L') baseQty = qty * 1000;
+
+  let finalQty = baseQty;
+  if (toUnit === 'kg') finalQty = baseQty / 1000;
+  if (toUnit === 'L') finalQty = baseQty / 1000;
+
+  return finalQty;
+};
+
+const calculateIngredientCost = (ing: Ingredient) => {
+  // If units mismatch but belong to same category (e.g., kg and g)
+  const usedQtyInPurchasedUnit = convertToSameUnit(ing.usedQty, ing.usedUnit, ing.purchasedUnit);
+  return (ing.purchasePrice / ing.purchasedQty) * usedQtyInPurchasedUnit;
+};
 
 export default function PrecificacaoClient() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -26,36 +47,7 @@ export default function PrecificacaoClient() {
   const [fixedCosts, setFixedCosts] = useState('15'); // 15% para custos fixos/invisiveis
   const [packagingCost, setPackagingCost] = useState('0');
 
-  const [results, setResults] = useState({
-    totalCost: 0,
-    costPerUnit: 0,
-    suggestedPrice: 0,
-    profitPerUnit: 0,
-    totalProfit: 0,
-  });
-
   const units = ['g', 'kg', 'ml', 'L', 'un'];
-
-  const convertToSameUnit = (qty: number, fromUnit: string, toUnit: string) => {
-    if (fromUnit === toUnit) return qty;
-    
-    // Convert everything to base units (g, ml, un)
-    let baseQty = qty;
-    if (fromUnit === 'kg') baseQty = qty * 1000;
-    if (fromUnit === 'L') baseQty = qty * 1000;
-
-    let finalQty = baseQty;
-    if (toUnit === 'kg') finalQty = baseQty / 1000;
-    if (toUnit === 'L') finalQty = baseQty / 1000;
-    
-    return finalQty;
-  };
-
-  const calculateIngredientCost = (ing: Ingredient) => {
-    // If units mismatch but belong to same category (e.g., kg and g)
-    let usedQtyInPurchasedUnit = convertToSameUnit(ing.usedQty, ing.usedUnit, ing.purchasedUnit);
-    return (ing.purchasePrice / ing.purchasedQty) * usedQtyInPurchasedUnit;
-  };
 
   const addIngredient = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +74,7 @@ export default function PrecificacaoClient() {
     setIngredients(ingredients.filter(ing => ing.id !== id));
   };
 
-  useEffect(() => {
+  const results = useMemo(() => {
     const rawCost = ingredients.reduce((sum, ing) => sum + calculateIngredientCost(ing), 0);
     const unitsYield = parseFloat(yieldUnits) || 1;
     const margin = parseFloat(profitMargin) || 0;
@@ -112,13 +104,13 @@ export default function PrecificacaoClient() {
     const profitPerUnit = suggestedPrice - costPerUnit;
     const totalProfit = suggestedTotalPrice - costWithFixed;
 
-    setResults({
+    return {
       totalCost: costWithFixed,
       costPerUnit,
       suggestedPrice,
       profitPerUnit,
       totalProfit,
-    });
+    };
   }, [ingredients, yieldUnits, profitMargin, fixedCosts, packagingCost]);
 
   const formatCurrency = (value: number) => {

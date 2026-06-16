@@ -10,7 +10,6 @@ import {
 } from '@/lib/financiamento-logic';
 import { formatCurrency } from '@/lib/formatters';
 import { Button } from '@/components/ui/Button';
-import { ResultCard } from '@/components/ui/ResultCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 const parseBRL = (v: string) => sanitizeNumber(v);

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scripts utilitários one-off (seed/geração), não fazem parte do app:
+    "add_12_articles.js",
+    "insert_articles.js",
+    "generate-cities.js",
   ]),
   {
     rules: {

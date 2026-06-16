@@ -31,8 +31,8 @@ export default function JsonCsvClient() {
       );
 
       return [header.join(','), ...rows].join('\n');
-    } catch (e: any) {
-      throw new Error(`Erro ao fazer parse do JSON: ${e.message}`);
+    } catch (e) {
+      throw new Error(`Erro ao fazer parse do JSON: ${e instanceof Error ? e.message : String(e)}`);
     }
   };
 
@@ -67,9 +67,9 @@ export default function JsonCsvClient() {
 
       for (let i = 1; i < lines.length; i++) {
         const values = parseCsvLine(lines[i]);
-        const obj: Record<string, any> = {};
+        const obj: Record<string, unknown> = {};
         headers.forEach((header, index) => {
-          let val = values[index];
+          const val = values[index];
           if (val !== undefined) {
             // try to parse numbers/booleans if it makes sense, or keep as string
             if (val === 'true') obj[header] = true;
@@ -83,8 +83,8 @@ export default function JsonCsvClient() {
       }
 
       return JSON.stringify(json, null, 2);
-    } catch (e: any) {
-      throw new Error(`Erro ao fazer parse do CSV: ${e.message}`);
+    } catch (e) {
+      throw new Error(`Erro ao fazer parse do CSV: ${e instanceof Error ? e.message : String(e)}`);
     }
   };
 
@@ -99,8 +99,8 @@ export default function JsonCsvClient() {
       } else {
         setOutput(csvToJson(input));
       }
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
     }
   };
 

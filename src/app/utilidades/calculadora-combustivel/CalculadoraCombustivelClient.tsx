@@ -16,8 +16,10 @@ export default function CalculadoraCombustivelClient() {
   } | null>(null);
 
   useEffect(() => {
+    // Lê o parâmetro da URL apenas na montagem (fonte externa ao React).
     const urlParams = new URLSearchParams(window.location.search);
     const d = urlParams.get('distancia');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (d) setDistancia(d.replace('.', ','));
   }, []);
 

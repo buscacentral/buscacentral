@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { calcularPlanejamento, sanitizeNumber, calcularDias } from '@/lib/planejador-viagem-logic';
 import { formatCurrency } from '@/lib/formatters';
 import { ResultCard } from '@/components/ui/ResultCard';
@@ -17,16 +17,12 @@ export default function PlanejadorViagemClient() {
   const [gastoAtividades, setGastoAtividades] = useState('300');
   const [outrosGastos, setOutrosGastos] = useState('0');
 
-  useEffect(() => {
-    if (dataInicio && dataFim) {
-      const dias = calcularDias(dataInicio, dataFim);
-      if (dias > 0) {
-        setDiasHotel(Math.max(0, dias - 1).toString());
-      } else {
-        setDiasHotel('0');
-      }
+  const atualizarDiasHotel = (inicio: string, fim: string) => {
+    if (inicio && fim) {
+      const dias = calcularDias(inicio, fim);
+      setDiasHotel(dias > 0 ? Math.max(0, dias - 1).toString() : '0');
     }
-  }, [dataInicio, dataFim]);
+  };
 
   const resultado = useMemo(() => {
     return calcularPlanejamento({
@@ -63,12 +59,12 @@ export default function PlanejadorViagemClient() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-bold text-gray-800 mb-1">Ida</label>
-            <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)}
+            <input type="date" value={dataInicio} onChange={(e) => { setDataInicio(e.target.value); atualizarDiasHotel(e.target.value, dataFim); }}
               className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-800 mb-1">Volta</label>
-            <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)}
+            <input type="date" value={dataFim} onChange={(e) => { setDataFim(e.target.value); atualizarDiasHotel(dataInicio, e.target.value); }}
               className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
           </div>
         </div>

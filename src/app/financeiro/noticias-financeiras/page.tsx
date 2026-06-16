@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description: 'Acompanhe as últimas notícias e atualizações do mercado financeiro, blockchain e criptomoedas em tempo real.',
 };
 
+interface RawArticle {
+  title?: string;
+  urlToImage?: string;
+}
+
 export default async function NoticiasFinanceirasPage() {
   const apiKey = '45f51f703fea4d6a81ec8ca9b2e942c4';
   
@@ -23,7 +28,7 @@ export default async function NoticiasFinanceirasPage() {
       const data = await res.json();
       if (data && data.articles) {
         initialNews = data.articles
-          .filter((a: any) => a.title && a.title !== '[Removed]' && a.urlToImage)
+          .filter((a: RawArticle) => a.title && a.title !== '[Removed]' && a.urlToImage)
           .slice(0, 30);
       }
     }
@@ -41,7 +46,7 @@ export default async function NoticiasFinanceirasPage() {
       const dataCrypto = await resCrypto.json();
       if (dataCrypto && dataCrypto.articles) {
         cryptoNews = dataCrypto.articles
-          .filter((a: any) => a.title && a.title !== '[Removed]' && a.urlToImage)
+          .filter((a: RawArticle) => a.title && a.title !== '[Removed]' && a.urlToImage)
           .slice(0, 30);
       }
     }

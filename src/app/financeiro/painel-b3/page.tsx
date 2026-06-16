@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import PainelB3Client from './PainelB3Client';
+import PainelB3Client, { type StockData } from './PainelB3Client';
 
 export const metadata: Metadata = {
   title: 'Painel B3 (Ações e FIIs) | Busca Central',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default async function PainelB3Page() {
   const apiKey = 'ma5LADevQ1H7H4r9UCa8if';
   const tickers = ['PETR4', 'VALE3', 'ITUB4', 'MXRF11'];
-  let initialStocks: any[] = [];
+  let initialStocks: StockData[] = [];
 
   try {
     const promises = tickers.map(t => 
