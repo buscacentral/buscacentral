@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import CopyButton from '@/components/CopyButton';
-import QRCode from 'qrcode';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
@@ -39,6 +38,7 @@ export default function WhatsAppLinkClient() {
     setLink(waLink);
 
     try {
+      const QRCode = (await import('qrcode')).default;
       const qr = await QRCode.toDataURL(waLink, { width: 300, margin: 2 });
       setQrDataUrl(qr);
     } catch {

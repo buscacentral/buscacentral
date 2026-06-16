@@ -68,7 +68,6 @@ export default function GeradorCPF() {
       description="Gere CPFs válidos e formatados para uso em testes e desenvolvimento de software."
       ariaLabel="Gerador de CPF interativo"
       path="/documentos/gerador-cpf"
-      lastUpdated="2026-06-16"
       seoContent={seoContent}
       faqItems={faqItems}
       relatedTools={relatedTools}

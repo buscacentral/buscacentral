@@ -86,3 +86,86 @@ export function searchTools(query: string): Tool[] {
       tool.keywords.some((kw) => kw.includes(q))
   );
 }
+
+
+/**
+ * Data da última atualização de cada ferramenta (ISO YYYY-MM-DD), por path.
+ *
+ * Fonte única de verdade: o `ToolPageLayout` lê este mapa automaticamente (via
+ * `getToolLastUpdated`) para exibir "Atualizado em <data>" e preencher o campo
+ * `dateModified` do schema SoftwareApplication.
+ *
+ * COMO MANTER: ao alterar/melhorar uma ferramenta, atualize a data abaixo do
+ * path correspondente. Para sobrescrever pontualmente, passe a prop
+ * `lastUpdated` diretamente ao `<ToolPageLayout>` daquela página.
+ */
+export const toolUpdates: Record<string, string> = {
+  '/documentos/consulta-cnpj': '2026-06-16',
+  '/documentos/consulta-processos': '2026-06-16',
+  '/documentos/gerador-cartao-credito': '2026-06-16',
+  '/documentos/gerador-cnpj': '2026-06-16',
+  '/documentos/gerador-cpf': '2026-06-16',
+  '/documentos/gerador-recibos': '2026-06-16',
+  '/documentos/validador-cnpj': '2026-06-16',
+  '/documentos/validador-cpf': '2026-06-16',
+  '/financeiro/conversor-clt-pj': '2026-06-16',
+  '/financeiro/cotacao': '2026-06-16',
+  '/financeiro/criptomoedas': '2026-06-16',
+  '/financeiro/decimo-terceiro': '2026-06-16',
+  '/financeiro/ferias': '2026-06-16',
+  '/financeiro/financiamento-carro': '2026-06-16',
+  '/financeiro/horas-extras': '2026-06-16',
+  '/financeiro/juros-compostos': '2026-06-16',
+  '/financeiro/precificacao-receitas': '2026-06-16',
+  '/financeiro/rescisao-trabalhista': '2026-06-16',
+  '/financeiro/roi-imobiliario': '2026-06-16',
+  '/financeiro/salario-liquido': '2026-06-16',
+  '/financeiro/simulador-investimentos': '2026-06-16',
+  '/financeiro/tabela-fipe': '2026-06-16',
+  '/localizacao/busca-cep': '2026-06-16',
+  '/localizacao/clima': '2026-06-16',
+  '/localizacao/distancia-cidades': '2026-06-16',
+  '/utilidades/base64': '2026-06-16',
+  '/utilidades/calculadora-amor': '2026-06-16',
+  '/utilidades/calculadora-churrasco': '2026-06-16',
+  '/utilidades/calculadora-combustivel': '2026-06-16',
+  '/utilidades/calculadora-desconto': '2026-06-16',
+  '/utilidades/calculadora-imc': '2026-06-16',
+  '/utilidades/calculadora-porcentagem': '2026-06-16',
+  '/utilidades/comparador-textos': '2026-06-16',
+  '/utilidades/consumo-agua': '2026-06-16',
+  '/utilidades/contador-caracteres': '2026-06-16',
+  '/utilidades/conversor-caixa': '2026-06-16',
+  '/utilidades/conversor-imagens': '2026-06-16',
+  '/utilidades/conversor-unidades': '2026-06-16',
+  '/utilidades/cronometro': '2026-06-16',
+  '/utilidades/dias-uteis': '2026-06-16',
+  '/utilidades/extrator-emails': '2026-06-16',
+  '/utilidades/formatador-codigo': '2026-06-16',
+  '/utilidades/formatador-dados': '2026-06-16',
+  '/utilidades/gerador-lorem-ipsum': '2026-06-16',
+  '/utilidades/gerador-qr-code': '2026-06-16',
+  '/utilidades/gerador-senha': '2026-06-16',
+  '/utilidades/gerador-uuid': '2026-06-16',
+  '/utilidades/idade-gestacional': '2026-06-16',
+  '/utilidades/json-csv': '2026-06-16',
+  '/utilidades/pix-copia-cola': '2026-06-16',
+  '/utilidades/planejador-viagem': '2026-06-16',
+  '/utilidades/pomodoro': '2026-06-16',
+  '/utilidades/rastreio': '2026-06-16',
+  '/utilidades/regra-de-tres': '2026-06-16',
+  '/utilidades/removedor-duplicatas': '2026-06-16',
+  '/utilidades/seletor-cores': '2026-06-16',
+  '/utilidades/sorteador': '2026-06-16',
+  '/utilidades/sorteador-nomes': '2026-06-16',
+  '/utilidades/tabela-calorias': '2026-06-16',
+  '/utilidades/timestamp': '2026-06-16',
+  '/utilidades/validador-email': '2026-06-16',
+  '/utilidades/whatsapp-link': '2026-06-16',
+};
+
+/** Retorna a data de última atualização (ISO) de uma ferramenta pelo path. */
+export function getToolLastUpdated(path?: string): string | undefined {
+  if (!path) return undefined;
+  return toolUpdates[path];
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AdPlaceholder from './AdPlaceholder';
+import { getToolLastUpdated } from '@/lib/tools';
 
 export interface FAQItem {
   question: string;
@@ -129,6 +130,10 @@ export default function ToolPageLayout({
   const url = path ? `${SITE_URL}${path}` : SITE_URL;
   const breadcrumbs = path ? buildBreadcrumbs(path, title) : null;
 
+  // Usa a data explícita (prop) ou, na ausência, a data centralizada em
+  // src/lib/tools.ts mapeada pelo path da ferramenta.
+  const effectiveLastUpdated = lastUpdated ?? getToolLastUpdated(path);
+
   const breadcrumbSchema = breadcrumbs
     ? {
         "@context": "https://schema.org",
@@ -155,7 +160,7 @@ export default function ToolPageLayout({
       "priceCurrency": "BRL"
     },
     "url": url,
-    ...(lastUpdated ? { "dateModified": lastUpdated } : {}),
+    ...(effectiveLastUpdated ? { "dateModified": effectiveLastUpdated } : {}),
   };
 
   const faqSchema = faqItems && faqItems.length > 0 ? {
@@ -222,12 +227,12 @@ export default function ToolPageLayout({
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
         <p className="text-gray-600 text-lg">{description}</p>
-        {lastUpdated && (
+        {effectiveLastUpdated && (
           <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-gray-500">
             <span aria-hidden="true">🗓️</span>
             Atualizado em{' '}
-            <time dateTime={lastUpdated} className="font-medium text-gray-600">
-              {formatUpdatedDate(lastUpdated)}
+            <time dateTime={effectiveLastUpdated} className="font-medium text-gray-600">
+              {formatUpdatedDate(effectiveLastUpdated)}
             </time>
           </p>
         )}

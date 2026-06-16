@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import QRCode from 'qrcode';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
@@ -20,6 +19,7 @@ export default function GeradorQRCodeClient() {
 
     setError('');
     try {
+      const QRCode = (await import('qrcode')).default;
       const url = await QRCode.toDataURL(text, {
         width: 400,
         margin: 2,

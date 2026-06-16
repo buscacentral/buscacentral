@@ -1,18 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import dynamic from 'next/dynamic';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip);
+const LineChartLazy = dynamic(() => import('@/components/LineChartLazy'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+      Carregando gráfico…
+    </div>
+  ),
+});
 
 interface CoinData {
   market_data: {
@@ -251,7 +249,7 @@ export default function CryptoDetailClient({
         <h2 className="text-base md:text-lg font-semibold text-slate-900 mb-4">Preço 7 dias (BRL)</h2>
         {chart ? (
           <div className="h-64">
-            <Line
+            <LineChartLazy
               data={chart}
               options={{
                 responsive: true,
