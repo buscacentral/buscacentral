@@ -8,6 +8,13 @@ export const metadata: Metadata = {
 
 export const artigos = [
   {
+    slug: 'como-escrever-valores-por-extenso',
+    title: 'Como escrever valores por extenso em cheques, recibos e contratos',
+    excerpt: 'Aprenda as regras do português para escrever valores em reais por extenso sem erros — e entenda por que isso protege você contra fraudes.',
+    date: '02 de Julho, 2026',
+    category: 'Documentos'
+  },
+  {
     slug: 'como-saber-se-estou-sendo-processado',
     title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',
     excerpt: 'Descubra como pesquisar se o seu nome está envolvido em processos judiciais de forma totalmente gratuita, segura e de acordo com a LGPD.',

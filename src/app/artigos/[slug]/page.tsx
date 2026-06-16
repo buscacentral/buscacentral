@@ -4,6 +4,50 @@ import Link from 'next/link';
 
 // Mocked articles database for AdSense approval
 const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; isoDate: string; category: string; description: string }> = {
+  'como-escrever-valores-por-extenso': {
+    title: 'Como escrever valores por extenso em cheques, recibos e contratos',
+    date: '02 de Julho, 2026',
+    isoDate: '2026-07-02T10:00:00.000Z',
+    category: 'Documentos',
+    description: 'Aprenda as regras do português para escrever valores em reais por extenso sem erros — e entenda por que isso protege você contra fraudes em cheques, recibos e contratos.',
+    content: (
+      <>
+        <p>Escrever um valor por extenso parece simples, até a hora de preencher um cheque, emitir um recibo ou redigir um contrato e bater a dúvida: é &quot;mil reais&quot; ou &quot;um mil reais&quot;? &quot;Cem&quot; ou &quot;cento&quot;? Onde entra o &quot;e&quot;? Errar essa grafia pode gerar desconforto e até questionamentos sobre a validade do documento.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Por que o valor por extenso é tão importante?</h2>
+        <p>Em documentos financeiros, o valor costuma aparecer duas vezes: em números e por extenso. Isso não é redundância — é uma proteção. Se houver qualquer divergência entre as duas formas, a praxe (e a jurisprudência brasileira) costuma dar prevalência ao <strong>valor escrito por extenso</strong>, justamente porque é mais difícil de adulterar do que um número, onde bastaria acrescentar um zero.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">As principais regras (sem complicação)</h2>
+
+        <h3 className="text-xl font-bold mt-6 mb-3">1. &quot;Cem&quot; ou &quot;cento&quot;?</h3>
+        <p>Use <strong>&quot;cem&quot;</strong> para o número exato 100 (&quot;cem reais&quot;). A partir de 101, vira <strong>&quot;cento&quot;</strong>: &quot;cento e cinquenta&quot;, &quot;cento e noventa e nove&quot;.</p>
+
+        <h3 className="text-xl font-bold mt-6 mb-3">2. &quot;Mil&quot; nunca vem com &quot;um&quot;</h3>
+        <p>A palavra &quot;mil&quot; é invariável e não é precedida de &quot;um&quot;. Portanto, R$ 1.000,00 escreve-se <strong>&quot;mil reais&quot;</strong>, e nunca &quot;um mil reais&quot;.</p>
+
+        <h3 className="text-xl font-bold mt-6 mb-3">3. O conector &quot;e&quot;</h3>
+        <p>Dentro de cada classe, o &quot;e&quot; liga a centena, a dezena e a unidade: &quot;duzentos e trinta e quatro&quot;. Entre classes grandes, usa-se vírgula — exceto antes do último grupo, que recebe &quot;e&quot; quando for menor que 100 ou um múltiplo exato de 100. Por isso dizemos &quot;mil e quinhentos&quot;, mas &quot;mil, duzentos e trinta e quatro&quot;.</p>
+
+        <h3 className="text-xl font-bold mt-6 mb-3">4. O &quot;de&quot; em milhões e bilhões</h3>
+        <p>Quando o valor termina exatamente em milhão, bilhão ou trilhão, entra a preposição &quot;de&quot;: <strong>&quot;um milhão de reais&quot;</strong>. Mas se houver grupos menores, o &quot;de&quot; some: &quot;um milhão e quinhentos mil reais&quot;.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Exemplos prontos</h2>
+        <ul>
+          <li><strong>R$ 100,00</strong> → cem reais</li>
+          <li><strong>R$ 1.000,00</strong> → mil reais</li>
+          <li><strong>R$ 1.234,56</strong> → mil, duzentos e trinta e quatro reais e cinquenta e seis centavos</li>
+          <li><strong>R$ 1.000.000,00</strong> → um milhão de reais</li>
+        </ul>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Faça isso automaticamente</h3>
+          <p className="text-blue-800">
+            Não quer arriscar errar? Use o nosso <Link href="/utilidades/numero-por-extenso" className="underline font-semibold hover:text-blue-900">Conversor de Número por Extenso</Link>: digite o valor e copie o texto já no formato correto. E se precisar de um recibo completo, o <Link href="/documentos/gerador-recibos" className="underline font-semibold hover:text-blue-900">Gerador de Recibos</Link> já preenche o valor por extenso para você.
+          </p>
+        </div>
+      </>
+    )
+  },
   'como-saber-se-estou-sendo-processado': {
     title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',
     date: '15 de Junho, 2026',

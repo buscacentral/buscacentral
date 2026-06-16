@@ -60,7 +60,7 @@ export default function Home() {
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
         <p className="bg-blue-50 text-blue-600 inline-block px-5 py-1.5 rounded-full text-sm font-bold mb-8 shadow-sm border border-blue-100">
-          65 ferramentas gratuitas
+          66 ferramentas gratuitas
         </p>
         
         <SearchBar />
@@ -91,7 +91,7 @@ export default function Home() {
               { name: 'Documentos', href: '/documentos', icon: '📄', count: 8 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 17 },
-              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 37 },
+              { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 38 },
             ].map((cat) => (
               <a
                 key={cat.href}
@@ -119,7 +119,7 @@ export default function Home() {
           
           <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">100% Gratuito e Sem Cadastro</h3>
           <p className="mb-4 leading-relaxed">
-            Todas as nossas {mainTools.length > 0 ? '65' : ''} ferramentas estão disponíveis gratuitamente 24 horas por dia, 7 dias por semana. Não exigimos criação de conta, login com redes sociais ou assinaturas premium. Basta acessar a página da utilidade que você precisa e utilizá-la imediatamente.
+            Todas as nossas {mainTools.length > 0 ? '66' : ''} ferramentas estão disponíveis gratuitamente 24 horas por dia, 7 dias por semana. Não exigimos criação de conta, login com redes sociais ou assinaturas premium. Basta acessar a página da utilidade que você precisa e utilizá-la imediatamente.
           </p>
           
           <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">Privacidade e Segurança em Primeiro Lugar</h3>

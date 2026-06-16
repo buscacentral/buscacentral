@@ -38,6 +38,7 @@ const subcategorias = [
       { title: 'Validador de E-mail', description: 'Verifique a sintaxe e identifique e-mails descartáveis.', href: '/utilidades/validador-email', icon: '✉️' },
       { title: 'Removedor de Duplicatas', description: 'Remova linhas duplicadas e ordene listas.', href: '/utilidades/removedor-duplicatas', icon: '🧹' },
       { title: 'Conversor de Caixa', description: 'Transforme texto em MAIÚSCULO, minúsculo, etc.', href: '/utilidades/conversor-caixa', icon: '🔡' },
+      { title: 'Número por Extenso', description: 'Converta números e valores em reais por extenso para cheques e recibos.', href: '/utilidades/numero-por-extenso', icon: '🔤' },
     ],
   },
   {
