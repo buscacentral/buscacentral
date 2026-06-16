@@ -787,16 +787,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Página não encontrada' };
   }
 
+  const url = `https://buscacentral.com.br/artigos/${slug}`;
+
   return {
     title: `${article.title} | BuscaCentral Artigos`,
     description: article.description,
+    alternates: {
+      canonical: `/artigos/${slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.description,
       type: 'article',
+      url,
+      siteName: 'BuscaCentral',
+      locale: 'pt_BR',
       publishedTime: article.isoDate,
-    }
+      modifiedTime: article.isoDate,
+      section: article.category,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.description,
+    },
   };
+}
+
+export function generateStaticParams() {
+  return Object.keys(articlesData).map((slug) => ({ slug }));
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -807,9 +826,80 @@ export default async function ArticlePage({ params }: Props) {
     notFound();
   }
 
+  const url = `https://buscacentral.com.br/artigos/${slug}`;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: article.title,
+    description: article.description,
+    datePublished: article.isoDate,
+    dateModified: article.isoDate,
+    articleSection: article.category,
+    inLanguage: 'pt-BR',
+    author: {
+      '@type': 'Organization',
+      name: 'BuscaCentral',
+      url: 'https://buscacentral.com.br',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'BuscaCentral',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://buscacentral.com.br/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://buscacentral.com.br/' },
+      { '@type': 'ListItem', position: 2, name: 'Artigos', item: 'https://buscacentral.com.br/artigos' },
+      { '@type': 'ListItem', position: 3, name: article.title, item: url },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Trilha de navegação (breadcrumbs) */}
+        <nav aria-label="Trilha de navegação" className="mb-8">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+            <li className="flex items-center gap-1.5">
+              <Link href="/" className="hover:text-blue-600 transition-colors">Início</Link>
+              <span className="text-slate-300" aria-hidden="true">/</span>
+            </li>
+            <li className="flex items-center gap-1.5">
+              <Link href="/artigos" className="hover:text-blue-600 transition-colors">Artigos</Link>
+              <span className="text-slate-300" aria-hidden="true">/</span>
+            </li>
+            <li className="min-w-0">
+              <span
+                className="text-slate-700 font-medium truncate block max-w-[60vw] sm:max-w-md"
+                aria-current="page"
+                title={article.title}
+              >
+                {article.title}
+              </span>
+            </li>
+          </ol>
+        </nav>
+
         <header className="mb-10 text-center">
           <div className="flex items-center justify-center gap-4 mb-6">
             <span className="bg-sky-100 text-sky-800 text-sm font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">

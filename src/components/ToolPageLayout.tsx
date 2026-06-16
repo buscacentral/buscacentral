@@ -203,6 +203,15 @@ export function generateToolMetadata(
   const fullTitle = `${title} | BuscaCentral`;
   const url = `https://buscacentral.com.br${path}`;
 
+  // Usa a imagem Open Graph da categoria (ex.: /documentos/opengraph-image),
+  // com fallback para a imagem padrão do site. Sem isto, as ferramentas
+  // ficavam sem og:image ao serem compartilhadas.
+  const categories = ['documentos', 'financeiro', 'localizacao', 'utilidades'];
+  const segment = path.split('/').filter(Boolean)[0];
+  const ogImage = categories.includes(segment)
+    ? `https://buscacentral.com.br/${segment}/opengraph-image`
+    : 'https://buscacentral.com.br/opengraph-image';
+
   return {
     title: fullTitle,
     description,
@@ -213,11 +222,13 @@ export function generateToolMetadata(
       siteName: 'BuscaCentral',
       locale: 'pt_BR',
       type: 'website',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: fullTitle }],
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description,
+      images: [ogImage],
     },
     alternates: {
       canonical: url,
