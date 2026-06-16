@@ -17,6 +17,8 @@ const mainTools = [
   { title: 'Precificação de Receitas', description: 'Calcule o custo e o preço ideal de venda dos seus produtos.', href: '/financeiro/precificacao-receitas', icon: '🍰', color: 'purple' as const },
   { title: 'Cronômetro Pomodoro', description: 'Aumente sua produtividade com blocos de foco de 25 minutos.', href: '/utilidades/pomodoro', icon: '🍅', color: 'red' as const },
   { title: 'Consulta de Processos', description: 'Descubra se você tem processos judiciais pelo seu nome.', href: '/documentos/consulta-processos', icon: '⚖️', color: 'blue' as const },
+  { title: 'Gerador de Senha', description: 'Crie senhas fortes e seguras com um clique.', href: '/utilidades/gerador-senha', icon: '🔑', color: 'purple' as const },
+  { title: 'Calculadora de Combustível', description: 'Calcule o custo da viagem e o consumo do seu veículo.', href: '/utilidades/calculadora-combustivel', icon: '⛽', color: 'green' as const },
 ];
 
 export default function Home() {
