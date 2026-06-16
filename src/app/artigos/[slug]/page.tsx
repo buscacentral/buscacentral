@@ -4,6 +4,37 @@ import Link from 'next/link';
 
 // Mocked articles database for AdSense approval
 const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; isoDate: string; category: string; description: string }> = {
+  'sac-ou-price-qual-o-melhor-para-financiar-imovel': {
+    title: 'SAC ou Price: qual o melhor sistema para financiar seu imóvel?',
+    date: '03 de Julho, 2026',
+    isoDate: '2026-07-03T10:00:00.000Z',
+    category: 'Finanças',
+    description: 'Entenda a diferença entre os sistemas de amortização SAC e Price, veja qual paga menos juros e aprenda a simular o financiamento da casa própria.',
+    content: (
+      <>
+        <p>Ao financiar um imóvel, além de negociar a taxa de juros, você precisa escolher o <strong>sistema de amortização</strong>: SAC ou Price. Essa escolha muda o valor das suas parcelas e, no fim das contas, quanto você vai pagar de juros ao longo de 20, 30 ou até 35 anos. Entender os dois é essencial antes de assinar o contrato.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">O que é amortização?</h2>
+        <p>Toda parcela do financiamento tem duas partes: uma abate a dívida (amortização) e a outra paga os juros sobre o saldo que ainda falta quitar. O que diferencia o SAC do Price é <strong>como essas duas partes se comportam ao longo do tempo</strong>.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Sistema SAC: parcelas que diminuem</h2>
+        <p>No SAC (Sistema de Amortização Constante), a parte que abate a dívida é <strong>fixa</strong> em todas as parcelas. Como os juros incidem sobre o saldo devedor, que vai diminuindo, as parcelas <strong>começam mais altas e caem mês a mês</strong>. É o sistema mais comum no crédito imobiliário brasileiro e, na maioria dos casos, resulta em <strong>menos juros no total</strong>.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Tabela Price: parcelas fixas</h2>
+        <p>Na Tabela Price, as parcelas são <strong>iguais do início ao fim</strong>. No começo, a maior parte da prestação é juros e pouco abate a dívida; com o tempo, isso se inverte. A previsibilidade ajuda no orçamento, mas como a dívida cai mais devagar no início, normalmente você paga <strong>mais juros no total</strong> do que no SAC.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Então o SAC é sempre melhor?</h2>
+        <p>Em juros totais, geralmente sim. Mas o SAC exige uma capacidade de pagamento maior no começo, justamente quando muita gente já está apertada com mudança, reforma e ITBI. Se a primeira parcela do SAC não couber no seu orçamento, a Price pode ser a opção que viabiliza a compra. O segredo é simular os dois com os seus números reais.</p>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Simule antes de decidir</h3>
+          <p className="text-blue-800">
+            Use o nosso <Link href="/financeiro/financiamento-imobiliario" className="underline font-semibold hover:text-blue-900">Simulador de Financiamento Imobiliário</Link> para comparar SAC e Price lado a lado: veja a primeira e a última parcela, o total pago e quanto você economiza em juros. Vale também conhecer o efeito dos <Link href="/financeiro/juros-compostos" className="underline font-semibold hover:text-blue-900">juros compostos</Link> sobre o seu dinheiro.
+          </p>
+        </div>
+      </>
+    )
+  },
   'como-escrever-valores-por-extenso': {
     title: 'Como escrever valores por extenso em cheques, recibos e contratos',
     date: '02 de Julho, 2026',

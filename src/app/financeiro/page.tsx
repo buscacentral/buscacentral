@@ -87,6 +87,13 @@ const tools = [
     color: 'bg-red-50 border-red-200'
   },
   {
+    title: 'Simulador de Financiamento Imobiliário',
+    description: 'Simule o financiamento da casa própria por SAC ou Price.',
+    href: '/financeiro/financiamento-imobiliario',
+    icon: '🏠',
+    color: 'bg-blue-50 border-blue-200'
+  },
+  {
     title: 'Calculadora de Rescisão Trabalhista',
     description: 'Calcule valores de rescisão para todos os tipos de demissão.',
     href: '/financeiro/rescisao-trabalhista',

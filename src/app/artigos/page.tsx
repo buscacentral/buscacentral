@@ -8,6 +8,13 @@ export const metadata: Metadata = {
 
 export const artigos = [
   {
+    slug: 'sac-ou-price-qual-o-melhor-para-financiar-imovel',
+    title: 'SAC ou Price: qual o melhor sistema para financiar seu imóvel?',
+    excerpt: 'Entenda a diferença entre os dois sistemas de amortização, veja qual paga menos juros e aprenda a simular o financiamento da casa própria.',
+    date: '03 de Julho, 2026',
+    category: 'Finanças'
+  },
+  {
     slug: 'como-escrever-valores-por-extenso',
     title: 'Como escrever valores por extenso em cheques, recibos e contratos',
     excerpt: 'Aprenda as regras do português para escrever valores em reais por extenso sem erros — e entenda por que isso protege você contra fraudes.',
