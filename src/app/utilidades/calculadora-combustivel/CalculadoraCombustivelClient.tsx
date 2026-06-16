@@ -75,6 +75,10 @@ export default function CalculadoraCombustivelClient() {
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">km</span>
             </div>
+            <p className="mt-2 text-xs text-slate-500 flex items-center gap-1">
+              <span>Não sabe a distância?</span>
+              <a href="/localizacao/distancia-cidades" className="text-sky-600 hover:underline font-medium">Calcule a rota 📍</a>
+            </p>
           </div>
           
           <div>
