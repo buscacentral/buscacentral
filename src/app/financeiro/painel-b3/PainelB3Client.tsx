@@ -50,8 +50,8 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
 
     try {
       const cleanTicker = searchTicker.trim().toUpperCase();
-      // Using brapi.dev with user provided token.
-      const res = await fetch(`https://brapi.dev/api/quote/${cleanTicker}?token=ma5LADevQ1H7H4r9UCa8if`);
+      // Chama o proxy interno; o token da Brapi fica somente no servidor.
+      const res = await fetch(`/api/b3/quote?ticker=${encodeURIComponent(cleanTicker)}`);
       const data = await res.json();
 
       if (!res.ok || data.error) {
