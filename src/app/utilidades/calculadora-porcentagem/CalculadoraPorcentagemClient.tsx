@@ -22,7 +22,7 @@ export default function CalculadoraPorcentagemClient() {
     { id: 'percentual', label: 'Quanto é X% de Y', descA: 'Porcentagem (%)', descB: 'Valor', btnLabel: 'Calcular' },
     { id: 'valor', label: 'X é quantos % de Y', descA: 'Valor parcial', descB: 'Valor total', btnLabel: 'Calcular' },
     { id: 'variacao', label: 'Variação percentual', descA: 'Valor inicial', descB: 'Valor final', btnLabel: 'Calcular variação' },
-    { id: 'proporcao', label: 'Acrescentar/Descontar %', descA: 'Valor', descB: 'Porcentagem (%)', btnLabel: 'Calcular' },
+    { id: 'proporcao', label: 'Acréscimo/Desconto', descA: 'Valor', descB: 'Porcentagem (%)', btnLabel: 'Calcular' },
   ];
 
   const modoAtual = modos.find(m => m.id === modo)!;

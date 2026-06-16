@@ -178,16 +178,16 @@ export default function GeradorReciboClient() {
 
             <div className="space-y-6 text-lg leading-relaxed text-justify">
               <p>
-                Recebi(emos) de <strong className="uppercase border-b border-dashed border-slate-400 pb-1 px-2">{pagadorNome || '_________________________________'}</strong>
-                {pagadorDoc && <span> inscrito(a) no CPF/CNPJ sob o nº <strong className="border-b border-dashed border-slate-400 pb-1 px-2">{pagadorDoc}</strong>,</span>}
+                Recebi(emos) de <strong className="uppercase border-b border-dashed border-slate-400 pb-1 px-2 break-all">{pagadorNome || '_________________________________'}</strong>
+                {pagadorDoc && <span> inscrito(a) no CPF/CNPJ sob o nº <strong className="border-b border-dashed border-slate-400 pb-1 px-2 break-all">{pagadorDoc}</strong>,</span>}
               </p>
               
               <p>
-                a importância supra de <strong className="uppercase border-b border-dashed border-slate-400 pb-1 px-2">{valor ? extenso(valor) : '__________________________________________________'}</strong>
+                a importância supra de <strong className="uppercase border-b border-dashed border-slate-400 pb-1 px-2 break-all">{valor ? extenso(valor) : '__________________________________________________'}</strong>
               </p>
 
               <p>
-                referente a <strong className="border-b border-dashed border-slate-400 pb-1 px-2">{referente || '____________________________________________________________________'}</strong>.
+                referente a <strong className="border-b border-dashed border-slate-400 pb-1 px-2 break-all">{referente || '____________________________________________________________________'}</strong>.
               </p>
               
               <p>
