@@ -177,30 +177,32 @@ export default function CotacaoClient({
                 handleCurrencyChange(curr.code);
               }
             }}
-            className={`bg-white border rounded-xl p-5 shadow-sm cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-              selectedCurrency === curr.code ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'
+            className={`bg-white border rounded-2xl p-5 shadow-sm cursor-pointer transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              selectedCurrency === curr.code ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/30' : 'border-gray-200 hover:border-gray-300'
             }`}
             onClick={() => handleCurrencyChange(curr.code)}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{curr.flag}</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-12 h-12 bg-slate-100 rounded-full text-2xl border border-slate-200">
+                  {curr.flag}
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{curr.code.replace('-BRL', '')}</p>
-                  <p className="text-xs text-gray-500">{curr.name}</p>
+                  <p className="font-bold text-gray-900 text-lg leading-tight">{curr.code.replace('-BRL', '')}</p>
+                  <p className="text-xs text-gray-500 font-medium">{curr.name}</p>
                 </div>
               </div>
-              <span className={`text-sm font-medium ${
-                parseFloat(curr.variation) >= 0 ? 'text-green-600' : 'text-red-600'
+              <span className={`text-xs font-bold px-2.5 py-1 rounded-md flex items-center gap-1 ${
+                parseFloat(curr.variation) >= 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
               }`}>
                 {parseFloat(curr.variation) >= 0 ? '↑' : '↓'} {Math.abs(parseFloat(curr.variation))}%
               </span>
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="mt-2">
+              <p className="text-3xl font-black text-gray-900 tracking-tight">
                 R$ {curr.bid}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Compra / Venda: R$ {curr.ask}</p>
+              <p className="text-xs text-gray-500 mt-1 font-medium">Compra / Venda: R$ {curr.ask}</p>
             </div>
           </div>
         ))}

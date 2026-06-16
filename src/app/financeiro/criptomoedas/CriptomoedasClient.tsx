@@ -244,34 +244,45 @@ export default function CriptomoedasClient() {
       {/* Fear & Greed Index */}
       {fearGreed && (
         <ResultCard className="mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-6">
             <div>
-              <h2 className="text-sm font-medium text-gray-500 mb-1">Fear & Greed Index</h2>
+              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-1">Fear & Greed Index</h2>
               <div className="flex items-center gap-3">
                 <span
-                  className="text-3xl font-extrabold"
+                  className="text-4xl font-black drop-shadow-sm"
                   style={{ color: getFearGreedColor(parseInt(fearGreed.value)) }}
                 >
                   {fearGreed.value}
                 </span>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-bold px-3 py-1 bg-slate-100 rounded-full text-slate-700 uppercase tracking-wide">
                   {fearGreed.value_classification}
                 </span>
               </div>
             </div>
-            <div className="w-48 h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${fearGreed.value}%`,
-                  backgroundColor: getFearGreedColor(parseInt(fearGreed.value)),
-                }}
-              />
+            
+            <div className="flex-1 min-w-[200px] max-w-md">
+              <div className="relative h-4 bg-slate-200 rounded-full overflow-hidden flex shadow-inner">
+                <div className="h-full w-1/4 bg-red-500" title="Extreme Fear (0-25)"></div>
+                <div className="h-full w-1/4 bg-orange-400" title="Fear (26-50)"></div>
+                <div className="h-full w-1/4 bg-yellow-400" title="Greed (51-75)"></div>
+                <div className="h-full w-1/4 bg-green-500" title="Extreme Greed (76-100)"></div>
+                
+                {/* Marker pointer */}
+                <div 
+                  className="absolute top-0 bottom-0 w-1.5 bg-slate-900 rounded-full shadow-md border border-white transition-all duration-1000 ease-out z-10"
+                  style={{ left: `calc(${fearGreed.value}% - 3px)` }}
+                />
+              </div>
+              <div className="flex justify-between text-[10px] text-slate-400 mt-1.5 uppercase font-bold tracking-wider">
+                <span>Medo Extremo</span>
+                <span>Neutro</span>
+                <span>Ganância Extrema</span>
+              </div>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs text-gray-400 leading-relaxed">
-              <strong className="text-gray-500">O que é?</strong> O Fear & Greed Index é um termômetro
+          <div className="mt-5 pt-4 border-t border-slate-100">
+            <p className="text-xs text-slate-500 leading-relaxed">
+              <strong className="text-slate-700">O que é?</strong> O Fear & Greed Index é um termômetro
               do sentimento do mercado crypto, calculado com base em volatilidade, volume, pesquisas
               em redes sociais, dominância do Bitcoin e tendências de busca. Varia de 0 (medo extremo)
               a 100 (ganância extrema). Historicamente, períodos de <strong>medo extremo</strong> costumam
