@@ -4,6 +4,15 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Central de Localização',
   description: 'Ferramentas de localização: busca de CEP, busca reversa e distância entre cidades brasileiras.',
+  alternates: { canonical: '/localizacao' },
+  openGraph: {
+    title: 'Central de Localização | BuscaCentral',
+    description: 'Ferramentas de localização: busca de CEP, busca reversa e distância entre cidades brasileiras.',
+    url: 'https://buscacentral.com.br/localizacao',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
 };
 
 const tools = [

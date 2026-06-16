@@ -25,6 +25,47 @@ interface ToolPageLayoutProps {
   path?: string;
 }
 
+const SITE_URL = 'https://buscacentral.com.br';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  documentos: 'Documentos',
+  localizacao: 'Localização',
+  financeiro: 'Financeiro',
+  utilidades: 'Utilidades',
+  artigos: 'Artigos',
+};
+
+interface Breadcrumb {
+  name: string;
+  url: string;
+}
+
+/** Transforma um slug (ex.: "tabela-fipe") em rótulo legível ("Tabela Fipe"). */
+function prettifySegment(segment: string): string {
+  return segment
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+/** Constrói a trilha de breadcrumbs a partir do caminho da página. */
+function buildBreadcrumbs(path: string, currentTitle: string): Breadcrumb[] {
+  const segments = path.split('/').filter(Boolean);
+  const crumbs: Breadcrumb[] = [{ name: 'Início', url: `${SITE_URL}/` }];
+
+  let accumulated = '';
+  segments.forEach((segment, index) => {
+    accumulated += `/${segment}`;
+    const isLast = index === segments.length - 1;
+    crumbs.push({
+      name: isLast ? currentTitle : CATEGORY_LABELS[segment] || prettifySegment(segment),
+      url: `${SITE_URL}${accumulated}`,
+    });
+  });
+
+  return crumbs;
+}
+
 /**
  * ToolPageLayout - Template base para páginas de ferramentas
  * 
@@ -71,8 +112,22 @@ export default function ToolPageLayout({
   relatedTools,
   path,
 }: ToolPageLayoutProps) {
-  const url = path ? `https://buscacentral.com.br${path}` : 'https://buscacentral.com.br';
-  
+  const url = path ? `${SITE_URL}${path}` : SITE_URL;
+  const breadcrumbs = path ? buildBreadcrumbs(path, title) : null;
+
+  const breadcrumbSchema = breadcrumbs
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbs.map((crumb, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "name": crumb.name,
+          "item": crumb.url,
+        })),
+      }
+    : null;
+
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -112,6 +167,40 @@ export default function ToolPageLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+      )}
+      {breadcrumbSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      )}
+
+      {/* Trilha de navegação (breadcrumbs) */}
+      {breadcrumbs && (
+        <nav aria-label="Trilha de navegação" className="mb-6">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-gray-500">
+            {breadcrumbs.map((crumb, idx) => {
+              const isLast = idx === breadcrumbs.length - 1;
+              const href = crumb.url.replace(SITE_URL, '') || '/';
+              return (
+                <li key={crumb.url} className="flex items-center gap-1.5">
+                  {isLast ? (
+                    <span className="text-gray-700 font-medium" aria-current="page">
+                      {crumb.name}
+                    </span>
+                  ) : (
+                    <>
+                      <Link href={href} className="hover:text-blue-600 transition-colors">
+                        {crumb.name}
+                      </Link>
+                      <span className="text-gray-300" aria-hidden="true">/</span>
+                    </>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
       )}
 
       {/* Cabeçalho da ferramenta */}

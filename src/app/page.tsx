@@ -1,6 +1,30 @@
+import type { Metadata } from 'next';
 import SearchBar from '@/components/SearchBar';
 import ToolCard from '@/components/ToolCard';
 import AdPlaceholder from '@/components/AdPlaceholder';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
+
+const siteSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'BuscaCentral',
+    url: 'https://buscacentral.com.br',
+    logo: 'https://buscacentral.com.br/logo.png',
+    description: 'Central de ferramentas online gratuitas do Brasil.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'BuscaCentral',
+    url: 'https://buscacentral.com.br',
+  },
+];
 
 const mainTools = [
   { title: 'Gerador de CPF', description: 'Gere CPFs válidos para testes e desenvolvimento.', href: '/documentos/gerador-cpf', icon: '📄', color: 'blue' as const },
@@ -24,6 +48,10 @@ const mainTools = [
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
+      />
       <section className="text-center mx-auto mt-10 mb-12 max-w-4xl px-4 sm:px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight tracking-tight">
           O que você deseja buscar ou gerar?

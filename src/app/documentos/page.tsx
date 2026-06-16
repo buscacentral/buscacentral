@@ -4,6 +4,15 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Central de Documentos',
   description: 'Ferramentas para documentos: gerador e validador de CPF e CNPJ. Consulta CNPJ pela Receita Federal.',
+  alternates: { canonical: '/documentos' },
+  openGraph: {
+    title: 'Central de Documentos | BuscaCentral',
+    description: 'Ferramentas para documentos: gerador e validador de CPF e CNPJ. Consulta CNPJ pela Receita Federal.',
+    url: 'https://buscacentral.com.br/documentos',
+    siteName: 'BuscaCentral',
+    locale: 'pt_BR',
+    type: 'website',
+  },
 };
 
 const tools = [
