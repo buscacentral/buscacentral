@@ -8,18 +8,20 @@ export const metadata: Metadata = {
 
 export default async function PainelB3Page() {
   const apiKey = 'ma5LADevQ1H7H4r9UCa8if';
-  let initialStocks = [];
+  const tickers = ['PETR4', 'VALE3', 'ITUB4', 'MXRF11'];
+  let initialStocks: any[] = [];
 
   try {
-    const res = await fetch(`https://brapi.dev/api/quote/PETR4,VALE3,ITUB4,MXRF11?token=${apiKey}`, {
-      next: { revalidate: 60 } // Atualiza a cada 60 segundos
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.results) {
-        initialStocks = data.results;
-      }
-    }
+    const promises = tickers.map(t => 
+      fetch(`https://brapi.dev/api/quote/${t}?token=${apiKey}`, {
+        next: { revalidate: 60 } // Atualiza a cada 60 segundos
+      }).then(r => r.json())
+    );
+    
+    const results = await Promise.all(promises);
+    initialStocks = results
+      .filter(d => d && d.results && d.results.length > 0)
+      .map(d => d.results[0]);
   } catch (error) {
     console.error("Erro ao buscar ações iniciais:", error);
   }
