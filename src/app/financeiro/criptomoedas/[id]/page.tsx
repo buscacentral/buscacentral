@@ -16,7 +16,7 @@ const CRYPTO_MAP: Record<string, { name: string; symbol: string; description: st
   'staked-ether': { name: 'Lido Staked Ether', symbol: 'STETH', description: 'Cotação do Lido Staked Ether (STETH) em tempo real em Reais. Token derivado do ETH stakado.' },
 };
 
-const TOP_10 = Object.keys(CRYPTO_MAP);
+export const TOP_10 = Object.keys(CRYPTO_MAP);
 
 export function generateStaticParams() {
   return TOP_10.map((id) => ({ id }));
