@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { ResultCard } from '@/components/ui/ResultCard';
 
@@ -14,6 +14,12 @@ export default function CalculadoraCombustivelClient() {
     custoTotal: number;
     custoKm: number;
   } | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const d = urlParams.get('distancia');
+    if (d) setDistancia(d.replace('.', ','));
+  }, []);
 
   const formatCurrencyInput = (value: string) => {
     const num = value.replace(/\D/g, '');
