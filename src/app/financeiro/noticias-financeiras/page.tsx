@@ -11,8 +11,11 @@ export default async function NoticiasFinanceirasPage() {
   
   // Server-Side Fetching para SEO e Performance
   let initialNews = [];
+  let cryptoNews = [];
+
   try {
-    const res = await fetch(`https://newsapi.org/v2/top-headlines?country=br&category=business&apiKey=${apiKey}`, {
+    // Usando endpoint 'everything' para garantir resultados diários no Brasil
+    const res = await fetch(`https://newsapi.org/v2/everything?q=economia OR "mercado financeiro"&language=pt&sortBy=publishedAt&apiKey=${apiKey}`, {
       next: { revalidate: 3600 } // Faz o cache por 1 hora
     });
     
@@ -26,6 +29,24 @@ export default async function NoticiasFinanceirasPage() {
     }
   } catch (error) {
     console.error("Erro ao buscar notícias no servidor:", error);
+  }
+
+  try {
+    // Buscando criptomoedas no servidor também para evitar bloqueio de CORS do NewsAPI no cliente
+    const resCrypto = await fetch(`https://newsapi.org/v2/everything?q=criptomoedas OR bitcoin OR ethereum&language=pt&sortBy=publishedAt&apiKey=${apiKey}`, {
+      next: { revalidate: 3600 }
+    });
+    
+    if (resCrypto.ok) {
+      const dataCrypto = await resCrypto.json();
+      if (dataCrypto && dataCrypto.articles) {
+        cryptoNews = dataCrypto.articles
+          .filter((a: any) => a.title && a.title !== '[Removed]' && a.urlToImage)
+          .slice(0, 30);
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao buscar cripto no servidor:", error);
   }
 
   // Schema Markup (JSON-LD) para SEO (NewsArticle e WebPage)
@@ -57,7 +78,7 @@ export default async function NoticiasFinanceirasPage() {
         </div>
         
         {/* Passa as notícias pré-renderizadas para o Cliente */}
-        <NoticiasClient initialNews={initialNews} />
+        <NoticiasClient initialNews={initialNews} cryptoNews={cryptoNews} />
 
         {/* SEÇÃO DE SEO: FAQ & Disclaimer Legal */}
         <div className="mt-24 pt-12 border-t border-slate-200">
