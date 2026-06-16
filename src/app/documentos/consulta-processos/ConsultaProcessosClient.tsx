@@ -24,7 +24,7 @@ export default function ConsultaProcessosClient() {
     const googleQuery = encodeURIComponent(`"${nome.trim()}" processo OR jusbrasil OR tj`);
 
     setLinksGerados({
-      jusbrasil: `https://www.jusbrasil.com.br/processos/nome/${formattedName}`,
+      jusbrasil: `https://www.jusbrasil.com.br/busca?q=${encodeURIComponent(nome.trim())}`,
       escavador: `https://www.escavador.com/busca?q=${encodeURIComponent(nome.trim())}&qo=t`,
       google: `https://www.google.com/search?q=${googleQuery}`,
     });
