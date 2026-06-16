@@ -99,8 +99,22 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
               disabled={loading}
             />
           </div>
-          <Button type="submit" disabled={loading || !ticker.trim()} className="py-3 px-8 text-base">
-            {loading ? 'Buscando...' : 'Buscar Ativo'}
+          <Button type="submit" disabled={loading || !ticker.trim()} className="py-3 px-8 text-base min-w-[160px] relative overflow-hidden group">
+            <div className="flex items-center justify-center gap-2">
+              {loading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Buscando...</span>
+                </>
+              ) : (
+                <span>Buscar Ativo</span>
+              )}
+            </div>
+            {/* Magnetic highlight spell on hover */}
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
           </Button>
         </form>
         <p className="text-xs text-slate-500 mt-3 flex gap-2">
@@ -124,40 +138,56 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
         <div className="pt-4">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Em Destaque Hoje</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {initialStocks.map((stock) => (
-              <div 
-                key={stock.symbol}
-                onClick={() => fetchStock(stock.symbol)}
-                className="bg-white p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center text-center group"
-              >
-                {stock.logourl ? (
-                  <div className="w-12 h-12 bg-white rounded-full border border-slate-100 flex items-center justify-center p-1.5 shadow-sm mb-3">
-                    <Image 
-                      src={stock.logourl} 
-                      alt={stock.symbol} 
-                      width={32} 
-                      height={32} 
-                      className="object-contain"
-                      unoptimized
-                    />
+            {initialStocks.map((stock, idx) => {
+              const isPositive = stock.regularMarketChange >= 0;
+              return (
+                <div 
+                  key={stock.symbol}
+                  onClick={() => fetchStock(stock.symbol)}
+                  className={`relative bg-white p-5 rounded-2xl border border-slate-200 hover:border-transparent cursor-pointer flex flex-col items-center text-center group transition-all duration-500 ease-out animate-in fade-in slide-in-from-bottom-4`}
+                  style={{ animationDelay: \`\${idx * 75}ms\`, animationFillMode: 'both' }}
+                >
+                  {/* Subtle glowing background spell */}
+                  <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none \${
+                    isPositive 
+                      ? 'bg-gradient-to-b from-emerald-500/5 to-transparent shadow-[0_8px_30px_rgb(16,185,129,0.12)]' 
+                      : 'bg-gradient-to-b from-rose-500/5 to-transparent shadow-[0_8px_30px_rgb(244,63,94,0.12)]'
+                  }`} />
+                  
+                  {stock.logourl ? (
+                    <div className="relative w-14 h-14 bg-white rounded-2xl border border-slate-100 flex items-center justify-center p-2 shadow-sm mb-4 group-hover:-translate-y-1 transition-transform duration-500 ease-out">
+                      <Image 
+                        src={stock.logourl} 
+                        alt={stock.symbol} 
+                        width={36} 
+                        height={36} 
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative w-14 h-14 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-4 group-hover:-translate-y-1 transition-transform duration-500 ease-out">
+                      <span className="text-slate-400 font-bold text-lg">B3</span>
+                    </div>
+                  )}
+                  <h4 className="font-extrabold text-slate-900 tracking-tight text-lg mb-0.5">{stock.symbol}</h4>
+                  <p className="text-xs font-medium text-slate-500 line-clamp-1 mb-4 h-4">{stock.shortName}</p>
+                  
+                  <div className="w-full pt-4 border-t border-slate-100 flex items-end justify-between mt-auto">
+                    <div className="flex flex-col items-start">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Preço</span>
+                      <span className="font-bold text-slate-800">{formatCurrency(stock.regularMarketPrice)}</span>
+                    </div>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold \${
+                      isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                    }`}>
+                      <span>{isPositive ? '↗' : '↘'}</span>
+                      <span>{Math.abs(stock.regularMarketChangePercent || 0).toFixed(2)}%</span>
+                    </div>
                   </div>
-                ) : (
-                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-3">
-                    <span className="text-slate-400 font-bold">B3</span>
-                  </div>
-                )}
-                <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{stock.symbol}</h4>
-                <p className="text-xs text-slate-500 line-clamp-1 mb-2 h-4">{stock.shortName}</p>
-                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
-                  <span className="font-bold text-slate-800">{formatCurrency(stock.regularMarketPrice)}</span>
-                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                    stock.regularMarketChange >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                  }`}>
-                    {stock.regularMarketChange >= 0 ? '+' : ''}{stock.regularMarketChangePercent?.toFixed(2)}%
-                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
