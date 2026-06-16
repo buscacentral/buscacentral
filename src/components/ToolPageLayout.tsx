@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AdPlaceholder from './AdPlaceholder';
-import { getToolLastUpdated } from '@/lib/tools';
+import { getToolLastUpdated, getRelatedTools } from '@/lib/tools';
 
 export interface FAQItem {
   question: string;
@@ -11,7 +11,7 @@ export interface FAQItem {
 export interface RelatedTool {
   title: string;
   url: string;
-  description: string;
+  description?: string;
 }
 
 interface ToolPageLayoutProps {
@@ -133,6 +133,12 @@ export default function ToolPageLayout({
   // Usa a data explícita (prop) ou, na ausência, a data centralizada em
   // src/lib/tools.ts mapeada pelo path da ferramenta.
   const effectiveLastUpdated = lastUpdated ?? getToolLastUpdated(path);
+
+  // Ferramentas relacionadas: usa a lista curada da página, ou — na ausência —
+  // gera automaticamente a partir da mesma categoria (links internos para
+  // todas as ferramentas, sem manutenção manual).
+  const effectiveRelatedTools: RelatedTool[] =
+    relatedTools && relatedTools.length > 0 ? relatedTools : getRelatedTools(path);
 
   const breadcrumbSchema = breadcrumbs
     ? {
@@ -284,18 +290,20 @@ export default function ToolPageLayout({
       )}
 
       {/* Ferramentas Relacionadas */}
-      {relatedTools && relatedTools.length > 0 && (
+      {effectiveRelatedTools && effectiveRelatedTools.length > 0 && (
         <section className="mt-16 pt-12 border-t border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Ferramentas Relacionadas</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedTools.map((tool, idx) => (
+            {effectiveRelatedTools.map((tool, idx) => (
               <Link 
                 key={idx} 
                 href={tool.url}
                 className="block p-6 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all"
               >
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">{tool.title}</h3>
-                <p className="text-sm text-gray-600 line-clamp-3">{tool.description}</p>
+                {tool.description && (
+                  <p className="text-sm text-gray-600 line-clamp-3">{tool.description}</p>
+                )}
               </Link>
             ))}
           </div>
