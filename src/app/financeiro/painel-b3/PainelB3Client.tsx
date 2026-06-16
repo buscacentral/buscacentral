@@ -21,22 +21,35 @@ interface StockData {
   message?: string;
 }
 
-export default function PainelB3Client() {
+interface PainelB3ClientProps {
+  initialStocks?: StockData[];
+}
+
+export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientProps) {
   const [ticker, setTicker] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [stockData, setStockData] = useState<StockData | null>(null);
 
-  const fetchStock = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!ticker.trim()) return;
+  const fetchStock = async (e: React.FormEvent | string) => {
+    let searchTicker = '';
+    
+    if (typeof e === 'string') {
+      searchTicker = e;
+      setTicker(e);
+    } else {
+      e.preventDefault();
+      searchTicker = ticker;
+    }
+    
+    if (!searchTicker.trim()) return;
 
     setLoading(true);
     setError('');
     setStockData(null);
 
     try {
-      const cleanTicker = ticker.trim().toUpperCase();
+      const cleanTicker = searchTicker.trim().toUpperCase();
       // Using brapi.dev with user provided token.
       const res = await fetch(`https://brapi.dev/api/quote/${cleanTicker}?token=ma5LADevQ1H7H4r9UCa8if`);
       const data = await res.json();
@@ -92,10 +105,10 @@ export default function PainelB3Client() {
         </form>
         <p className="text-xs text-slate-500 mt-3 flex gap-2">
           <span className="font-semibold text-slate-700">Populares:</span>
-          <button onClick={() => setTicker('PETR4')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">PETR4</button>
-          <button onClick={() => setTicker('VALE3')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">VALE3</button>
-          <button onClick={() => setTicker('MXRF11')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">MXRF11</button>
-          <button onClick={() => setTicker('ITUB4')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">ITUB4</button>
+          <button onClick={() => fetchStock('PETR4')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">PETR4</button>
+          <button onClick={() => fetchStock('VALE3')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">VALE3</button>
+          <button onClick={() => fetchStock('MXRF11')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">MXRF11</button>
+          <button onClick={() => fetchStock('ITUB4')} className="hover:text-blue-600 underline decoration-slate-300 hover:decoration-blue-400 underline-offset-2">ITUB4</button>
         </p>
       </div>
 
@@ -103,6 +116,49 @@ export default function PainelB3Client() {
         <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
           <span>⚠️</span>
           <p>{error}</p>
+        </div>
+      )}
+
+      {/* Empty State: Ativos Populares (SSR) */}
+      {!stockData && !loading && !error && initialStocks.length > 0 && (
+        <div className="pt-4">
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Em Destaque Hoje</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {initialStocks.map((stock) => (
+              <div 
+                key={stock.symbol}
+                onClick={() => fetchStock(stock.symbol)}
+                className="bg-white p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center text-center group"
+              >
+                {stock.logourl ? (
+                  <div className="w-12 h-12 bg-white rounded-full border border-slate-100 flex items-center justify-center p-1.5 shadow-sm mb-3">
+                    <Image 
+                      src={stock.logourl} 
+                      alt={stock.symbol} 
+                      width={32} 
+                      height={32} 
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-3">
+                    <span className="text-slate-400 font-bold">B3</span>
+                  </div>
+                )}
+                <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{stock.symbol}</h4>
+                <p className="text-xs text-slate-500 line-clamp-1 mb-2 h-4">{stock.shortName}</p>
+                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
+                  <span className="font-bold text-slate-800">{formatCurrency(stock.regularMarketPrice)}</span>
+                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+                    stock.regularMarketChange >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                  }`}>
+                    {stock.regularMarketChange >= 0 ? '+' : ''}{stock.regularMarketChangePercent?.toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

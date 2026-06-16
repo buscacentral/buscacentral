@@ -6,7 +6,24 @@ export const metadata: Metadata = {
   description: 'Consulte a cotação em tempo real de ações e fundos imobiliários da bolsa de valores brasileira (B3). Dados providos pela Brapi.',
 };
 
-export default function PainelB3Page() {
+export default async function PainelB3Page() {
+  const apiKey = 'ma5LADevQ1H7H4r9UCa8if';
+  let initialStocks = [];
+
+  try {
+    const res = await fetch(`https://brapi.dev/api/quote/PETR4,VALE3,ITUB4,MXRF11?token=${apiKey}`, {
+      next: { revalidate: 60 } // Atualiza a cada 60 segundos
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.results) {
+        initialStocks = data.results;
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao buscar ações iniciais:", error);
+  }
+
   // Schema Markup (JSON-LD) para SEO (FAQ e WebPage)
   const schemaMarkup = {
     "@context": "https://schema.org",
@@ -48,8 +65,8 @@ export default function PainelB3Page() {
           </p>
         </div>
         
-        {/* Componente Client-side de Busca Interativa */}
-        <PainelB3Client />
+        {/* Componente Client-side de Busca Interativa com dados pre-carregados */}
+        <PainelB3Client initialStocks={initialStocks} />
 
         {/* SEÇÃO DE SEO: FAQ & Disclaimer Legal */}
         <div className="mt-24 pt-12 border-t border-slate-200">
