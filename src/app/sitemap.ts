@@ -56,10 +56,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const articleRoutes = artigos.map((artigo) => `/artigos/${artigo.slug}`);
   const cryptoRoutes = cryptoIds.map((id) => `/financeiro/criptomoedas/${id}`);
 
+  // Rotas que não devem aparecer no sitemap (ex.: resultados de busca, marcados
+  // como noindex).
+  const excludedRoutes = new Set(['/buscar']);
+
   // Remove duplicatas e ordena (mantendo a home em primeiro).
   const allRoutes = Array.from(
     new Set([...staticRoutes, ...articleRoutes, ...cryptoRoutes]),
-  ).sort((a, b) => {
+  )
+    .filter((route) => !excludedRoutes.has(route))
+    .sort((a, b) => {
     if (a === '/') return -1;
     if (b === '/') return 1;
     return a.localeCompare(b);

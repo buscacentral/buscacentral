@@ -23,6 +23,19 @@ interface ToolPageLayoutProps {
   faqItems?: FAQItem[];
   relatedTools?: RelatedTool[];
   path?: string;
+  /** Data da última atualização da ferramenta no formato ISO (ex.: "2026-06-16"). */
+  lastUpdated?: string;
+}
+
+/** Formata uma data ISO (YYYY-MM-DD) para o formato pt-BR (DD/MM/AAAA), sem desvio de fuso. */
+function formatUpdatedDate(iso: string): string {
+  const date = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
 const SITE_URL = 'https://buscacentral.com.br';
@@ -111,6 +124,7 @@ export default function ToolPageLayout({
   faqItems,
   relatedTools,
   path,
+  lastUpdated,
 }: ToolPageLayoutProps) {
   const url = path ? `${SITE_URL}${path}` : SITE_URL;
   const breadcrumbs = path ? buildBreadcrumbs(path, title) : null;
@@ -140,7 +154,8 @@ export default function ToolPageLayout({
       "price": "0",
       "priceCurrency": "BRL"
     },
-    "url": url
+    "url": url,
+    ...(lastUpdated ? { "dateModified": lastUpdated } : {}),
   };
 
   const faqSchema = faqItems && faqItems.length > 0 ? {
@@ -207,6 +222,15 @@ export default function ToolPageLayout({
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
         <p className="text-gray-600 text-lg">{description}</p>
+        {lastUpdated && (
+          <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-gray-500">
+            <span aria-hidden="true">🗓️</span>
+            Atualizado em{' '}
+            <time dateTime={lastUpdated} className="font-medium text-gray-600">
+              {formatUpdatedDate(lastUpdated)}
+            </time>
+          </p>
+        )}
       </header>
 
       {/* Área interativa da ferramenta */}
