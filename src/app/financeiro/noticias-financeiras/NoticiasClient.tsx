@@ -14,25 +14,32 @@ interface NewsArticle {
   };
 }
 
-export default function NoticiasClient() {
-  const [news, setNews] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+interface NoticiasClientProps {
+  initialNews: NewsArticle[];
+}
+
+export default function NoticiasClient({ initialNews }: NoticiasClientProps) {
+  const [news, setNews] = useState<NewsArticle[]>(initialNews);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [category, setCategory] = useState<'business' | 'crypto'>('business');
 
   useEffect(() => {
+    // If category is business, we use the server-rendered initialNews.
+    if (category === 'business') {
+      setNews(initialNews);
+      setError('');
+      setLoading(false);
+      return;
+    }
+
     const fetchNews = async () => {
       setLoading(true);
       setError('');
       try {
+        // Obviamente em produção a chave deve vir de uma API interna ou Server Action.
         const apiKey = '45f51f703fea4d6a81ec8ca9b2e942c4';
-        let endpoint = '';
-
-        if (category === 'business') {
-          endpoint = `https://newsapi.org/v2/top-headlines?country=br&category=business&apiKey=${apiKey}`;
-        } else {
-          endpoint = `https://newsapi.org/v2/everything?q=criptomoedas OR bitcoin OR ethereum&language=pt&sortBy=publishedAt&apiKey=${apiKey}`;
-        }
+        const endpoint = `https://newsapi.org/v2/everything?q=criptomoedas OR bitcoin OR ethereum&language=pt&sortBy=publishedAt&apiKey=${apiKey}`;
 
         const res = await fetch(endpoint);
         
@@ -43,21 +50,20 @@ export default function NoticiasClient() {
         const data = await res.json();
         
         if (data && data.articles) {
-          // Filtra notícias sem título ou imagem (comum em algumas fontes de RSS)
           const validArticles = data.articles.filter((a: NewsArticle) => a.title && a.title !== '[Removed]' && a.urlToImage);
-          setNews(validArticles.slice(0, 30)); // Limita a 30 para boa performance
+          setNews(validArticles.slice(0, 30));
         } else {
           throw new Error('Formato de resposta inválido.');
         }
       } catch (err: any) {
-        setError(err.message || 'Não foi possível carregar as notícias neste momento. Tente novamente mais tarde.');
+        setError(err.message || 'Não foi possível carregar as notícias neste momento.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchNews();
-  }, [category]);
+  }, [category, initialNews]);
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
