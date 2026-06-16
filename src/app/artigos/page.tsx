@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Leia nossos artigos e guias práticos sobre documentos, finanças, produtividade e muito mais.',
 };
 
-const artigos = [
+export const artigos = [
   {
     slug: 'como-saber-se-estou-sendo-processado',
     title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',

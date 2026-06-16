@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ResultCard } from '@/components/ui/ResultCard';
 import { Button } from '@/components/ui/Button';
 
-interface StockData {
+export interface StockData {
   symbol: string;
   shortName: string;
   longName: string;
@@ -63,8 +63,8 @@ export default function PainelB3Client({ initialStocks = [] }: PainelB3ClientPro
       } else {
         throw new Error('Nenhum dado retornado para este ativo.');
       }
-    } catch (err: any) {
-      setError(err.message || 'Ocorreu um erro ao buscar os dados.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ocorreu um erro ao buscar os dados.');
     } finally {
       setLoading(false);
     }

@@ -86,10 +86,6 @@ export default function SearchBar() {
     : [];
 
   useEffect(() => {
-    setActiveIndex(-1);
-  }, [query]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (resultsRef.current && !resultsRef.current.contains(event.target as Node) &&
           inputRef.current && !inputRef.current.contains(event.target as Node)) {
@@ -143,6 +139,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
+          setActiveIndex(-1);
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}

@@ -1,37 +1,48 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 type Mode = 'pomodoro' | 'shortBreak' | 'longBreak';
 
+const TIMES: Record<Mode, number> = {
+  pomodoro: 25 * 60,
+  shortBreak: 5 * 60,
+  longBreak: 15 * 60,
+};
+
+const playAlarm = () => {
+  try {
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    audio.play();
+  } catch (e) {
+    console.error('Audio play failed', e);
+  }
+};
+
 export default function PomodoroClient() {
   const [mode, setMode] = useState<Mode>('pomodoro');
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [timeLeft, setTimeLeft] = useState(TIMES.pomodoro);
   const [isRunning, setIsRunning] = useState(false);
   const [cycles, setCycles] = useState(0);
 
-  const times = {
-    pomodoro: 25 * 60,
-    shortBreak: 5 * 60,
-    longBreak: 15 * 60,
-  };
-
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const switchMode = (newMode: Mode) => {
+  const switchMode = useCallback((newMode: Mode) => {
     setMode(newMode);
-    setTimeLeft(times[newMode]);
+    setTimeLeft(TIMES[newMode]);
     setIsRunning(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       timerRef.current = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
     } else if (timeLeft === 0 && isRunning) {
-      // Timer finished
+      // Timer finalizado: dispara o alarme e avança o ciclo.
+      // setState aqui é intencional (reação à contagem chegar a zero).
+      /* eslint-disable react-hooks/set-state-in-effect */
       playAlarm();
       setIsRunning(false);
-      
+
       if (mode === 'pomodoro') {
         const newCycles = cycles + 1;
         setCycles(newCycles);
@@ -43,20 +54,12 @@ export default function PomodoroClient() {
       } else {
         switchMode('pomodoro');
       }
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [isRunning, timeLeft, mode, cycles]);
-
-  const playAlarm = () => {
-    try {
-      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-      audio.play();
-    } catch (e) {
-      console.error('Audio play failed', e);
-    }
-  };
+  }, [isRunning, timeLeft, mode, cycles, switchMode]);
 
   const toggleTimer = () => {
     setIsRunning(!isRunning);
@@ -64,7 +67,7 @@ export default function PomodoroClient() {
 
   const resetTimer = () => {
     setIsRunning(false);
-    setTimeLeft(times[mode]);
+    setTimeLeft(TIMES[mode]);
   };
 
   const formatTime = (seconds: number) => {
@@ -125,7 +128,7 @@ export default function PomodoroClient() {
           {isRunning ? 'Pausar' : 'Iniciar'}
         </button>
 
-        {(!isRunning && timeLeft !== times[mode]) && (
+        {(!isRunning && timeLeft !== TIMES[mode]) && (
           <button
             onClick={resetTimer}
             className="p-4 rounded-2xl bg-white/20 text-white hover:bg-white/30 transition-colors"

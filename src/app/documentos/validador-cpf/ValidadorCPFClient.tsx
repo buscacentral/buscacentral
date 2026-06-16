@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { validateCPF, formatCPF } from '@/lib/cpf';
 import { Button } from '@/components/ui/Button';
-import { Alert } from '@/components/ui/Alert';
 import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function ValidadorCPFClient() {

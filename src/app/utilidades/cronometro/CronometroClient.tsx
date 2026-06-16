@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/Button';
 import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function CronometroClient() {
@@ -19,7 +18,6 @@ export default function CronometroClient() {
   const [tTempo, setTTempo] = useState(300000); // 5 min em ms
   const [tRunning, setTRunning] = useState(false);
   const tRef = useRef<NodeJS.Timeout | null>(null);
-  const tStart = useRef(0);
   const tTarget = useRef(0);
 
   // Audio for timer

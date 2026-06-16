@@ -1,27 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export default function IdadeGestacionalClient() {
   const [calcMethod, setCalcMethod] = useState<'dum' | 'dpp'>('dum');
   const [dateStr, setDateStr] = useState('');
-  
-  const [weeks, setWeeks] = useState(0);
-  const [days, setDays] = useState(0);
-  const [dpp, setDpp] = useState<Date | null>(null);
-  const [trimestre, setTrimestre] = useState(0);
 
-  useEffect(() => {
-    if (!dateStr) {
-      setWeeks(0);
-      setDays(0);
-      setDpp(null);
-      setTrimestre(0);
-      return;
-    }
+  const { weeks, days, dpp, trimestre } = useMemo(() => {
+    const empty = { weeks: 0, days: 0, dpp: null as Date | null, trimestre: 0 };
+    if (!dateStr) return empty;
 
     const inputDate = new Date(dateStr + 'T12:00:00'); // Midday to avoid timezone shifting
-    if (isNaN(inputDate.getTime())) return;
+    if (isNaN(inputDate.getTime())) return empty;
 
     const today = new Date();
     today.setHours(12, 0, 0, 0);
@@ -60,15 +50,9 @@ export default function IdadeGestacionalClient() {
 
     const w = Math.floor(currentGestationalAgeDays / 7);
     const d = currentGestationalAgeDays % 7;
+    const tri = w < 13 ? 1 : w < 27 ? 2 : 3;
 
-    setWeeks(w);
-    setDays(d);
-    setDpp(calculatedDpp);
-
-    if (w < 13) setTrimestre(1);
-    else if (w < 27) setTrimestre(2);
-    else setTrimestre(3);
-
+    return { weeks: w, days: d, dpp: calculatedDpp, trimestre: tri };
   }, [calcMethod, dateStr]);
 
   const progressPercent = Math.min((((weeks * 7) + days) / 280) * 100, 100);

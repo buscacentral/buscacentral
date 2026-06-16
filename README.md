@@ -14,24 +14,26 @@ Consultas rápidas, sem cadastro e sem custo.
 
 ## 🛠️ Ferramentas disponíveis (65)
 
-Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado para artigos educativos e ajuda na provação do AdSense.
+Além das ferramentas, contamos com um **Blog / Guia Prático** (`/artigos`) integrado, com artigos educativos que apoiam a aprovação do AdSense.
 
-
-### 📋 Documentos
+### 📋 Documentos (8)
 - Gerador de CPF
 - Validador de CPF
 - Gerador de CNPJ
 - Validador de CNPJ
 - Consulta CNPJ (Receita Federal)
+- Consulta de Processos
+- Gerador de Cartão de Crédito (para testes)
+- Gerador de Recibos
 
-### 📍 Localização
+### 📍 Localização (3)
 - Busca de CEP
 - Distância entre Cidades
 - Clima
 
-### 💰 Financeiro
+### 💰 Financeiro (17)
 - Cotação de Moedas em tempo real
-- Criptomoedas (Top 10)
+- Criptomoedas (Top 10, com página de detalhe por moeda)
 - Painel B3 (Ações e FIIs)
 - Indicadores Econômicos (Selic, IPCA, CDI)
 - Notícias Financeiras e Mercado
@@ -42,28 +44,49 @@ Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado 
 - Calculadora de Rescisão Trabalhista
 - Simulador de Investimentos (CDB / Tesouro Direto)
 - ROI Imobiliário
+- Salário Líquido
+- Férias
+- Décimo Terceiro
+- Horas Extras
+- Precificação de Receitas
 
-### 🔧 Utilidades
+### 🔧 Utilidades (37)
 - Gerador de QR Code
 - Gerador de Senha
 - Gerador de UUID
+- Gerador de Lorem Ipsum
 - Comparador de Textos
+- Contador de Caracteres
+- Removedor de Duplicatas
+- Extrator de Emails
+- Validador de Email
 - Conversor de Imagens
 - Conversor de Caixa (maiúsculo/minúsculo)
+- Conversor de Unidades
 - Seletor de Cores
-- Extrator de Emails
-- Contador de Caracteres
 - Link WhatsApp
 - PIX Copia e Cola
-- Formatador JSON/XML
+- Formatador de Dados (JSON/XML)
 - Formatador de Código
+- JSON ↔ CSV
+- Codificador/Decodificador Base64
+- Conversor de Timestamp
 - Calculadora de IMC
 - Tabela de Calorias (TACO/IBGE)
+- Consumo de Água
+- Idade Gestacional
+- Calculadora de Porcentagem
+- Calculadora de Desconto
+- Regra de Três
+- Calculadora de Combustível (Etanol x Gasolina)
+- Calculadora de Churrasco
+- Calculadora do Amor
 - Dias Úteis entre Datas
-- Conversor de Timestamp
-- Removedor de Duplicatas
-- Codificador/Decodificador Base64
-- Rastreio
+- Cronômetro
+- Pomodoro
+- Sorteador
+- Sorteador de Nomes
+- Rastreio de Encomendas
 - Planejador de Viagem
 
 ## 🚀 Stack

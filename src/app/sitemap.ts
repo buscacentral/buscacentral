@@ -1,138 +1,74 @@
 import type { MetadataRoute } from 'next';
+import fs from 'node:fs';
+import path from 'node:path';
+import { artigos } from './artigos/page';
+import { TOP_10 as cryptoIds } from './financeiro/criptomoedas/[id]/page';
+
+const baseUrl = 'https://buscacentral.com.br';
+
+/**
+ * Descobre automaticamente todas as rotas estáticas varrendo o diretório
+ * `src/app` em busca de arquivos `page.tsx`. Dessa forma, toda nova ferramenta
+ * entra no sitemap sem precisar de manutenção manual.
+ *
+ * Segmentos dinâmicos ([slug]), route groups ((grupo)), pastas privadas (_) e a
+ * pasta `api` são ignorados — as rotas dinâmicas são adicionadas explicitamente
+ * a partir das suas respectivas fontes de dados.
+ */
+function getStaticRoutes(): string[] {
+  const appDir = path.join(process.cwd(), 'src', 'app');
+  const routes: string[] = [];
+
+  function walk(dir: string, route: string): void {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+    const hasPage = entries.some(
+      (entry) => entry.isFile() && /^page\.(tsx|ts|jsx|js)$/.test(entry.name),
+    );
+    if (hasPage) {
+      routes.push(route === '' ? '/' : route);
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const name = entry.name;
+      // Ignora API, segmentos dinâmicos, route groups e pastas privadas.
+      if (
+        name === 'api' ||
+        name.startsWith('[') ||
+        name.startsWith('(') ||
+        name.startsWith('_')
+      ) {
+        continue;
+      }
+      walk(path.join(dir, name), `${route}/${name}`);
+    }
+  }
+
+  walk(appDir, '');
+  return routes;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://buscacentral.com.br';
+  const lastModified = new Date();
 
-  const staticPages = [
-    '',
-    '/documentos',
-    '/documentos/gerador-cpf',
-    '/documentos/validador-cpf',
-    '/documentos/gerador-cnpj',
-    '/documentos/validador-cnpj',
-    '/documentos/consulta-cnpj',
-    '/localizacao',
-    '/localizacao/busca-cep',
-    '/localizacao/distancia-cidades',
-    '/localizacao/clima',
-    '/financeiro',
-    '/financeiro/cotacao',
-    '/financeiro/criptomoedas',
-    '/financeiro/criptomoedas/bitcoin',
-    '/financeiro/criptomoedas/ethereum',
-    '/financeiro/criptomoedas/tether',
-    '/financeiro/criptomoedas/binancecoin',
-    '/financeiro/criptomoedas/solana',
-    '/financeiro/criptomoedas/ripple',
-    '/financeiro/criptomoedas/usd-coin',
-    '/financeiro/criptomoedas/dogecoin',
-    '/financeiro/criptomoedas/cardano',
-    '/financeiro/criptomoedas/staked-ether',
-    '/financeiro/tabela-fipe',
-    '/financeiro/juros-compostos',
-    '/financeiro/conversor-clt-pj',
-    '/financeiro/financiamento-carro',
-    '/financeiro/rescisao-trabalhista',
-    '/financeiro/simulador-investimentos',
-    '/financeiro/salario-liquido',
-    '/financeiro/ferias',
-    '/financeiro/decimo-terceiro',
-    '/financeiro/horas-extras',
-    '/financeiro/painel-b3',
-    '/financeiro/indicadores-economicos',
-    '/financeiro/noticias-financeiras',
-    '/documentos/consulta-cnpj',
-    '/documentos/consulta-processos',
-    '/documentos/gerador-cartao-credito',
-    '/utilidades',
-    '/utilidades/gerador-qr-code',
-    '/utilidades/gerador-senha',
-    '/utilidades/gerador-uuid',
-    '/utilidades/base64',
-    '/utilidades/contador-caracteres',
-    '/utilidades/pix-copia-cola',
-    '/utilidades/timestamp',
-    '/utilidades/comparador-textos',
-    '/utilidades/removedor-duplicatas',
-    '/utilidades/conversor-caixa',
-    '/utilidades/conversor-imagens',
-    '/utilidades/seletor-cores',
-    '/utilidades/extrator-emails',
-    '/utilidades/whatsapp-link',
-    '/utilidades/dias-uteis',
-    '/utilidades/rastreio',
-    '/utilidades/planejador-viagem',
-    '/utilidades/formatador-codigo',
-    '/utilidades/calculadora-imc',
-    '/utilidades/tabela-calorias',
-    '/utilidades/calculadora-porcentagem',
-    '/utilidades/calculadora-desconto',
-    '/utilidades/conversor-unidades',
-    '/utilidades/gerador-lorem-ipsum',
-    '/utilidades/sorteador',
-    '/utilidades/cronometro',
-    '/utilidades/json-csv',
-    '/utilidades/calculadora-combustivel',
-    '/utilidades/validador-email',
-    '/utilidades/calculadora-churrasco',
-    '/utilidades/regra-de-tres',
-    '/utilidades/consumo-agua',
-    '/utilidades/formatador-dados',
-    '/utilidades/idade-gestacional',
-    '/utilidades/pomodoro',
-    '/utilidades/sorteador-nomes',
-    '/utilidades/calculadora-amor',
-    '/financeiro/precificacao-receitas',
-    '/documentos/gerador-recibos',
-    '/artigos',
-    '/artigos/como-saber-se-estou-sendo-processado',
-    '/artigos/o-que-e-uuid-e-por-que-e-seguro',
-    '/artigos/como-funciona-tabela-fipe',
-    '/artigos/diferenca-clt-e-pj',
-    '/artigos/por-que-empresas-precisam-gerar-cpf-para-testes',
-    '/artigos/juros-compostos-o-segredo-dos-investimentos',
-    '/artigos/tamanho-ideal-textos-seo-redes-sociais',
-    '/artigos/calculadora-de-imc-e-peso-ideal',
-    '/artigos/o-que-e-base64-e-como-funciona',
-    '/artigos/como-funciona-api-de-cep-correios',
-    '/artigos/entenda-o-calculo-de-rescisao-de-contrato',
-    '/artigos/como-funciona-um-extrator-de-emails',
-    '/artigos/simulando-investimentos-tesouro-direto-vs-cdb',
-    '/artigos/qr-code-tudo-que-voce-precisa-saber',
-    '/artigos/dolar-hoje-por-que-a-cotacao-oscila-tanto',
-    
-    '/artigos/salario-bruto-vs-liquido-irrf-inss',
-    '/artigos/guia-do-decimo-terceiro-salario',
-    '/artigos/calculo-de-ferias-e-terco-constitucional',
-    '/artigos/bitcoin-ethereum-volatilidade-mercado',
-    '/artigos/financiamento-veiculos-tabela-price',
-    '/artigos/como-criar-uma-senha-forte',
-    '/artigos/como-consultar-situacao-cnpj',
-    '/artigos/gerador-cartao-de-credito-testes',
-    '/artigos/criar-link-whatsapp-vendas',
-    '/artigos/pix-copia-e-cola-br-code',
-    '/artigos/rastreio-encomendas-correios',
-    '/artigos/etanol-ou-gasolina-regra-dos-70',
-    '/artigos/como-calcular-quantidade-de-carne-para-churrasco',
-    '/artigos/como-limpar-listas-de-cpf-e-telefones-no-excel',
-    '/artigos/como-fazer-regra-de-tres-simples-passo-a-passo',
-    '/artigos/quantos-litros-de-agua-beber-por-dia-calculo',
-    '/artigos/como-precificar-doces-e-salgados-para-vender',
-    '/artigos/como-fazer-um-recibo-simples-e-com-validade-legal',
-    '/artigos/como-calcular-idade-gestacional-dum-dpp',
-    '/artigos/tecnica-pomodoro-como-parar-de-procrastinar',
-    '/artigos/como-fazer-sorteio-justo-no-instagram',
-    '/artigos/a-historia-das-calculadoras-do-amor-na-internet',
-    '/sobre',
-    '/contato',
-    '/privacidade',
-    '/termos',
-  ];
+  const staticRoutes = getStaticRoutes();
+  const articleRoutes = artigos.map((artigo) => `/artigos/${artigo.slug}`);
+  const cryptoRoutes = cryptoIds.map((id) => `/financeiro/criptomoedas/${id}`);
 
-  return staticPages.map((page) => ({
-    url: `${baseUrl}${page}`,
-    lastModified: new Date(),
+  // Remove duplicatas e ordena (mantendo a home em primeiro).
+  const allRoutes = Array.from(
+    new Set([...staticRoutes, ...articleRoutes, ...cryptoRoutes]),
+  ).sort((a, b) => {
+    if (a === '/') return -1;
+    if (b === '/') return 1;
+    return a.localeCompare(b);
+  });
+
+  return allRoutes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified,
     changeFrequency: 'weekly' as const,
-    priority: page === '' ? 1 : 0.8,
+    priority: route === '/' ? 1 : 0.8,
   }));
 }

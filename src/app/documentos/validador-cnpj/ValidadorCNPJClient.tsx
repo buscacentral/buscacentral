@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { validateCNPJ, formatCNPJ } from '@/lib/cnpj';
 import { Button } from '@/components/ui/Button';
-import { Alert } from '@/components/ui/Alert';
 import { ResultCard } from '@/components/ui/ResultCard';
 
 export default function ValidadorCNPJClient() {

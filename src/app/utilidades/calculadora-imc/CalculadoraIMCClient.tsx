@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Button } from '@/components/ui/Button';
 import { ResultCard } from '@/components/ui/ResultCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
