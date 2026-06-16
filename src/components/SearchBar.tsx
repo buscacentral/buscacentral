@@ -60,6 +60,7 @@ const tools = [
   { name: 'Formatador de Dados', path: '/utilidades/formatador-dados', category: 'Utilidades', keywords: ['formatar', 'limpar', 'cpf', 'cnpj', 'telefone', 'celular', 'lote'] },
   { name: 'Regra de Três', path: '/utilidades/regra-de-tres', category: 'Utilidades', keywords: ['regra de três', 'matemática', 'proporção', 'cálculo', 'simples'] },
   { name: 'Consumo de Água', path: '/utilidades/consumo-agua', category: 'Utilidades', keywords: ['água', 'beber', 'hidratação', 'litros', 'saúde'] },
+  { name: 'Consulta de Processos', path: '/documentos/consulta-processos', category: 'Documentos', keywords: ['processo', 'jusbrasil', 'judicial', 'nome', 'justiça', 'tribunal'] },
   { name: 'Precificação de Receitas', path: '/financeiro/precificacao-receitas', category: 'Financeiro', keywords: ['preço', 'receita', 'custo', 'venda', 'lucro', 'markup', 'doces', 'salgados'] },
   { name: 'Gerador de Recibos', path: '/documentos/gerador-recibos', category: 'Documentos', keywords: ['recibo', 'pagamento', 'pdf', 'comprovante', 'gerador', 'imprimir'] },
   { name: 'Idade Gestacional', path: '/utilidades/idade-gestacional', category: 'Utilidades', keywords: ['idade gestacional', 'gravidez', 'semanas', 'dum', 'dpp', 'parto'] },

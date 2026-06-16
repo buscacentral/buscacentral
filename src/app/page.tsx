@@ -15,7 +15,8 @@ const mainTools = [
   { title: 'Formatador em Lote', description: 'Limpe e formate CPFs, CNPJs e Telefones instantaneamente.', href: '/utilidades/formatador-dados', icon: '🧹', color: 'green' as const },
   { title: 'Gerador de Recibos', description: 'Gere recibos de pagamento simples e profissionais em PDF.', href: '/documentos/gerador-recibos', icon: '🧾', color: 'blue' as const },
   { title: 'Precificação de Receitas', description: 'Calcule o custo e o preço ideal de venda dos seus produtos.', href: '/financeiro/precificacao-receitas', icon: '🍰', color: 'purple' as const },
-  { title: 'Cronômetro Pomodoro', description: 'Aumente sua produtividade com blocos de foco de 25 minutos.', href: '/utilidades/pomodoro', icon: '🍅', color: 'red' as const },
+  { name: 'Cronômetro Pomodoro', description: 'Aumente sua produtividade com blocos de foco de 25 minutos.', href: '/utilidades/pomodoro', icon: '🍅', color: 'red' as const },
+  { title: 'Consulta de Processos', description: 'Descubra se você tem processos judiciais pelo seu nome.', href: '/documentos/consulta-processos', icon: '⚖️', color: 'blue' as const },
 ];
 
 export default function Home() {
@@ -29,7 +30,7 @@ export default function Home() {
           Ferramentas gratuitas essenciais em um só lugar, rápidas e sem cadastro.
         </p>
         <p className="bg-blue-50 text-blue-600 inline-block px-5 py-1.5 rounded-full text-sm font-bold mb-8 shadow-sm border border-blue-100">
-          61 ferramentas gratuitas
+          62 ferramentas gratuitas
         </p>
         
         <SearchBar />
@@ -57,7 +58,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: 'Documentos', href: '/documentos', icon: '📄', count: 7 },
+              { name: 'Documentos', href: '/documentos', icon: '📄', count: 8 },
               { name: 'Localização', href: '/localizacao', icon: '📍', count: 3 },
               { name: 'Financeiro', href: '/financeiro', icon: '💱', count: 14 },
               { name: 'Utilidades', href: '/utilidades', icon: '🛠️', count: 37 },
@@ -88,7 +89,7 @@ export default function Home() {
           
           <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">100% Gratuito e Sem Cadastro</h3>
           <p className="mb-4 leading-relaxed">
-            Todas as nossas {mainTools.length > 0 ? '61' : ''} ferramentas estão disponíveis gratuitamente 24 horas por dia, 7 dias por semana. Não exigimos criação de conta, login com redes sociais ou assinaturas premium. Basta acessar a página da utilidade que você precisa e utilizá-la imediatamente.
+            Todas as nossas {mainTools.length > 0 ? '62' : ''} ferramentas estão disponíveis gratuitamente 24 horas por dia, 7 dias por semana. Não exigimos criação de conta, login com redes sociais ou assinaturas premium. Basta acessar a página da utilidade que você precisa e utilizá-la imediatamente.
           </p>
           
           <h3 className="text-xl font-bold text-slate-800 mt-8 mb-3">Privacidade e Segurança em Primeiro Lugar</h3>

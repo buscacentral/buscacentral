@@ -13,6 +13,7 @@ const tools = [
   { title: 'Validador de CNPJ', description: 'Valide a autenticidade de um CNPJ rapidamente.', href: '/documentos/validador-cnpj', icon: '✔️', color: 'bg-orange-50 border-orange-200' },
   { title: 'Consulta de CNPJ', description: 'Busque todos os dados públicos de uma empresa pelo CNPJ.', href: '/documentos/consulta-cnpj', icon: '🔍', color: 'bg-blue-50 border-blue-200' },
   { title: 'Gerador de Cartão de Crédito', description: 'Gere números de cartão válidos para testes de sistemas.', href: '/documentos/gerador-cartao-credito', icon: '💳', color: 'bg-rose-50 border-rose-200' },
+  { title: 'Consulta de Processos', description: 'Descubra se há processos judiciais públicos associados ao seu nome (Seguro LGPD).', href: '/documentos/consulta-processos', icon: '⚖️', color: 'bg-blue-50 border-blue-200' },
 ];
 
 const sugestoes = [

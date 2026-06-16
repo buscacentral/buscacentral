@@ -4,6 +4,43 @@ import Link from 'next/link';
 
 // Mocked articles database for AdSense approval
 const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; isoDate: string; category: string; description: string }> = {
+  'como-saber-se-estou-sendo-processado': {
+    title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',
+    date: '15 de Junho, 2026',
+    isoDate: '2026-06-15T21:00:00.000Z',
+    category: 'Jurídico',
+    description: 'Descubra como pesquisar se o seu nome está envolvido em processos judiciais de forma totalmente gratuita, segura e de acordo com a LGPD.',
+    content: (
+      <>
+        <p>Receber a notícia de que existe um processo judicial no seu nome é algo que assusta qualquer pessoa. Muitas vezes, descobrimos a existência de uma ação (trabalhista, de consumo, ou cível) tarde demais, quando uma conta bancária é bloqueada ou um oficial de justiça bate à porta.</p>
+        <p>Por sorte, a legislação brasileira determina que, via de regra, os processos judiciais são documentos públicos. Isso significa que você mesmo pode investigar a própria situação jurídica sem precisar pagar um advogado logo de cara.</p>
+        
+        <h2 className="text-2xl font-bold mt-8 mb-4">A Legalidade da Busca e a LGPD</h2>
+        <p>Muitas pessoas têm dúvidas se investigar processos de terceiros online ou mesmo usar sites que indexam o Diário Oficial viola a Lei Geral de Proteção de Dados (LGPD). A resposta curta é: <strong>Não viola</strong>.</p>
+        <p>O artigo 93, inciso IX da Constituição Federal do Brasil assegura o Princípio da Publicidade dos atos processuais. Ou seja, a regra no país é que processos sejam abertos ao público para garantir a transparência do Judiciário. As únicas exceções são processos que correm em <em>Segredo de Justiça</em> (casos de divórcio, pensão alimentícia envolvendo menores de idade, e alguns crimes específicos).</p>
+        
+        <h2 className="text-2xl font-bold mt-8 mb-4">Onde e como procurar de forma gratuita?</h2>
+        <p>Existem três formas principais de descobrir se você está sendo processado:</p>
+        
+        <h3 className="text-xl font-bold mt-6 mb-3">1. Sites Agregadores (Jusbrasil e Escavador)</h3>
+        <p>Esses sites possuem "robôs" que leem todos os Diários Oficiais da Justiça de todos os estados brasileiros diariamente. Quando um juiz dá um despacho citando o seu nome completo, o nome vai para o Diário Oficial, e o Jusbrasil captura essa informação. Essa é a forma mais rápida e fácil de buscar.</p>
+        
+        <h3 className="text-xl font-bold mt-6 mb-3">2. Sites dos Tribunais de Justiça (TJs) e Justiça do Trabalho (TRTs)</h3>
+        <p>Se você desconfia que está sendo processado no seu estado de residência, você pode acessar o site do TJ do seu estado (ex: TJSP para São Paulo, TJRJ para o Rio de Janeiro) e procurar pela seção "Consulta Processual de 1º Grau". A busca pode ser feita utilizando apenas o seu CPF. O mesmo vale para o site da Justiça do Trabalho (TRT).</p>
+
+        <h3 className="text-xl font-bold mt-6 mb-3">3. Consulta Avançada no Google</h3>
+        <p>Ao colocar o seu nome completo entre aspas (exemplo: <em>"Joao Batista da Silva"</em>) e adicionar a palavra <em>processo</em> no Google, o buscador faz uma varredura nas bases de dados indexadas do governo e de sites jurídicos.</p>
+
+        <div className="bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-emerald-900 mb-2">Encurtamos o caminho para você!</h3>
+          <p className="text-emerald-800">
+            Criamos uma ferramenta segura e 100% Client-Side (nós não salvamos nem lemos os dados que você digita) que gera os links diretos de busca em todos esses portais com apenas um clique. 
+            Acesse o nosso <strong><Link href="/documentos/consulta-processos" className="underline font-semibold hover:text-emerald-900">Gerador de Consulta de Processos</Link></strong> agora mesmo.
+          </p>
+        </div>
+      </>
+    )
+  },
   'o-que-e-uuid-e-por-que-e-seguro': {
     title: 'O que é um UUID e por que ele é seguro?',
     date: '15 de Junho, 2026',

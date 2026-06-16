@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 
 const artigos = [
   {
-    slug: 'o-que-e-uuid-e-por-que-e-seguro',
-    title: 'O que é um UUID e por que ele é seguro?',
-    excerpt: 'Entenda como funcionam os Identificadores Únicos Universais, por que eles são vitais para o desenvolvimento de software e a probabilidade quase nula de uma colisão.',
+    slug: 'como-saber-se-estou-sendo-processado',
+    title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',
+    excerpt: 'Descubra como pesquisar se o seu nome está envolvido em processos judiciais de forma totalmente gratuita, segura e de acordo com a LGPD.',
     date: '15 de Junho, 2026',
-    category: 'Tecnologia'
+    category: 'Jurídico'
   },
   {
     slug: 'como-funciona-tabela-fipe',
