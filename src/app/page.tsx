@@ -15,7 +15,7 @@ const mainTools = [
   { title: 'Formatador em Lote', description: 'Limpe e formate CPFs, CNPJs e Telefones instantaneamente.', href: '/utilidades/formatador-dados', icon: '🧹', color: 'green' as const },
   { title: 'Gerador de Recibos', description: 'Gere recibos de pagamento simples e profissionais em PDF.', href: '/documentos/gerador-recibos', icon: '🧾', color: 'blue' as const },
   { title: 'Precificação de Receitas', description: 'Calcule o custo e o preço ideal de venda dos seus produtos.', href: '/financeiro/precificacao-receitas', icon: '🍰', color: 'purple' as const },
-  { name: 'Cronômetro Pomodoro', description: 'Aumente sua produtividade com blocos de foco de 25 minutos.', href: '/utilidades/pomodoro', icon: '🍅', color: 'red' as const },
+  { title: 'Cronômetro Pomodoro', description: 'Aumente sua produtividade com blocos de foco de 25 minutos.', href: '/utilidades/pomodoro', icon: '🍅', color: 'red' as const },
   { title: 'Consulta de Processos', description: 'Descubra se você tem processos judiciais pelo seu nome.', href: '/documentos/consulta-processos', icon: '⚖️', color: 'blue' as const },
 ];
 
