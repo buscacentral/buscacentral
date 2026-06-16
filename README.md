@@ -12,7 +12,7 @@ Consultas rápidas, sem cadastro e sem custo.
 ## 🌐 Acesse o site
 [buscacentral.com.br](https://buscacentral.com.br)
 
-## 🛠️ Ferramentas disponíveis (51)
+## 🛠️ Ferramentas disponíveis (65)
 
 Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado para artigos educativos e ajuda na provação do AdSense.
 
@@ -32,6 +32,9 @@ Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado 
 ### 💰 Financeiro
 - Cotação de Moedas em tempo real
 - Criptomoedas (Top 10)
+- Painel B3 (Ações e FIIs)
+- Indicadores Econômicos (Selic, IPCA, CDI)
+- Notícias Financeiras e Mercado
 - Tabela FIPE
 - Juros Compostos
 - Conversor CLT → PJ
@@ -79,6 +82,9 @@ Além das ferramentas, agora contamos com um **Blog / Guia Prático** integrado 
 | AwesomeAPI | Cotação de moedas | Gratuita |
 | CNPJ.ws | Consulta CNPJ | Gratuita |
 | parallelum.com.br | Tabela FIPE | Gratuita |
+| Brapi | Painel B3 (Ações e FIIs) | Gratuita (token) |
+| Banco Central do Brasil | Indicadores (Selic, IPCA) | Gratuita |
+| NewsAPI | Notícias Financeiras e Cripto | Gratuita (Developer) |
 
 ## 💡 Como rodar localmente
 
