@@ -2,24 +2,61 @@ import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import ValidadorCNPJClient from './ValidadorCNPJClient';
 
-export const metadata: Metadata = generateToolMetadata(
-  'Validador de CNPJ',
-  'Valide CNPJs com verificação oficial de dígito verificador. Confira se o formato está correto.',
-  '/documentos/validador-cnpj'
-);
+export const metadata: Metadata = {
+  ...generateToolMetadata(
+    'Validador de CNPJ',
+    'Valide CNPJs e entenda como calcular o dígito verificador (DV) com o algoritmo oficial da Receita Federal. Passo a passo, pesos e exemplo prático.',
+    '/documentos/validador-cnpj'
+  ),
+  keywords: [
+    'validador de cnpj',
+    'validar cnpj',
+    'validação cnpj',
+    'dígito verificador cnpj',
+    'digito verificador do cnpj',
+    'calcular dígito do cnpj',
+    'cnpj dígito verificador',
+    'dígitos do cnpj',
+  ],
+};
 
 const seoContent = (
   <article className="prose prose-gray max-w-none">
     <h2>Entenda como funciona o Validador de CNPJ</h2>
     <p>O <strong>Validador de CNPJ da BuscaCentral</strong> é uma ferramenta desenhada para testar rapidamente se um Cadastro Nacional de Pessoa Jurídica (CNPJ) possui o formato e a lógica matemática exigidos pela Receita Federal do Brasil. Ideal para testes de software, cadastros de fornecedores e auditorias internas.</p>
 
-    <h3>Como a validação matemática acontece?</h3>
-    <p>Um CNPJ possui 14 dígitos (no formato 00.000.000/0001-00). A nossa ferramenta ignora pontos, barras e traços e foca nos números:</p>
+    <h2>Como calcular o dígito verificador do CNPJ (passo a passo)</h2>
+    <p>Os dois últimos números de um CNPJ são os <strong>Dígitos Verificadores (DV)</strong>. Eles não são aleatórios: são calculados a partir dos 12 primeiros dígitos usando o algoritmo <em>módulo 11</em>. Veja como calcular o dígito verificador do CNPJ na prática, usando o exemplo <strong>11.222.333/0001-81</strong>:</p>
+
+    <h3>1º dígito verificador (13ª posição)</h3>
+    <p>Multiplique cada um dos <strong>12 primeiros dígitos</strong> pelos pesos, da esquerda para a direita:</p>
     <ul>
-      <li>Os primeiros 12 dígitos são a raiz do CNPJ (sendo que o &quot;/0001&quot; indica a matriz e &quot;/0002&quot; em diante indicam filiais).</li>
-      <li>Os dois últimos números são os <strong>Dígitos Verificadores (DV)</strong>.</li>
+      <li><strong>Pesos:</strong> 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2</li>
+      <li><strong>Dígitos:</strong> 1, 1, 2, 2, 2, 3, 3, 3, 0, 0, 0, 1</li>
+      <li><strong>Soma dos produtos:</strong> 5 + 4 + 6 + 4 + 18 + 24 + 21 + 18 + 0 + 0 + 0 + 2 = <strong>102</strong></li>
+      <li><strong>Resto da divisão por 11:</strong> 102 ÷ 11 deixa resto <strong>3</strong></li>
+      <li><strong>Regra:</strong> se o resto for menor que 2, o DV é 0; senão, o DV é <strong>11 − resto</strong>. Logo: 11 − 3 = <strong>8</strong>.</li>
     </ul>
-    <p>O validador aplica um algoritmo oficial de multiplicação com pesos decrescentes nos 12 primeiros números para calcular qual deveria ser o 13º dígito. Em seguida, refaz o cálculo incluindo o 13º dígito para descobrir qual deveria ser o 14º. Se os resultados baterem com o que foi digitado, o CNPJ é considerado válido.</p>
+    <p>O primeiro dígito verificador é <strong>8</strong>.</p>
+
+    <h3>2º dígito verificador (14ª posição)</h3>
+    <p>Agora inclua o 1º DV recém-calculado e use <strong>13 dígitos</strong> com um novo conjunto de pesos:</p>
+    <ul>
+      <li><strong>Pesos:</strong> 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2</li>
+      <li><strong>Dígitos:</strong> 1, 1, 2, 2, 2, 3, 3, 3, 0, 0, 0, 1, 8</li>
+      <li><strong>Soma dos produtos:</strong> = <strong>120</strong></li>
+      <li><strong>Resto da divisão por 11:</strong> 120 ÷ 11 deixa resto <strong>10</strong></li>
+      <li><strong>DV:</strong> 11 − 10 = <strong>1</strong></li>
+    </ul>
+    <p>O segundo dígito verificador é <strong>1</strong>. Por isso o CNPJ termina em <strong>-81</strong>. É exatamente essa conta que a ferramenta acima faz automaticamente para validar qualquer CNPJ.</p>
+
+    <h3>Estrutura dos 14 dígitos do CNPJ</h3>
+    <p>O CNPJ segue o formato <strong>00.000.000/0001-00</strong>:</p>
+    <ul>
+      <li>Os <strong>8 primeiros</strong> identificam a empresa (a raiz).</li>
+      <li>Os <strong>4 seguintes</strong> indicam a unidade: &quot;0001&quot; é a matriz e &quot;0002&quot; em diante são as filiais.</li>
+      <li>Os <strong>2 últimos</strong> são os dígitos verificadores que acabamos de calcular.</li>
+    </ul>
 
     <h3>Aplicações práticas para o Validador</h3>
     <ul>
@@ -35,8 +72,16 @@ const seoContent = (
 
 const faqItems = [
   {
+    question: "Como calcular o dígito verificador do CNPJ?",
+    answer: "Multiplique os 12 primeiros dígitos pelos pesos 5,4,3,2,9,8,7,6,5,4,3,2 e some os resultados. Divida a soma por 11: se o resto for menor que 2, o dígito é 0; caso contrário, o dígito é 11 menos o resto. Esse é o 1º dígito verificador. Para o 2º, repita o processo com 13 dígitos e os pesos 6,5,4,3,2,9,8,7,6,5,4,3,2."
+  },
+  {
+    question: "Quais são os pesos usados na validação do CNPJ?",
+    answer: "Para o primeiro dígito verificador, os pesos (da esquerda para a direita) são 5,4,3,2,9,8,7,6,5,4,3,2. Para o segundo dígito, são 6,5,4,3,2,9,8,7,6,5,4,3,2. Em ambos os casos usa-se o algoritmo módulo 11."
+  },
+  {
     question: "O validador informa se a empresa está ativa?",
-    answer: "Não. A validação oferecida aqui é puramente matemática. Um CNPJ pode ser matematicamente válido, mas pertencer a uma empresa que já foi fechada. Para consultar o status de um CNPJ, você deve acessar o portal da Redesim na Receita Federal."
+    answer: "Não. A validação oferecida aqui é puramente matemática. Um CNPJ pode ser matematicamente válido, mas pertencer a uma empresa que já foi fechada. Para consultar o status de um CNPJ, você deve acessar o portal da Redesim na Receita Federal ou usar nossa Consulta CNPJ."
   },
   {
     question: "Por que um CNPJ que existe deu como 'inválido'?",
@@ -50,19 +95,19 @@ const faqItems = [
 
 const relatedTools = [
   {
+    title: "Consulta CNPJ",
+    url: "/documentos/consulta-cnpj",
+    description: "Consulte os dados cadastrais reais de uma empresa (razão social, situação e endereço) na Receita Federal."
+  },
+  {
+    title: "Gerador de CNPJ",
+    url: "/documentos/gerador-cnpj",
+    description: "Gere CNPJs válidos e com dígito verificador correto para usar em testes e desenvolvimento."
+  },
+  {
     title: "Validador de CPF",
     url: "/documentos/validador-cpf",
     description: "Confirme se o CPF de um cliente, sócio ou funcionário está matematicamente correto."
-  },
-  {
-    title: "Dias Úteis",
-    url: "/utilidades/dias-uteis",
-    description: "Calcule facilmente os dias úteis entre duas datas para pagamentos de notas fiscais e fornecedores."
-  },
-  {
-    title: "Encurtador de URLs",
-    url: "/utilidades/encurtador-url",
-    description: "Encurte links longos do seu site empresarial para compartilhar de forma mais limpa com seus clientes."
   }
 ];
 
@@ -70,7 +115,7 @@ export default function ValidadorCNPJ() {
   return (
     <ToolPageLayout
       title="Validador de CNPJ"
-      description="Verifique instantaneamente se um CNPJ é válido usando o algoritmo oficial da Receita Federal. Evite erros de digitação em formulários e cadastros."
+      description="Verifique instantaneamente se um CNPJ é válido usando o algoritmo oficial da Receita Federal. Veja como calcular o dígito verificador passo a passo."
       ariaLabel="Validador de CNPJ interativo"
       path="/documentos/validador-cnpj"
       seoContent={seoContent}
