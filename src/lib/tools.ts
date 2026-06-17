@@ -68,6 +68,9 @@ export const tools: Tool[] = [
   { name: 'Cronômetro Pomodoro', path: '/utilidades/pomodoro', category: 'Utilidades', keywords: ['pomodoro', 'foco', 'estudo', 'produtividade', 'timer', 'temporizador'] },
   { name: 'Sorteador de Nomes', path: '/utilidades/sorteador-nomes', category: 'Utilidades', keywords: ['sorteio', 'nomes', 'rifa', 'instagram', 'aleatório'] },
   { name: 'Calculadora do Amor', path: '/utilidades/calculadora-amor', category: 'Utilidades', keywords: ['amor', 'calculadora', 'casal', 'compatibilidade', 'nomes', 'crush', 'brincadeira'] },
+  { name: 'Indicadores Econômicos', path: '/financeiro/indicadores-economicos', category: 'Financeiro', keywords: ['selic', 'ipca', 'cdi', 'inflação', 'indicadores', 'taxa de juros', 'banco central', 'economia'] },
+  { name: 'Notícias Financeiras', path: '/financeiro/noticias-financeiras', category: 'Financeiro', keywords: ['notícias', 'mercado financeiro', 'cripto', 'blockchain', 'economia', 'bolsa'] },
+  { name: 'Painel B3', path: '/financeiro/painel-b3', category: 'Financeiro', keywords: ['b3', 'ações', 'fiis', 'bolsa', 'fundos imobiliários', 'cotação', 'bovespa', 'ibovespa'] },
 ];
 
 /**
