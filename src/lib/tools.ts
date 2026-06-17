@@ -71,6 +71,8 @@ export const tools: Tool[] = [
   { name: 'Indicadores Econômicos', path: '/financeiro/indicadores-economicos', category: 'Financeiro', keywords: ['selic', 'ipca', 'cdi', 'inflação', 'indicadores', 'taxa de juros', 'banco central', 'economia'] },
   { name: 'Notícias Financeiras', path: '/financeiro/noticias-financeiras', category: 'Financeiro', keywords: ['notícias', 'mercado financeiro', 'cripto', 'blockchain', 'economia', 'bolsa'] },
   { name: 'Painel B3', path: '/financeiro/painel-b3', category: 'Financeiro', keywords: ['b3', 'ações', 'fiis', 'bolsa', 'fundos imobiliários', 'cotação', 'bovespa', 'ibovespa'] },
+  { name: 'Número por Extenso', path: '/utilidades/numero-por-extenso', category: 'Utilidades', keywords: ['extenso', 'número por extenso', 'valor por extenso', 'escrever valor', 'cheque', 'recibo', 'contrato'] },
+  { name: 'Simulador de Financiamento Imobiliário', path: '/financeiro/financiamento-imobiliario', category: 'Financeiro', keywords: ['financiamento', 'imóvel', 'sac', 'price', 'casa própria', 'apartamento', 'amortização', 'imobiliário', 'parcelas'] },
 ];
 
 /**
