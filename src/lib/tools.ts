@@ -110,3 +110,38 @@ export function getToolLastUpdated(path?: string): string | undefined {
   if (!path) return undefined;
   return SITE_LAST_REVIEWED;
 }
+
+
+export interface RelatedToolLink {
+  title: string;
+  url: string;
+}
+
+/**
+ * Gera ferramentas relacionadas automaticamente, escolhendo as próximas
+ * ferramentas da MESMA categoria (com wrap-around). Distribui os links internos
+ * de forma equilibrada: cada ferramenta aponta para as seguintes da sua
+ * categoria, em vez de todas apontarem para as primeiras da lista.
+ *
+ * Usado como fallback pelo `ToolPageLayout` quando a página não define
+ * `relatedTools` manualmente.
+ */
+export function getRelatedTools(path?: string, limit = 3): RelatedToolLink[] {
+  if (!path) return [];
+  const current = tools.find((t) => t.path === path);
+  if (!current) return [];
+
+  const categoryTools = tools.filter((t) => t.category === current.category);
+  const n = categoryTools.length;
+  if (n <= 1) return [];
+
+  const startIndex = categoryTools.findIndex((t) => t.path === path);
+  const result: RelatedToolLink[] = [];
+  for (let offset = 1; offset < n && result.length < limit; offset++) {
+    const candidate = categoryTools[(startIndex + offset) % n];
+    if (candidate.path !== path) {
+      result.push({ title: candidate.name, url: candidate.path });
+    }
+  }
+  return result;
+}
