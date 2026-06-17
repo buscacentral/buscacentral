@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AdPlaceholder from './AdPlaceholder';
+import { getToolLastUpdated, getRelatedTools } from '@/lib/tools';
 
 export interface FAQItem {
   question: string;
@@ -10,7 +11,7 @@ export interface FAQItem {
 export interface RelatedTool {
   title: string;
   url: string;
-  description: string;
+  description?: string;
 }
 
 interface ToolPageLayoutProps {
@@ -23,6 +24,19 @@ interface ToolPageLayoutProps {
   faqItems?: FAQItem[];
   relatedTools?: RelatedTool[];
   path?: string;
+  /** Data da última atualização da ferramenta no formato ISO (ex.: "2026-06-16"). */
+  lastUpdated?: string;
+}
+
+/** Formata uma data ISO (YYYY-MM-DD) para o formato pt-BR (DD/MM/AAAA), sem desvio de fuso. */
+function formatUpdatedDate(iso: string): string {
+  const date = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
 const SITE_URL = 'https://buscacentral.com.br';
@@ -111,9 +125,20 @@ export default function ToolPageLayout({
   faqItems,
   relatedTools,
   path,
+  lastUpdated,
 }: ToolPageLayoutProps) {
   const url = path ? `${SITE_URL}${path}` : SITE_URL;
   const breadcrumbs = path ? buildBreadcrumbs(path, title) : null;
+
+  // Usa a data explícita (prop) ou, na ausência, a data centralizada em
+  // src/lib/tools.ts mapeada pelo path da ferramenta.
+  const effectiveLastUpdated = lastUpdated ?? getToolLastUpdated(path);
+
+  // Ferramentas relacionadas: usa a lista curada da página, ou — na ausência —
+  // gera automaticamente a partir da mesma categoria (links internos para
+  // todas as ferramentas, sem manutenção manual).
+  const effectiveRelatedTools: RelatedTool[] =
+    relatedTools && relatedTools.length > 0 ? relatedTools : getRelatedTools(path);
 
   const breadcrumbSchema = breadcrumbs
     ? {
@@ -140,7 +165,8 @@ export default function ToolPageLayout({
       "price": "0",
       "priceCurrency": "BRL"
     },
-    "url": url
+    "url": url,
+    ...(effectiveLastUpdated ? { "dateModified": effectiveLastUpdated } : {}),
   };
 
   const faqSchema = faqItems && faqItems.length > 0 ? {
@@ -207,6 +233,15 @@ export default function ToolPageLayout({
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
         <p className="text-gray-600 text-lg">{description}</p>
+        {effectiveLastUpdated && (
+          <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-gray-500">
+            <span aria-hidden="true">🗓️</span>
+            Atualizado em{' '}
+            <time dateTime={effectiveLastUpdated} className="font-medium text-gray-600">
+              {formatUpdatedDate(effectiveLastUpdated)}
+            </time>
+          </p>
+        )}
       </header>
 
       {/* Área interativa da ferramenta */}
@@ -255,18 +290,20 @@ export default function ToolPageLayout({
       )}
 
       {/* Ferramentas Relacionadas */}
-      {relatedTools && relatedTools.length > 0 && (
+      {effectiveRelatedTools && effectiveRelatedTools.length > 0 && (
         <section className="mt-16 pt-12 border-t border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Ferramentas Relacionadas</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedTools.map((tool, idx) => (
+            {effectiveRelatedTools.map((tool, idx) => (
               <Link 
                 key={idx} 
                 href={tool.url}
                 className="block p-6 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all"
               >
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">{tool.title}</h3>
-                <p className="text-sm text-gray-600 line-clamp-3">{tool.description}</p>
+                {tool.description && (
+                  <p className="text-sm text-gray-600 line-clamp-3">{tool.description}</p>
+                )}
               </Link>
             ))}
           </div>

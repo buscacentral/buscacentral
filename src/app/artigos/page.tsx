@@ -22,6 +22,20 @@ export const artigos = [
     category: 'Documentos'
   },
   {
+    slug: 'como-calcular-distancia-entre-cidades',
+    title: 'Como calcular a distância entre cidades (e o custo da viagem)',
+    excerpt: 'Entenda a diferença entre distância em linha reta e rodoviária, estime o tempo de viagem e descubra quanto vai gastar de combustível antes de pegar a estrada.',
+    date: '02 de Julho, 2026',
+    category: 'Localização'
+  },
+  {
+    slug: 'salario-liquido-por-faixa-quanto-sobra',
+    title: 'Salário líquido por faixa: quanto sobra de R$ 2.000 a R$ 10.000',
+    excerpt: 'Veja quanto sobra do salário bruto após INSS e IRRF em diferentes faixas e entenda por que o líquido não cresce na mesma proporção que o bruto.',
+    date: '02 de Julho, 2026',
+    category: 'Trabalhista'
+  },
+  {
     slug: 'como-saber-se-estou-sendo-processado',
     title: 'Como saber se estou sendo processado? Guia completo e Legal (LGPD)',
     excerpt: 'Descubra como pesquisar se o seu nome está envolvido em processos judiciais de forma totalmente gratuita, segura e de acordo com a LGPD.',

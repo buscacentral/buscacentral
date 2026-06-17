@@ -1,6 +1,15 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getArtigoFerramentas } from '@/lib/artigos-ferramentas';
+import { calcularINSS, calcularIRPF, formatarMoeda } from '@/lib/trabalhista';
+
+/** Calcula o líquido (cenário-base) para a tabela do artigo de salário. */
+function liquidoBase(bruto: number): string {
+  const inss = calcularINSS(bruto);
+  const irpf = calcularIRPF(bruto - inss);
+  return formatarMoeda(bruto - inss - irpf);
+}
 
 // Mocked articles database for AdSense approval
 const articlesData: Record<string, { title: string; content: React.ReactNode; date: string; isoDate: string; category: string; description: string }> = {
@@ -75,6 +84,89 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
           <p className="text-blue-800">
             Não quer arriscar errar? Use o nosso <Link href="/utilidades/numero-por-extenso" className="underline font-semibold hover:text-blue-900">Conversor de Número por Extenso</Link>: digite o valor e copie o texto já no formato correto. E se precisar de um recibo completo, o <Link href="/documentos/gerador-recibos" className="underline font-semibold hover:text-blue-900">Gerador de Recibos</Link> já preenche o valor por extenso para você.
           </p>
+        </div>
+      </>
+    )
+  },
+  'como-calcular-distancia-entre-cidades': {
+    title: 'Como calcular a distância entre cidades (e o custo da viagem)',
+    date: '02 de Julho, 2026',
+    isoDate: '2026-07-02T10:00:00.000Z',
+    category: 'Localização',
+    description: 'Aprenda a diferença entre distância em linha reta e rodoviária, estime o tempo de viagem e descubra quanto vai gastar de combustível antes de pegar a estrada.',
+    content: (
+      <>
+        <p>Planejar uma viagem de carro ou de ônibus começa por uma pergunta simples: qual é a distância entre a cidade de origem e a de destino? A resposta, porém, não é única — existe a distância em linha reta e a distância pela estrada, e elas costumam ser bem diferentes.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Linha reta x distância rodoviária</h2>
+        <p>A <strong>distância em linha reta</strong> (ou geodésica) é a menor distância possível entre dois pontos, calculada com as coordenadas de latitude e longitude pela fórmula de Haversine. É útil para ter uma referência, mas nenhuma estrada é perfeitamente reta.</p>
+        <p>A <strong>distância rodoviária</strong> é o que você realmente percorre, acompanhando o traçado das rodovias, contornos e relevo. Na prática, ela costuma ser de 20% a 40% maior que a linha reta. Por isso, em nossas estimativas aplicamos um fator médio de correção de cerca de 30% sobre a linha reta.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Como estimar o tempo de viagem</h2>
+        <p>Com a distância rodoviária em mãos, o tempo é uma conta direta: distância dividida pela velocidade média. Para estradas brasileiras, use como referência cerca de 80 km/h de carro e 60 km/h de ônibus. Lembre-se de somar paradas para descanso, abastecimento e refeições — em viagens longas, o tempo real pode ser bem maior que o teórico.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Quanto vou gastar de combustível?</h2>
+        <p>O cálculo do combustível depende de dois números: o consumo médio do seu veículo (km por litro) e o preço do litro. A fórmula é:</p>
+        <ul>
+          <li><strong>Litros necessários</strong> = distância ÷ consumo (km/l)</li>
+          <li><strong>Custo</strong> = litros × preço do litro</li>
+        </ul>
+        <p>Por exemplo, numa viagem de 430 km com um carro que faz 12 km/l e gasolina a R$ 6,00, são cerca de 36 litros, ou aproximadamente R$ 215 só de ida. Para o trajeto de volta, dobre o valor.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Planeje a viagem completa</h2>
+        <p>Além de distância e combustível, considere pedágios, manutenção e eventuais hospedagens. Uma boa estimativa evita surpresas no orçamento e ajuda a decidir entre dirigir ou comprar passagem.</p>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Calcule a sua rota agora</h3>
+          <p className="text-blue-800">Use a nossa <Link href="/localizacao/distancia-cidades" className="underline font-semibold hover:text-blue-900">calculadora de distância entre cidades</Link> para qualquer cidade do Brasil. Veja também exemplos prontos, como a <Link href="/localizacao/distancia/rio-de-janeiro-rj/sao-paulo-sp" className="underline font-semibold hover:text-blue-900">distância entre Rio de Janeiro e São Paulo</Link>, e estime o gasto na <Link href="/utilidades/calculadora-combustivel" className="underline font-semibold hover:text-blue-900">calculadora de combustível</Link>.</p>
+        </div>
+      </>
+    )
+  },
+  'salario-liquido-por-faixa-quanto-sobra': {
+    title: 'Salário líquido por faixa: quanto sobra de R$ 2.000 a R$ 10.000',
+    date: '02 de Julho, 2026',
+    isoDate: '2026-07-02T11:00:00.000Z',
+    category: 'Trabalhista',
+    description: 'Veja quanto sobra do salário bruto após INSS e IRRF em diferentes faixas e entenda por que o líquido não cresce na mesma proporção que o bruto.',
+    content: (
+      <>
+        <p>Quando você recebe uma proposta de emprego, o valor combinado é quase sempre o salário bruto. Mas o que cai na conta — o líquido — é menor, porque a folha de pagamento desconta INSS e Imposto de Renda na fonte (IRRF). Entender quanto sobra em cada faixa ajuda a negociar melhor e a planejar o orçamento.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Por que o líquido não acompanha o bruto</h2>
+        <p>Os dois descontos obrigatórios são <strong>progressivos</strong>: quanto maior o salário, maior a alíquota aplicada sobre a parcela que excede cada faixa. Por isso, dobrar o salário bruto não dobra o líquido — a mordida dos impostos cresce mais rápido nas faixas mais altas.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Os dois descontos: INSS e IRRF</h2>
+        <p>O <strong>INSS</strong> é calculado primeiro, pela tabela progressiva, sobre o salário bruto. Em seguida, o <strong>IRRF</strong> incide sobre o salário já descontado o INSS, com direito ao desconto simplificado ou às deduções legais (dependentes e pensão). Salários mais baixos costumam ser isentos de IR.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Tabela: quanto sobra em cada faixa</h2>
+        <p>Veja o salário líquido estimado no cenário-base (sem dependentes ou outros descontos), usando as tabelas vigentes:</p>
+        <div className="overflow-x-auto my-6">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b-2 border-slate-200">
+                <th className="py-2 pr-4 font-bold text-slate-700">Salário bruto</th>
+                <th className="py-2 font-bold text-slate-700">Salário líquido (aprox.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[2000, 3000, 4000, 5000, 6000, 8000, 10000].map((v) => (
+                <tr key={v} className="border-b border-slate-100">
+                  <td className="py-2 pr-4">R$ {v.toLocaleString('pt-BR')}</td>
+                  <td className="py-2 font-semibold text-emerald-700">{liquidoBase(v)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-slate-500">Valores no cenário-base, sem dependentes, pensão ou outros descontos (como vale-transporte e plano de saúde), que podem reduzir o líquido.</p>
+
+        <h2 className="text-2xl font-bold mt-8 mb-4">Como reduzir o desconto legalmente</h2>
+        <p>Você pode diminuir a base de cálculo do Imposto de Renda informando <strong>dependentes</strong> e <strong>pensão alimentícia</strong> judicial, além de contribuições previdenciárias. Vale a pena simular com os seus dados reais para saber o valor exato.</p>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg my-8">
+          <h3 className="font-bold text-lg text-blue-900 mb-2">Calcule o seu salário líquido</h3>
+          <p className="text-blue-800">Personalize com dependentes e outros descontos na <Link href="/financeiro/salario-liquido" className="underline font-semibold hover:text-blue-900">calculadora de salário líquido</Link>. Pensando em virar PJ? Compare com o <Link href="/financeiro/conversor-clt-pj" className="underline font-semibold hover:text-blue-900">conversor CLT x PJ</Link>.</p>
         </div>
       </>
     )
@@ -995,6 +1087,28 @@ export default async function ArticlePage({ params }: Props) {
             {article.content}
           </div>
         </div>
+
+        {(() => {
+          const ferramentas = getArtigoFerramentas(slug);
+          if (ferramentas.length === 0) return null;
+          return (
+            <section className="mt-10" aria-label="Ferramentas relacionadas">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Ferramentas relacionadas</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {ferramentas.map((f) => (
+                  <Link
+                    key={f.url}
+                    href={f.url}
+                    className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-sm transition-all"
+                  >
+                    <span className="font-semibold text-slate-800">{f.title}</span>
+                    <span className="text-slate-400" aria-hidden="true">›</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
 
         <div className="mt-12 text-center">
           <Link href="/artigos" className="inline-flex items-center px-6 py-3 border border-slate-300 shadow-sm text-base font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
