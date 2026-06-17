@@ -1,21 +1,23 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import {
-  getCityPairs,
+  getCapitalPairs,
   resolvePair,
   getOtherCapitais,
   pairUrl,
 } from '@/lib/distancia-cidades';
 
-export const dynamicParams = false;
+// Pré-renderiza no build apenas os pares de capitais; os demais pares são
+// gerados sob demanda na primeira visita e ficam em cache (ISR).
+export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ origem: string; destino: string }>;
 }
 
 export function generateStaticParams() {
-  return getCityPairs();
+  return getCapitalPairs();
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -54,6 +56,13 @@ export default async function DistanciaParPage({ params }: Props) {
   const { origem, destino } = await params;
   const result = resolvePair(origem, destino);
   if (!result) notFound();
+
+  // Garante uma URL canônica única por par (slugs em ordem alfabética),
+  // evitando conteúdo duplicado em /a/b e /b/a.
+  const [canonA, canonB] = [origem, destino].sort();
+  if (origem !== canonA || destino !== canonB) {
+    redirect(`/localizacao/distancia/${canonA}/${canonB}`);
+  }
 
   const { origin, dest, road, straightLine } = result;
 

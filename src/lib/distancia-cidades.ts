@@ -27,8 +27,14 @@ export interface DistanceResult {
   road: number; // km estimados por estrada
 }
 
-/** Capitais brasileiras (nome como aparece no IBGE + UF). */
-const CAPITAIS: { nome: string; uf: string }[] = [
+/**
+ * Principais cidades brasileiras: as 27 capitais + as maiores cidades não-capitais
+ * (por população). Os pares entre elas geram as páginas programáticas de distância.
+ * Para expandir, basta adicionar mais cidades aqui (o nome deve bater com o IBGE,
+ * acentuação é normalizada automaticamente).
+ */
+const CIDADES_PRINCIPAIS: { nome: string; uf: string }[] = [
+  // Capitais
   { nome: 'Rio Branco', uf: 'AC' },
   { nome: 'Maceió', uf: 'AL' },
   { nome: 'Macapá', uf: 'AP' },
@@ -56,6 +62,76 @@ const CAPITAIS: { nome: string; uf: string }[] = [
   { nome: 'São Paulo', uf: 'SP' },
   { nome: 'Aracaju', uf: 'SE' },
   { nome: 'Palmas', uf: 'TO' },
+  // Maiores cidades não-capitais (SP)
+  { nome: 'Guarulhos', uf: 'SP' },
+  { nome: 'Campinas', uf: 'SP' },
+  { nome: 'São Bernardo do Campo', uf: 'SP' },
+  { nome: 'Santo André', uf: 'SP' },
+  { nome: 'Osasco', uf: 'SP' },
+  { nome: 'São José dos Campos', uf: 'SP' },
+  { nome: 'Ribeirão Preto', uf: 'SP' },
+  { nome: 'Sorocaba', uf: 'SP' },
+  { nome: 'Santos', uf: 'SP' },
+  { nome: 'Mauá', uf: 'SP' },
+  { nome: 'São José do Rio Preto', uf: 'SP' },
+  { nome: 'Mogi das Cruzes', uf: 'SP' },
+  { nome: 'Diadema', uf: 'SP' },
+  { nome: 'Piracicaba', uf: 'SP' },
+  { nome: 'Carapicuíba', uf: 'SP' },
+  { nome: 'Bauru', uf: 'SP' },
+  { nome: 'Jundiaí', uf: 'SP' },
+  { nome: 'Franca', uf: 'SP' },
+  // RJ
+  { nome: 'São Gonçalo', uf: 'RJ' },
+  { nome: 'Duque de Caxias', uf: 'RJ' },
+  { nome: 'Nova Iguaçu', uf: 'RJ' },
+  { nome: 'Niterói', uf: 'RJ' },
+  { nome: 'Campos dos Goytacazes', uf: 'RJ' },
+  { nome: 'Belford Roxo', uf: 'RJ' },
+  { nome: 'Volta Redonda', uf: 'RJ' },
+  { nome: 'Petrópolis', uf: 'RJ' },
+  // MG
+  { nome: 'Contagem', uf: 'MG' },
+  { nome: 'Uberlândia', uf: 'MG' },
+  { nome: 'Juiz de Fora', uf: 'MG' },
+  { nome: 'Betim', uf: 'MG' },
+  { nome: 'Montes Claros', uf: 'MG' },
+  { nome: 'Uberaba', uf: 'MG' },
+  // BA
+  { nome: 'Feira de Santana', uf: 'BA' },
+  { nome: 'Vitória da Conquista', uf: 'BA' },
+  { nome: 'Camaçari', uf: 'BA' },
+  // SC
+  { nome: 'Joinville', uf: 'SC' },
+  { nome: 'Blumenau', uf: 'SC' },
+  // PR
+  { nome: 'Londrina', uf: 'PR' },
+  { nome: 'Maringá', uf: 'PR' },
+  { nome: 'Ponta Grossa', uf: 'PR' },
+  { nome: 'Cascavel', uf: 'PR' },
+  { nome: 'Foz do Iguaçu', uf: 'PR' },
+  // RS
+  { nome: 'Caxias do Sul', uf: 'RS' },
+  { nome: 'Canoas', uf: 'RS' },
+  { nome: 'Pelotas', uf: 'RS' },
+  { nome: 'Santa Maria', uf: 'RS' },
+  // GO
+  { nome: 'Aparecida de Goiânia', uf: 'GO' },
+  { nome: 'Anápolis', uf: 'GO' },
+  // ES
+  { nome: 'Serra', uf: 'ES' },
+  { nome: 'Vila Velha', uf: 'ES' },
+  // PE
+  { nome: 'Olinda', uf: 'PE' },
+  { nome: 'Jaboatão dos Guararapes', uf: 'PE' },
+  { nome: 'Caruaru', uf: 'PE' },
+  { nome: 'Petrolina', uf: 'PE' },
+  // CE
+  { nome: 'Caucaia', uf: 'CE' },
+  { nome: 'Juazeiro do Norte', uf: 'CE' },
+  // PA
+  { nome: 'Ananindeua', uf: 'PA' },
+  { nome: 'Santarém', uf: 'PA' },
 ];
 
 /** Remove acentos e normaliza para comparação/slug. */
@@ -78,6 +154,9 @@ export function citySlug(nome: string, uf: string): string {
 
 let _capitaisCache: CityResolved[] | null = null;
 
+/** Quantidade de capitais no início do array CIDADES_PRINCIPAIS. */
+const NUM_CAPITAIS = 27;
+
 /** Carrega as capitais resolvidas (com coordenadas) a partir do cidades.json. */
 export function getCapitais(): CityResolved[] {
   if (_capitaisCache) return _capitaisCache;
@@ -92,7 +171,7 @@ export function getCapitais(): CityResolved[] {
   const cities: City[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
   const resolved: CityResolved[] = [];
-  for (const cap of CAPITAIS) {
+  for (const cap of CIDADES_PRINCIPAIS) {
     const match = cities.find(
       (c) => c.u === cap.uf && normalize(c.n) === normalize(cap.nome),
     );
@@ -124,15 +203,28 @@ export function haversine(a: City, b: City): number {
 }
 
 /**
- * Pares canônicos (não-direcionais) de capitais, ordenados por slug.
- * Evita conteúdo duplicado: cada par gera UMA página.
+ * Pares canônicos (não-direcionais) de TODAS as cidades principais, ordenados
+ * por slug. Usado pelo sitemap (todas as páginas são indexáveis).
  */
 export function getCityPairs(): { origem: string; destino: string }[] {
-  const capitais = getCapitais();
+  return buildPairs(getCapitais());
+}
+
+/**
+ * Subconjunto pré-renderizado no build (generateStaticParams): apenas os pares
+ * entre CAPITAIS — os de maior volume de busca. Os demais pares (envolvendo
+ * cidades grandes não-capitais) são gerados sob demanda na primeira visita e
+ * ficam em cache (ISR), mantendo o build leve.
+ */
+export function getCapitalPairs(): { origem: string; destino: string }[] {
+  return buildPairs(getCapitais().slice(0, NUM_CAPITAIS));
+}
+
+function buildPairs(lista: CityResolved[]): { origem: string; destino: string }[] {
   const pairs: { origem: string; destino: string }[] = [];
-  for (let i = 0; i < capitais.length; i++) {
-    for (let j = i + 1; j < capitais.length; j++) {
-      const [a, b] = [capitais[i].slug, capitais[j].slug].sort();
+  for (let i = 0; i < lista.length; i++) {
+    for (let j = i + 1; j < lista.length; j++) {
+      const [a, b] = [lista[i].slug, lista[j].slug].sort();
       pairs.push({ origem: a, destino: b });
     }
   }
