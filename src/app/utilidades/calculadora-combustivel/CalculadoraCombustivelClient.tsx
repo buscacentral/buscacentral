@@ -15,6 +15,9 @@ export default function CalculadoraCombustivelClient() {
     custoKm: number;
   } | null>(null);
 
+  const [valorAbastecer, setValorAbastecer] = useState<string>('');
+  const [resultadoRende, setResultadoRende] = useState<{ litros: number; distancia: number } | null>(null);
+
   useEffect(() => {
     // Lê o parâmetro da URL apenas na montagem (fonte externa ao React).
     const urlParams = new URLSearchParams(window.location.search);
@@ -64,6 +67,18 @@ export default function CalculadoraCombustivelClient() {
       custoTotal,
       custoKm
     });
+  };
+
+  const calcularRende = () => {
+    const valor = parseNumber(valorAbastecer);
+    const prc = parseNumber(preco);
+    if (valor <= 0 || prc <= 0) return;
+
+    const litros = valor / prc;
+    const cons = parseNumber(consumo);
+    const distancia = cons > 0 ? litros * cons : 0;
+
+    setResultadoRende({ litros, distancia });
   };
 
   return (
@@ -152,6 +167,47 @@ export default function CalculadoraCombustivelClient() {
           </div>
         </ResultCard>
       )}
+
+      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mt-10">
+        <h2 className="text-lg font-bold text-slate-800 mb-1">Quanto rende um valor? (R$ → litros)</h2>
+        <p className="text-sm text-slate-500 mb-4">
+          Digite quanto vai abastecer. Usa o <strong>preço do litro</strong> (e o <strong>consumo</strong>, se preenchido) informados acima.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Valor a abastecer</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">R$</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={valorAbastecer}
+                onChange={(e) => setValorAbastecer(formatCurrencyInput(e.target.value))}
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
+                placeholder="100,00"
+              />
+            </div>
+          </div>
+          <Button onClick={calcularRende} className="w-full sm:w-auto px-10 py-3" disabled={!valorAbastecer || !preco}>
+            Ver litros
+          </Button>
+        </div>
+
+        {resultadoRende && (
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-sky-50 border border-sky-100 rounded-xl p-5 text-center">
+              <p className="text-sm font-semibold text-sky-700 uppercase">Você abastece</p>
+              <p className="text-3xl font-black text-sky-600 mt-1">{resultadoRende.litros.toFixed(1)} <span className="text-lg">litros</span></p>
+            </div>
+            {resultadoRende.distancia > 0 && (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
+                <p className="text-sm font-semibold text-slate-500 uppercase">Dá para rodar</p>
+                <p className="text-3xl font-bold text-slate-700 mt-1">{resultadoRende.distancia.toFixed(0)} <span className="text-lg text-slate-500">km</span></p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 }
