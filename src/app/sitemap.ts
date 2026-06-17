@@ -4,6 +4,7 @@ import path from 'node:path';
 import { artigos } from './artigos/page';
 import { TOP_10 as cryptoIds } from './financeiro/criptomoedas/[id]/page';
 import { SITE_LAST_REVIEWED } from '@/lib/tools';
+import { getCityPairs } from '@/lib/distancia-cidades';
 
 const baseUrl = 'https://buscacentral.com.br';
 
@@ -57,6 +58,10 @@ function routeMeta(route: string): {
   // Páginas de criptomoeda (preços mudam diariamente)
   if (route.startsWith('/financeiro/criptomoedas/')) {
     return { priority: 0.6, changeFrequency: 'daily', lastModified: new Date() };
+  }
+  // Páginas programáticas de distância entre cidades
+  if (route.startsWith('/localizacao/distancia/')) {
+    return { priority: 0.6, changeFrequency: 'monthly', lastModified: reviewedDate };
   }
 
   const segments = route.split('/').filter(Boolean);
@@ -121,6 +126,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = getStaticRoutes();
   const articleRoutes = artigos.map((artigo) => `/artigos/${artigo.slug}`);
   const cryptoRoutes = cryptoIds.map((id) => `/financeiro/criptomoedas/${id}`);
+  const distanceRoutes = getCityPairs().map(
+    ({ origem, destino }) => `/localizacao/distancia/${origem}/${destino}`,
+  );
 
   // Rotas que não devem aparecer no sitemap (ex.: resultados de busca, marcados
   // como noindex).
@@ -128,7 +136,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Remove duplicatas e ordena (mantendo a home em primeiro).
   const allRoutes = Array.from(
-    new Set([...staticRoutes, ...articleRoutes, ...cryptoRoutes]),
+    new Set([...staticRoutes, ...articleRoutes, ...cryptoRoutes, ...distanceRoutes]),
   )
     .filter((route) => !excludedRoutes.has(route))
     .sort((a, b) => {
