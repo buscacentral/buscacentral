@@ -1,12 +1,31 @@
 import type { Metadata } from 'next';
 import ToolPageLayout, { generateToolMetadata } from '@/components/ToolPageLayout';
 import DistanciaCidadesClient from './DistanciaCidadesClient';
+import { citySlug, pairUrl } from '@/lib/distancia-cidades';
+import Link from 'next/link';
 
 export const metadata: Metadata = generateToolMetadata(
   'Distância entre Cidades',
   'Calcule a distância entre cidades brasileiras, tempo de viagem e custo de combustível. Coordenadas do IBGE.',
   '/localizacao/distancia-cidades'
 );
+
+// Pares de capitais com maior volume de busca, para links internos rumo às
+// páginas programáticas de distância (/localizacao/distancia/...).
+const distanciasPopulares: [string, string, string, string][] = [
+  ['São Paulo', 'SP', 'Rio de Janeiro', 'RJ'],
+  ['São Paulo', 'SP', 'Belo Horizonte', 'MG'],
+  ['São Paulo', 'SP', 'Curitiba', 'PR'],
+  ['São Paulo', 'SP', 'Brasília', 'DF'],
+  ['Rio de Janeiro', 'RJ', 'Belo Horizonte', 'MG'],
+  ['São Paulo', 'SP', 'Salvador', 'BA'],
+  ['São Paulo', 'SP', 'Porto Alegre', 'RS'],
+  ['Rio de Janeiro', 'RJ', 'Salvador', 'BA'],
+  ['Brasília', 'DF', 'Goiânia', 'GO'],
+  ['São Paulo', 'SP', 'Fortaleza', 'CE'],
+  ['Recife', 'PE', 'Salvador', 'BA'],
+  ['Curitiba', 'PR', 'Florianópolis', 'SC'],
+];
 
 const seoContent = (
   <article className="prose prose-gray max-w-none">
@@ -33,6 +52,21 @@ const seoContent = (
       <li>Na segunda caixa, repita o processo selecionando o Estado (UF) e a <strong>Cidade de Destino</strong>.</li>
       <li>O cálculo é automático! O mapa abaixo das caixas mostrará visualmente os dois pontos no território nacional e exibirá a quilometragem.</li>
     </ol>
+
+    <h3>Distâncias mais buscadas</h3>
+    <p>Veja a distância, o tempo de viagem e o custo de combustível das rotas mais procuradas entre capitais:</p>
+    <ul className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2">
+      {distanciasPopulares.map(([nomeA, ufA, nomeB, ufB]) => (
+        <li key={`${ufA}-${ufB}`}>
+          <Link
+            href={pairUrl(citySlug(nomeA, ufA), citySlug(nomeB, ufB))}
+            className="text-blue-600 hover:underline"
+          >
+            Distância de {nomeA} a {nomeB}
+          </Link>
+        </li>
+      ))}
+    </ul>
   </article>
 );
 
