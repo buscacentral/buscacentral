@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import ToolPageLayout from '@/components/ToolPageLayout';
 import SalarioLiquidoClient from './SalarioLiquidoClient';
+import { formatarReaisInteiro } from '@/lib/salario-liquido-faixas';
+
+const salariosPopulares = [1412, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 8000, 10000, 15000];
 
 export const metadata: Metadata = {
   title: 'Calculadora de Salário Líquido 2024 | BuscaCentral',
@@ -32,6 +36,23 @@ export default function SalarioLiquidoPage() {
       relatedTools={relatedTools}
     >
       <SalarioLiquidoClient />
+
+      <section className="mt-10">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Salário líquido por valor (consultas rápidas)</h2>
+        <p className="text-gray-600 mb-4">Veja o cálculo pronto para os salários mais consultados:</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {salariosPopulares.map((v) => (
+            <Link
+              key={v}
+              href={`/financeiro/salario-liquido/${v}`}
+              className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg hover:border-blue-500 hover:shadow-sm transition-all text-sm"
+            >
+              <span className="font-medium text-slate-800">{formatarReaisInteiro(v)}</span>
+              <span className="text-slate-400">›</span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </ToolPageLayout>
   );
 }
