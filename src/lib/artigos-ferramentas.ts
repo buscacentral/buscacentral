@@ -51,6 +51,8 @@ const MAPA: Record<string, string[]> = {
   // Artigos novos
   'como-calcular-distancia-entre-cidades': ['/localizacao/distancia-cidades', '/utilidades/calculadora-combustivel', '/utilidades/planejador-viagem'],
   'salario-liquido-por-faixa-quanto-sobra': ['/financeiro/salario-liquido', '/financeiro/conversor-clt-pj', '/financeiro/decimo-terceiro'],
+  'como-escrever-valores-por-extenso': ['/utilidades/numero-por-extenso', '/documentos/gerador-recibos'],
+  'sac-ou-price-qual-o-melhor-para-financiar-imovel': ['/financeiro/financiamento-imobiliario', '/financeiro/financiamento-carro', '/financeiro/juros-compostos'],
 };
 
 const porPath = new Map(tools.map((t) => [t.path, t.name]));
