@@ -4,19 +4,22 @@ import ValidadorCNPJClient from './ValidadorCNPJClient';
 
 export const metadata: Metadata = {
   ...generateToolMetadata(
-    'Validador de CNPJ',
-    'Valide CNPJs e entenda como calcular o dígito verificador (DV) com o algoritmo oficial da Receita Federal. Passo a passo, pesos e exemplo prático.',
+    'Validador de CNPJ Online — Resultado Imediato',
+    'Valide qualquer CNPJ em 1 clique. Verifique se o número é válido com o algoritmo oficial da Receita Federal. 100% gratuito, sem cadastro e sem anúncios invasivos.',
     '/documentos/validador-cnpj'
   ),
   keywords: [
     'validador de cnpj',
     'validar cnpj',
     'validação cnpj',
+    'verificar cnpj',
+    'cnpj é válido',
     'dígito verificador cnpj',
     'digito verificador do cnpj',
     'calcular dígito do cnpj',
     'cnpj dígito verificador',
     'dígitos do cnpj',
+    'consultar cnpj',
   ],
 };
 
@@ -72,8 +75,16 @@ const seoContent = (
 
 const faqItems = [
   {
+    question: "Como validar um CNPJ online?",
+    answer: "Cole ou digite os 14 dígitos do CNPJ no campo acima e clique em Validar. A ferramenta verifica instantaneamente se o número segue a regra matemática oficial da Receita Federal (algoritmo módulo 11). O resultado aparece na hora — sem cadastro, sem limite de consultas e 100% gratuito."
+  },
+  {
     question: "Como calcular o dígito verificador do CNPJ?",
     answer: "Multiplique os 12 primeiros dígitos pelos pesos 5,4,3,2,9,8,7,6,5,4,3,2 e some os resultados. Divida a soma por 11: se o resto for menor que 2, o dígito é 0; caso contrário, o dígito é 11 menos o resto. Esse é o 1º dígito verificador. Para o 2º, repita o processo com 13 dígitos e os pesos 6,5,4,3,2,9,8,7,6,5,4,3,2."
+  },
+  {
+    question: "Qual a diferença entre validar e consultar um CNPJ?",
+    answer: "Validar verifica apenas se os dígitos verificadores estão corretos matematicamente — é uma checagem offline e instantânea. Consultar vai além: acessa a base da Receita Federal para verificar razão social, situação cadastral (ativa, baixada, inapta) e endereço. Para consultar dados reais, use nossa ferramenta de Consulta CNPJ."
   },
   {
     question: "Quais são os pesos usados na validação do CNPJ?",
@@ -81,15 +92,19 @@ const faqItems = [
   },
   {
     question: "O validador informa se a empresa está ativa?",
-    answer: "Não. A validação oferecida aqui é puramente matemática. Um CNPJ pode ser matematicamente válido, mas pertencer a uma empresa que já foi fechada. Para consultar o status de um CNPJ, você deve acessar o portal da Redesim na Receita Federal ou usar nossa Consulta CNPJ."
+    answer: "Não. A validação oferecida aqui é puramente matemática. Um CNPJ pode ser matematicamente válido, mas pertencer a uma empresa que já foi fechada ou inapta. Para consultar o status de um CNPJ na Receita Federal, use nossa ferramenta de Consulta CNPJ que acessa dados reais."
   },
   {
     question: "Por que um CNPJ que existe deu como 'inválido'?",
-    answer: "Geralmente isso ocorre por um erro de digitação em algum dos números. Se um único número dos 14 dígitos estiver errado, a conta matemática dos dígitos verificadores não fechará e a ferramenta apontará como inválido."
+    answer: "Geralmente isso ocorre por um erro de digitação em algum dos 14 números. Basta um único dígito errado para que a conta matemática dos dígitos verificadores não feche. Confira se copiou o número completo, sem espaços extras ou dígitos faltando."
   },
   {
-    question: "A ferramenta bloqueia o CNPJ de teste '00.000.000/0000-00'?",
-    answer: "Sim, sequências repetidas (como todos os números zeros ou uns) são bloqueadas automaticamente, pois, apesar de às vezes passarem na fórmula matemática isolada, são regras de exceção da Receita Federal."
+    question: "A validação é segura? Meus dados são armazenados?",
+    answer: "Sim, é 100% segura. A validação ocorre inteiramente no seu navegador (offline) — o número digitado não é enviado para nenhum servidor. Não armazenamos, registramos ou compartilhamos nenhum CNPJ consultado nesta ferramenta."
+  },
+  {
+    question: "Posso validar vários CNPJs de uma vez?",
+    answer: "A ferramenta valida um CNPJ por vez para garantir clareza no resultado. Se precisa validar muitos CNPJs em lote (para importações ou auditorias), uma alternativa é usar a lógica do algoritmo módulo 11 em uma planilha ou script próprio."
   }
 ];
 
