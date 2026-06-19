@@ -148,11 +148,61 @@ export default async function DistanciaParPage({ params }: Props) {
     })),
   };
 
+  // -------------------------------------------------------------------------
+  // STRUCTURED DATA — HowTo Schema (rich snippet com passos visuais)
+  // -------------------------------------------------------------------------
+  const howToSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: `Como calcular a distância de ${origin.n} a ${dest.n}`,
+    description: `Descubra a distância rodoviária, o tempo de viagem e o custo de combustível entre ${origin.n} (${origin.u}) e ${dest.n} (${dest.u}).`,
+    totalTime: `PT${Math.floor((road / 80) * 60)}M`,
+    estimatedCost: {
+      '@type': 'MonetaryAmount',
+      currency: 'BRL',
+      value: Math.round(custoCombustivel).toString(),
+    },
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Verifique a distância por estrada',
+        text: `A distância rodoviária estimada de ${origin.n} a ${dest.n} é de ${road.toLocaleString('pt-BR')} km (${straightLine.toLocaleString('pt-BR')} km em linha reta).`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Calcule o tempo de viagem',
+        text: `A uma velocidade média de 80 km/h, o trajeto de carro leva aproximadamente ${formatHoras(road, 80)}. De ônibus (~60 km/h), cerca de ${formatHoras(road, 60)}.`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Estime o consumo de combustível',
+        text: `Divida a distância (${road.toLocaleString('pt-BR')} km) pelo consumo do seu veículo (ex: ${consumoPadrao} km/l) para obter os litros necessários: ${litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} litros.`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Calcule o custo total de combustível',
+        text: `Multiplique os litros (${litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}) pelo preço do combustível (R$ ${precoPadrao.toFixed(2).replace('.', ',')}). Custo estimado: ${custoCombustivel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} só de ida.`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 5,
+        name: 'Ajuste com o consumo real do seu veículo',
+        text: `Para um resultado mais preciso, use a Calculadora de Combustível da BuscaCentral informando o consumo específico do seu carro e o preço atualizado na sua cidade.`,
+        url: `https://buscacentral.com.br/utilidades/calculadora-combustivel?distancia=${road}`,
+      },
+    ],
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       {/* Structured Data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
 
       {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 mb-6" aria-label="Trilha de navegação">

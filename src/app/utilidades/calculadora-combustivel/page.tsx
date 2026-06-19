@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import ToolPageLayout from '@/components/ToolPageLayout';
 import CalculadoraCombustivelClient from './CalculadoraCombustivelClient';
+import { citySlug, pairUrl } from '@/lib/distancia-cidades';
 
 export const metadata: Metadata = {
   title: 'Cálculo de Combustível — Quanto Vou Gastar? | BuscaCentral',
@@ -127,6 +128,55 @@ const seoContent = (
   </article>
 );
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Rotas populares (interlinking reverso para páginas de distância)
+// ─────────────────────────────────────────────────────────────────────────────
+const rotasPopulares: [string, string, string, string][] = [
+  ['São Paulo', 'SP', 'Rio de Janeiro', 'RJ'],
+  ['São Paulo', 'SP', 'Belo Horizonte', 'MG'],
+  ['São Paulo', 'SP', 'Curitiba', 'PR'],
+  ['Rio de Janeiro', 'RJ', 'Salvador', 'BA'],
+  ['São Paulo', 'SP', 'Brasília', 'DF'],
+  ['Curitiba', 'PR', 'Florianópolis', 'SC'],
+  ['São Paulo', 'SP', 'Campinas', 'SP'],
+  ['São Paulo', 'SP', 'Porto Alegre', 'RS'],
+];
+
+const distanciaLinks = (
+  <section className="not-prose mt-10 p-6 bg-gradient-to-br from-slate-50 to-blue-50/50 border border-slate-200 rounded-2xl">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl">
+        🗺️
+      </div>
+      <div>
+        <h3 className="font-bold text-slate-900 text-lg">Não sabe a distância da viagem?</h3>
+        <p className="text-sm text-slate-600">Descubra os km entre as cidades e volte aqui para calcular o custo</p>
+      </div>
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+      {rotasPopulares.map(([nomeA, ufA, nomeB, ufB]) => (
+        <Link
+          key={`${nomeA}-${nomeB}`}
+          href={pairUrl(citySlug(nomeA, ufA), citySlug(nomeB, ufB))}
+          className="flex items-center justify-between px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm hover:border-blue-400 hover:shadow-sm transition-all"
+        >
+          <span className="font-medium text-slate-700">{nomeA} → {nomeB}</span>
+          <span className="text-slate-400 text-xs">ver km</span>
+        </Link>
+      ))}
+    </div>
+    <Link
+      href="/localizacao/distancia-cidades"
+      className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+    >
+      Ver todas as distâncias entre cidades
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </Link>
+  </section>
+);
+
 const faqItems = [
   { question: "Como fazer o cálculo de gasolina para uma viagem?", answer: "Divida a distância total (km) pelo consumo do veículo (km/l) para descobrir quantos litros vai precisar. Depois, multiplique os litros pelo preço do litro na bomba. Exemplo: 400 km ÷ 12 km/l = 33,3 litros × R$ 6,00 = R$ 200,00. Use nossa calculadora acima para obter o resultado instantaneamente." },
   { question: "Quantos litros R$ 100 de gasolina compram?", answer: "Depende do preço na bomba. A conta é: litros = valor ÷ preço do litro. Com a gasolina a R$ 6,00, R$ 100 compram cerca de 16,7 litros; a R$ 5,50, cerca de 18,2 litros. Basta dividir o valor que deseja abastecer pelo preço do litro do posto." },
@@ -143,6 +193,13 @@ const relatedTools = [
   { title: "Calculadora de Desconto", url: "/utilidades/calculadora-desconto", description: "Calcule porcentagens de descontos em compras." },
 ];
 
+const seoContentWithLinks = (
+  <>
+    {seoContent}
+    {distanciaLinks}
+  </>
+);
+
 export default function CalculadoraCombustivelPage() {
   return (
     <ToolPageLayout
@@ -150,7 +207,7 @@ export default function CalculadoraCombustivelPage() {
       description="Saiba quantos litros você vai gastar, o custo total da viagem e quantos litros R$ 100 compram — para gasolina, etanol ou diesel."
       ariaLabel="Calculadora de Consumo de Combustível interativa"
       path="/utilidades/calculadora-combustivel"
-      seoContent={seoContent}
+      seoContent={seoContentWithLinks}
       faqItems={faqItems}
       relatedTools={relatedTools}
     >
