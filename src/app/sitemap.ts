@@ -60,9 +60,9 @@ function routeMeta(route: string): {
   if (route.startsWith('/financeiro/criptomoedas/')) {
     return { priority: 0.6, changeFrequency: 'daily', lastModified: new Date() };
   }
-  // Páginas programáticas de distância entre cidades
+  // Páginas programáticas de distância entre cidades (alto volume de busca)
   if (route.startsWith('/localizacao/distancia/')) {
-    return { priority: 0.6, changeFrequency: 'monthly', lastModified: reviewedDate };
+    return { priority: 0.7, changeFrequency: 'weekly', lastModified: reviewedDate };
   }
   // Páginas programáticas de salário líquido por faixa
   if (route.startsWith('/financeiro/salario-liquido/')) {
