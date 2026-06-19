@@ -20,14 +20,34 @@ export function generateStaticParams() {
   return getCapitalPairs();
 }
 
+function formatHoras(km: number, velocidade: number): string {
+  const totalMin = Math.round((km / velocidade) * 60);
+  const h = Math.floor(totalMin / 60);
+  const min = totalMin % 60;
+  return `${h}h${min > 0 ? `${min}min` : ''}`;
+}
+
+// ---------------------------------------------------------------------------
+// SEO METADATA — Otimizado para CTR (3 dados no title: km, tempo, R$)
+// ---------------------------------------------------------------------------
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { origem, destino } = await params;
   const result = resolvePair(origem, destino);
   if (!result) return { title: 'Distância entre cidades' };
 
   const { origin, dest, road, straightLine } = result;
-  const title = `Distância de ${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km`;
-  const description = `A distância entre ${origin.n} (${origin.u}) e ${dest.n} (${dest.u}) é de aproximadamente ${road.toLocaleString('pt-BR')} km por estrada (${straightLine.toLocaleString('pt-BR')} km em linha reta). Veja o tempo de viagem de carro e o custo estimado de combustível.`;
+
+  const consumoPadrao = 10; // km/l
+  const precoPadrao = 6.0; // R$/litro
+  const custo = Math.round((road / consumoPadrao) * precoPadrao);
+  const tempo = formatHoras(road, 80);
+
+  // Title: responde 3 intenções de busca numa SERP
+  const title = `${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km, ${tempo} e R$ ${custo}`;
+
+  // Description: 140-155 chars, responde à dor + CTA implícito
+  const description = `Distância de ${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km por estrada (${straightLine.toLocaleString('pt-BR')} km em linha reta). Tempo de carro: ${tempo}. Calcule o gasto de combustível da viagem.`;
+
   const canonical = `https://buscacentral.com.br${pairUrl(origin.slug, dest.slug)}`;
 
   return {
@@ -35,30 +55,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical },
     openGraph: {
-      title: `${title} | BuscaCentral`,
+      title: `Distância de ${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km | BuscaCentral`,
       description,
       url: canonical,
       siteName: 'BuscaCentral',
       locale: 'pt_BR',
       type: 'website',
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${origin.n} → ${dest.n}: ${road.toLocaleString('pt-BR')} km`,
+      description,
+    },
   };
 }
 
-function formatHoras(km: number, velocidade: number): string {
-  const totalMin = Math.round((km / velocidade) * 60);
-  const h = Math.floor(totalMin / 60);
-  const min = totalMin % 60;
-  return `${h}h${min > 0 ? ` ${min}min` : ''}`;
-}
-
+// ---------------------------------------------------------------------------
+// PAGE COMPONENT
+// ---------------------------------------------------------------------------
 export default async function DistanciaParPage({ params }: Props) {
   const { origem, destino } = await params;
   const result = resolvePair(origem, destino);
   if (!result) notFound();
 
-  // Garante uma URL canônica única por par (slugs em ordem alfabética),
-  // evitando conteúdo duplicado em /a/b e /b/a.
+  // Garante URL canônica única por par (slugs em ordem alfabética)
   const [canonA, canonB] = [origem, destino].sort();
   if (origem !== canonA || destino !== canonB) {
     redirect(`/localizacao/distancia/${canonA}/${canonB}`);
@@ -66,7 +86,7 @@ export default async function DistanciaParPage({ params }: Props) {
 
   const { origin, dest, road, straightLine } = result;
 
-  // Estimativa de combustível (valores padrão; o usuário ajusta na ferramenta).
+  // Estimativas de combustível
   const consumoPadrao = 10; // km/l
   const precoPadrao = 6.0; // R$/litro
   const litros = road / consumoPadrao;
@@ -75,6 +95,9 @@ export default async function DistanciaParPage({ params }: Props) {
   const outras = getOtherCapitais([origin.slug, dest.slug], 8);
   const mapsUrl = `https://maps.google.com/maps?saddr=${encodeURIComponent(`${origin.n} - ${origin.u}`)}&daddr=${encodeURIComponent(`${dest.n} - ${dest.u}`)}`;
 
+  // -------------------------------------------------------------------------
+  // STRUCTURED DATA — Breadcrumbs
+  // -------------------------------------------------------------------------
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -86,9 +109,50 @@ export default async function DistanciaParPage({ params }: Props) {
     ],
   };
 
+  // -------------------------------------------------------------------------
+  // STRUCTURED DATA — FAQ Schema (5 perguntas dinâmicas)
+  // -------------------------------------------------------------------------
+  const faqItems = [
+    {
+      name: `Qual a distância entre ${origin.n} e ${dest.n}?`,
+      text: `A distância entre ${origin.n} (${origin.u}) e ${dest.n} (${dest.u}) é de aproximadamente ${road.toLocaleString('pt-BR')} km por estrada e ${straightLine.toLocaleString('pt-BR')} km em linha reta.`,
+    },
+    {
+      name: `Quanto tempo de carro de ${origin.n} a ${dest.n}?`,
+      text: `De carro, a uma velocidade média de 80 km/h, a viagem de ${origin.n} a ${dest.n} leva aproximadamente ${formatHoras(road, 80)}. De ônibus (~60 km/h), leva cerca de ${formatHoras(road, 60)}.`,
+    },
+    {
+      name: `Quanto gasto de gasolina de ${origin.n} a ${dest.n}?`,
+      text: `Considerando um veículo que faz ${consumoPadrao} km/l e gasolina a R$ ${precoPadrao.toFixed(2).replace('.', ',')}/litro, o custo estimado é de ${custoCombustivel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} só de ida (${litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} litros).`,
+    },
+    {
+      name: `Quantos pedágios tem de ${origin.n} a ${dest.n}?`,
+      text: `O número exato de pedágios varia conforme a rota escolhida. Recomendamos consultar o Google Maps ou o app da concessionária da rodovia para obter os valores atualizados de pedágio entre ${origin.n} e ${dest.n}.`,
+    },
+    {
+      name: `Qual o melhor caminho de ${origin.n} para ${dest.n}?`,
+      text: `Para visualizar a rota mais rápida ou mais curta de ${origin.n} a ${dest.n}, recomendamos abrir o Google Maps diretamente. Nossa ferramenta calcula a distância estimada (${road.toLocaleString('pt-BR')} km) e o custo de combustível para ajudar no seu planejamento.`,
+    },
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.name,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.text,
+      },
+    })),
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
+      {/* Structured Data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 mb-6" aria-label="Trilha de navegação">
@@ -101,7 +165,8 @@ export default async function DistanciaParPage({ params }: Props) {
         <span className="text-gray-700">{origin.n} a {dest.n}</span>
       </nav>
 
-      <header className="mb-8">
+      {/* Header */}
+      <header className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Distância de {origin.n} a {dest.n}
         </h1>
@@ -111,68 +176,87 @@ export default async function DistanciaParPage({ params }: Props) {
         </p>
       </header>
 
-      {/* Distâncias */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6 text-center">
-          <div className="text-3xl mb-2">🛣️</div>
-          <p className="text-sm font-medium text-blue-700 mb-1">Distância Rodoviária (estimada)</p>
-          <p className="text-4xl font-bold text-blue-600">{road.toLocaleString('pt-BR')}</p>
-          <p className="text-sm text-blue-500 mt-1">quilômetros</p>
+      {/* ================================================================= */}
+      {/* HERO DATA BLOCK — 3 colunas: distância, tempo, custo              */}
+      {/* Resposta imediata à intenção de busca, sem scroll                 */}
+      {/* ================================================================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-5 text-center">
+          <p className="text-sm font-medium text-blue-700 mb-1">Distância por estrada</p>
+          <p className="text-4xl font-bold text-blue-600">
+            {road.toLocaleString('pt-BR')} <span className="text-lg font-medium">km</span>
+          </p>
         </div>
-        <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl p-6 text-center">
-          <div className="text-3xl mb-2">📏</div>
-          <p className="text-sm font-medium text-slate-700 mb-1">Distância em Linha Reta</p>
-          <p className="text-4xl font-bold text-slate-600">{straightLine.toLocaleString('pt-BR')}</p>
-          <p className="text-sm text-slate-500 mt-1">quilômetros</p>
+        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-xl p-5 text-center">
+          <p className="text-sm font-medium text-emerald-700 mb-1">Tempo de carro (~80 km/h)</p>
+          <p className="text-4xl font-bold text-emerald-600">{formatHoras(road, 80)}</p>
         </div>
-      </div>
-
-      {/* Tempo de viagem */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
-          <div className="text-3xl mb-2">🚗</div>
-          <p className="text-sm font-medium text-slate-600 mb-1">De carro (~80 km/h)</p>
-          <p className="text-2xl font-bold text-slate-800">{formatHoras(road, 80)}</p>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
-          <div className="text-3xl mb-2">🚌</div>
-          <p className="text-sm font-medium text-slate-600 mb-1">De ônibus (~60 km/h)</p>
-          <p className="text-2xl font-bold text-slate-800">{formatHoras(road, 60)}</p>
+        <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-xl p-5 text-center">
+          <p className="text-sm font-medium text-amber-700 mb-1">Custo estimado (ida)</p>
+          <p className="text-4xl font-bold text-amber-600">
+            {custoCombustivel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          </p>
         </div>
       </div>
+      <p className="text-sm text-gray-500 mb-8 text-center">
+        Linha reta: {straightLine.toLocaleString('pt-BR')} km · Ônibus (~60 km/h): {formatHoras(road, 60)} · Consumo base: {consumoPadrao} km/l a R$ {precoPadrao.toFixed(2).replace('.', ',')}
+      </p>
 
-      {/* Custo de combustível */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-6">
-        <h2 className="text-lg font-bold text-amber-900 mb-3">⛽ Custo estimado de combustível</h2>
-        <p className="text-amber-800 mb-4">
-          Considerando um veículo que faz <strong>{consumoPadrao} km/l</strong> e gasolina a{' '}
-          <strong>R$ {precoPadrao.toFixed(2).replace('.', ',')}</strong> por litro:
-        </p>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-lg p-4 text-center border border-amber-100">
-            <p className="text-xs font-medium text-amber-700 mb-1">Litros necessários</p>
-            <p className="text-2xl font-bold text-amber-600">{litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} L</p>
+      {/* ================================================================= */}
+      {/* CTA CONVERSÃO — Calculadora de Combustível (glassmorphism)         */}
+      {/* Passa ?distancia= para pré-preencher a ferramenta                  */}
+      {/* ================================================================= */}
+      <Link
+        href={`/utilidades/calculadora-combustivel?distancia=${road}`}
+        className="group relative block w-full mb-10 p-6 rounded-2xl border border-blue-200/60 bg-gradient-to-r from-blue-50/80 via-white to-emerald-50/80 backdrop-blur-sm shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300"
+      >
+        {/* Glow effect on hover */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400/10 to-emerald-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        <div className="relative flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-white text-2xl shadow-md">
+            ⛽
           </div>
-          <div className="bg-white rounded-lg p-4 text-center border border-amber-100">
-            <p className="text-xs font-medium text-amber-700 mb-1">Custo só de ida</p>
-            <p className="text-2xl font-bold text-amber-600">
-              {custoCombustivel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          <div className="flex-1 text-center sm:text-left">
+            <p className="text-lg font-bold text-gray-900 mb-0.5">
+              Calcule o gasto real desta viagem
+            </p>
+            <p className="text-sm text-gray-600">
+              Ajuste o consumo do <strong>seu carro</strong>, o preço do combustível na sua cidade e descubra o custo exato de ida e volta — {road.toLocaleString('pt-BR')} km já preenchidos.
             </p>
           </div>
+          <div className="flex-shrink-0 flex items-center gap-1 text-blue-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+            Calcular agora
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
-        <p className="text-sm text-amber-700 mt-4">
-          Quer ajustar o consumo e o preço do combustível?{' '}
-          <Link href="/localizacao/distancia-cidades" className="font-semibold underline hover:text-amber-900">
-            Use a calculadora interativa de distância
-          </Link>{' '}
-          ou a{' '}
-          <Link href="/utilidades/calculadora-combustivel" className="font-semibold underline hover:text-amber-900">
-            calculadora de combustível
-          </Link>.
-        </p>
+      </Link>
+
+      {/* Detalhes adicionais da viagem */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 text-center">
+          <p className="text-xs font-medium text-slate-500 mb-1">Ônibus (~60 km/h)</p>
+          <p className="text-xl font-bold text-slate-700">{formatHoras(road, 60)}</p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-4 text-center">
+          <p className="text-xs font-medium text-slate-500 mb-1">Litros necessários</p>
+          <p className="text-xl font-bold text-slate-700">{litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} L</p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-4 text-center">
+          <p className="text-xs font-medium text-slate-500 mb-1">Ida e volta</p>
+          <p className="text-xl font-bold text-slate-700">{(road * 2).toLocaleString('pt-BR')} km</p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-4 text-center">
+          <p className="text-xs font-medium text-slate-500 mb-1">Custo ida+volta</p>
+          <p className="text-xl font-bold text-slate-700">
+            {(custoCombustivel * 2).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          </p>
+        </div>
       </div>
 
-      {/* CTAs */}
+      {/* CTAs secundários */}
       <div className="flex flex-col sm:flex-row gap-3 mb-10">
         <a
           href={mapsUrl}
@@ -200,11 +284,123 @@ export default async function DistanciaParPage({ params }: Props) {
           estimar a <strong>distância rodoviária de {road.toLocaleString('pt-BR')} km</strong> — um valor próximo
           do que você efetivamente percorrerá de carro ou ônibus.
         </p>
+
+        <h3>Custo de combustível de {origin.n} a {dest.n}</h3>
+        <p>
+          Para estimar o gasto de gasolina, usamos valores de referência: consumo médio de {consumoPadrao} km/l
+          e preço de R$ {precoPadrao.toFixed(2).replace('.', ',')} por litro. Com esses parâmetros, a viagem
+          de {origin.n} a {dest.n} consome aproximadamente{' '}
+          <strong>{litros.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} litros</strong>, custando{' '}
+          <strong>{custoCombustivel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong> só de ida.
+          Para um cálculo personalizado com o consumo real do seu veículo,{' '}
+          <Link href={`/utilidades/calculadora-combustivel?distancia=${road}`} className="text-blue-600 hover:underline font-semibold">
+            use nossa calculadora de combustível
+          </Link>.
+        </p>
+
+        <h3>Tempo de viagem</h3>
         <p>
           Os tempos de viagem são estimativas baseadas em velocidades médias e não consideram paradas, trânsito,
-          pedágios ou condições da via. Para a rota exata, recomendamos conferir também no Google Maps.
+          pedágios ou condições da via. De carro a ~80 km/h, a viagem leva cerca de <strong>{formatHoras(road, 80)}</strong>.
+          De ônibus a ~60 km/h, espere cerca de <strong>{formatHoras(road, 60)}</strong>. Para a rota exata,
+          recomendamos conferir também no Google Maps.
         </p>
       </article>
+
+      {/* ================================================================= */}
+      {/* FAQ VISÍVEL — Perguntas Frequentes com <details>                   */}
+      {/* ================================================================= */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Perguntas Frequentes</h2>
+        <div className="space-y-3">
+          {faqItems.map((item, idx) => (
+            <details
+              key={idx}
+              className="bg-slate-50 border border-slate-200 rounded-xl p-5 group"
+              {...(idx === 0 ? { open: true } : {})}
+            >
+              <summary className="font-semibold text-slate-800 cursor-pointer list-none flex items-center justify-between gap-2">
+                <span>{item.name}</span>
+                <span className="text-slate-400 group-open:rotate-180 transition-transform flex-shrink-0">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <p className="text-slate-600 mt-3 leading-relaxed">{item.text}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* FERRAMENTAS RELACIONADAS — Cross-sell / Interlinking               */}
+      {/* ================================================================= */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Ferramentas úteis para sua viagem</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href={`/utilidades/calculadora-combustivel?distancia=${road}`}
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">⛽</span>
+            <div>
+              <p className="font-semibold text-slate-800">Calculadora de Combustível</p>
+              <p className="text-xs text-slate-500">Calcule o gasto com seu consumo real</p>
+            </div>
+          </Link>
+          <Link
+            href="/localizacao/distancia-cidades"
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">🗺️</span>
+            <div>
+              <p className="font-semibold text-slate-800">Calcular outra distância</p>
+              <p className="text-xs text-slate-500">Qualquer cidade do Brasil</p>
+            </div>
+          </Link>
+          <Link
+            href="/financeiro/tabela-fipe"
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">🚗</span>
+            <div>
+              <p className="font-semibold text-slate-800">Tabela FIPE</p>
+              <p className="text-xs text-slate-500">Consulte o valor do seu veículo</p>
+            </div>
+          </Link>
+          <Link
+            href="/financeiro/financiamento-carro"
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">💰</span>
+            <div>
+              <p className="font-semibold text-slate-800">Financiamento de Carro</p>
+              <p className="text-xs text-slate-500">Simule parcelas e taxas</p>
+            </div>
+          </Link>
+          <Link
+            href="/utilidades/conversor-unidades"
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">📐</span>
+            <div>
+              <p className="font-semibold text-slate-800">Conversor de Unidades</p>
+              <p className="text-xs text-slate-500">Km, milhas, litros, galões...</p>
+            </div>
+          </Link>
+          <Link
+            href="/utilidades/dias-uteis"
+            className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">📅</span>
+            <div>
+              <p className="font-semibold text-slate-800">Dias Úteis</p>
+              <p className="text-xs text-slate-500">Calcule prazos de entrega/frete</p>
+            </div>
+          </Link>
+        </div>
+      </section>
 
       {/* Links internos para outras distâncias */}
       <section className="mb-6">
