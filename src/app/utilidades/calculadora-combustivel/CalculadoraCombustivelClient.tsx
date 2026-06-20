@@ -1,14 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { ResultCard } from '@/components/ui/ResultCard';
 
-export default function CalculadoraCombustivelClient() {
+// ---------------------------------------------------------------------------
+// Componente interno que consome useSearchParams (requer Suspense boundary)
+// ---------------------------------------------------------------------------
+function CalculadoraForm() {
+  const searchParams = useSearchParams();
+
   const [distancia, setDistancia] = useState<string>('');
   const [consumo, setConsumo] = useState<string>('');
   const [preco, setPreco] = useState<string>('');
-  
+
   const [resultado, setResultado] = useState<{
     litros: number;
     custoTotal: number;
@@ -18,13 +24,25 @@ export default function CalculadoraCombustivelClient() {
   const [valorAbastecer, setValorAbastecer] = useState<string>('');
   const [resultadoRende, setResultadoRende] = useState<{ litros: number; distancia: number } | null>(null);
 
+  // Parâmetros de contexto vindos da página de distância
+  const [rotaContexto, setRotaContexto] = useState<{ origem: string; destino: string } | null>(null);
+
   useEffect(() => {
-    // Lê o parâmetro da URL apenas na montagem (fonte externa ao React).
-    const urlParams = new URLSearchParams(window.location.search);
-    const d = urlParams.get('distancia');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (d) setDistancia(d.replace('.', ','));
-  }, []);
+    // Lê parâmetros da URL via useSearchParams (padrão Next.js App Router)
+    const d = searchParams.get('distancia');
+    const origem = searchParams.get('origem');
+    const destino = searchParams.get('destino');
+
+    if (d) {
+      // Formata o número para o padrão brasileiro (vírgula decimal)
+      const formatted = d.replace('.', ',');
+      setDistancia(formatted);
+    }
+
+    if (origem && destino) {
+      setRotaContexto({ origem: decodeURIComponent(origem), destino: decodeURIComponent(destino) });
+    }
+  }, [searchParams]);
 
   const formatCurrencyInput = (value: string) => {
     const num = value.replace(/\D/g, '');
@@ -33,7 +51,6 @@ export default function CalculadoraCombustivelClient() {
   };
 
   const formatDecimalInput = (value: string) => {
-    // Permite números e uma vírgula
     let v = value.replace(/[^\d,]/g, '');
     const parts = v.split(',');
     if (parts.length > 2) {
@@ -76,13 +93,26 @@ export default function CalculadoraCombustivelClient() {
 
     const litros = valor / prc;
     const cons = parseNumber(consumo);
-    const distancia = cons > 0 ? litros * cons : 0;
+    const distanciaCalc = cons > 0 ? litros * cons : 0;
 
-    setResultadoRende({ litros, distancia });
+    setResultadoRende({ litros, distancia: distanciaCalc });
   };
 
   return (
     <>
+      {/* Banner de contexto de rota (aparece quando vem da página de distância) */}
+      {rotaContexto && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200/60 rounded-xl flex items-center gap-3">
+          <span className="text-2xl">🗺️</span>
+          <p className="text-sm text-gray-700">
+            Calculando combustível para a viagem de{' '}
+            <strong>{rotaContexto.origem}</strong> a{' '}
+            <strong>{rotaContexto.destino}</strong> — distância de{' '}
+            <strong>{distancia} km</strong> já preenchida.
+          </p>
+        </div>
+      )}
+
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -149,6 +179,11 @@ export default function CalculadoraCombustivelClient() {
             <p className="text-4xl sm:text-5xl font-black text-sky-600">
               {formatarMoeda(resultado.custoTotal)}
             </p>
+            {rotaContexto && (
+              <p className="text-xs text-sky-700 mt-2">
+                {rotaContexto.origem} → {rotaContexto.destino} ({distancia} km)
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -209,5 +244,36 @@ export default function CalculadoraCombustivelClient() {
         )}
       </div>
     </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Fallback de loading para o Suspense boundary
+// ---------------------------------------------------------------------------
+function CalculadoraFallback() {
+  return (
+    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-8 animate-pulse">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-20 bg-slate-100 rounded-lg" />
+        <div className="h-20 bg-slate-100 rounded-lg" />
+        <div className="h-20 bg-slate-100 rounded-lg" />
+      </div>
+      <div className="mt-8 flex justify-center">
+        <div className="h-12 w-48 bg-slate-100 rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Componente exportado — envolve o formulário em <Suspense>
+// Necessário porque useSearchParams() opta a página para client-side rendering
+// no Next.js App Router; o Suspense boundary evita erro de build/SSR.
+// ---------------------------------------------------------------------------
+export default function CalculadoraCombustivelClient() {
+  return (
+    <Suspense fallback={<CalculadoraFallback />}>
+      <CalculadoraForm />
+    </Suspense>
   );
 }
