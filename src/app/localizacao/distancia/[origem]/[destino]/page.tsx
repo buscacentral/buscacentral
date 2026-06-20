@@ -253,33 +253,38 @@ export default async function DistanciaParPage({ params }: Props) {
       </p>
 
       {/* ================================================================= */}
-      {/* CTA CONVERSÃO — Calculadora de Combustível (glassmorphism)         */}
-      {/* Passa ?distancia= para pré-preencher a ferramenta                  */}
+      {/* CTA CONVERSÃO — Widget de Contexto de Viagem (glassmorphism)       */}
+      {/* Texto dinâmico com nomes das cidades + ?distancia= prefill         */}
       {/* ================================================================= */}
       <Link
-        href={`/utilidades/calculadora-combustivel?distancia=${road}`}
-        className="group relative block w-full mb-10 p-6 rounded-2xl border border-blue-200/60 bg-gradient-to-r from-blue-50/80 via-white to-emerald-50/80 backdrop-blur-sm shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300"
+        href={`/utilidades/calculadora-combustivel?distancia=${road}&origem=${encodeURIComponent(origin.n)}&destino=${encodeURIComponent(dest.n)}`}
+        className="group relative block w-full mb-10 p-6 rounded-2xl border border-blue-200/60 bg-gradient-to-r from-blue-50/80 via-white to-emerald-50/80 backdrop-blur-sm shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300 overflow-hidden"
       >
         {/* Glow effect on hover */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400/10 to-emerald-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Decorative fuel icon background */}
+        <div className="absolute -right-4 -bottom-4 text-8xl opacity-5 select-none pointer-events-none">⛽</div>
 
         <div className="relative flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-white text-2xl shadow-md">
-            ⛽
+            🚗
           </div>
           <div className="flex-1 text-center sm:text-left">
-            <p className="text-lg font-bold text-gray-900 mb-0.5">
-              Calcule o gasto real desta viagem
+            <p className="text-lg font-bold text-gray-900 mb-1">
+              Vai viajar de {origin.n} para {dest.n}?
             </p>
-            <p className="text-sm text-gray-600">
-              Ajuste o consumo do <strong>seu carro</strong>, o preço do combustível na sua cidade e descubra o custo exato de ida e volta — {road.toLocaleString('pt-BR')} km já preenchidos.
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Calcule o <strong>gasto exato de combustível</strong> e saiba quanto vai gastar na ponta do lápis.
+              Informe o consumo do seu carro e o preço na bomba — os <strong>{road.toLocaleString('pt-BR')} km</strong> já estarão preenchidos.
             </p>
           </div>
-          <div className="flex-shrink-0 flex items-center gap-1 text-blue-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
-            Calcular agora
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+          <div className="flex-shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl shadow-md group-hover:bg-blue-700 group-hover:shadow-lg transition-all">
+              Calcular gasto
+              <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
           </div>
         </div>
       </Link>
