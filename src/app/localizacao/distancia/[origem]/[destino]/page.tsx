@@ -86,11 +86,20 @@ export default async function DistanciaParPage({ params }: Props) {
 
   const { origin, dest, road, straightLine } = result;
 
-  // Estimativas de combustível
+  // Estimativas de combustível (padrão geral da página)
   const consumoPadrao = 10; // km/l
   const precoPadrao = 6.0; // R$/litro
   const litros = road / consumoPadrao;
   const custoCombustivel = litros * precoPadrao;
+
+  // Estimativa inteligente para viagens longas (> 150 km) — consumo médio de mercado: 12 km/L
+  const isViagemLonga = road > 150;
+  const consumoMedio = 12; // km/l — média de mercado para carros populares em estrada
+  const litrosEstimativa = road / consumoMedio;
+  const custoEstimativa = litrosEstimativa * precoPadrao;
+
+  // Rota interestadual (UFs diferentes)
+  const isInterestadual = origin.u !== dest.u;
 
   const outras = getOtherCapitais([origin.slug, dest.slug], 8);
   const mapsUrl = `https://maps.google.com/maps?saddr=${encodeURIComponent(`${origin.n} - ${origin.u}`)}&daddr=${encodeURIComponent(`${dest.n} - ${dest.u}`)}`;
@@ -133,6 +142,15 @@ export default async function DistanciaParPage({ params }: Props) {
       name: `Qual o melhor caminho de ${origin.n} para ${dest.n}?`,
       text: `Para visualizar a rota mais rápida ou mais curta de ${origin.n} a ${dest.n}, recomendamos abrir o Google Maps diretamente. Nossa ferramenta calcula a distância estimada (${road.toLocaleString('pt-BR')} km) e o custo de combustível para ajudar no seu planejamento.`,
     },
+    // FAQ extra dinâmico — só aparece em rotas interestaduais (SEO on-page para long-tail)
+    ...(isInterestadual
+      ? [
+          {
+            name: `Como calcular o gasto de combustível para viajar de ${origin.n} para ${dest.n}?`,
+            text: `Para calcular o gasto exato, divida a distância total de ${road.toLocaleString('pt-BR')} km pelo consumo médio de km/litro do seu veículo e multiplique pelo preço atual do combustível na bomba. Pode usar a calculadora completa do Buscacentral para simular o valor exato em segundos.`,
+          },
+        ]
+      : []),
   ];
 
   const faqSchema = {
@@ -251,6 +269,75 @@ export default async function DistanciaParPage({ params }: Props) {
       <p className="text-sm text-gray-500 mb-8 text-center">
         Linha reta: {straightLine.toLocaleString('pt-BR')} km · Ônibus (~60 km/h): {formatHoras(road, 60)} · Consumo base: {consumoPadrao} km/l a R$ {precoPadrao.toFixed(2).replace('.', ',')}
       </p>
+
+      {/* ================================================================= */}
+      {/* BLOCO ESTIMATIVA INTELIGENTE — Viagens > 150 km                    */}
+      {/* Micro-card visual com cálculo rápido (12 km/L, R$ 6,00/L)         */}
+      {/* ================================================================= */}
+      {isViagemLonga && (
+        <section className="mb-6">
+          <div className="relative overflow-hidden rounded-2xl border border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-amber-50 p-5 sm:p-7 shadow-sm">
+            {/* Decorative background */}
+            <div className="absolute -right-6 -top-6 text-[7rem] opacity-[0.04] select-none pointer-events-none">🚗</div>
+
+            <div className="relative">
+              <h2 className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 mb-3">
+                <span className="text-2xl">🚗</span> Estimativa de Gasto para esta viagem
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <div className="flex items-center gap-3 bg-white/80 border border-orange-100 rounded-xl px-4 py-3">
+                  <span className="flex-shrink-0 w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-lg">⛽</span>
+                  <div>
+                    <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Consumo médio estimado</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      ~{litrosEstimativa.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} Litros
+                    </p>
+                    <p className="text-xs text-gray-500">com base num consumo médio de {consumoMedio} km/L</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 bg-white/80 border border-orange-100 rounded-xl px-4 py-3">
+                  <span className="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-lg">💰</span>
+                  <div>
+                    <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Custo estimado</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      ~{custoEstimativa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </p>
+                    <p className="text-xs text-gray-500">com base na média nacional de R$ {precoPadrao.toFixed(2).replace('.', ',')}/L</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-500 leading-relaxed">
+                * Estimativa baseada em médias de mercado. O consumo real varia conforme o modelo do veículo, tipo de combustível, condições da estrada e estilo de condução.
+              </p>
+            </div>
+          </div>
+
+          {/* ─── CTA PERSONALIZADO — Conversão agressiva para a calculadora ─── */}
+          <Link
+            href={`/utilidades/calculadora-combustivel?distancia=${road}&origem=${encodeURIComponent(origin.n)}&destino=${encodeURIComponent(dest.n)}`}
+            className="group mt-4 flex items-center justify-between gap-4 w-full px-5 py-4 sm:px-7 sm:py-5 rounded-2xl border-2 border-blue-500/80 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md hover:shadow-xl hover:from-blue-700 hover:to-blue-800 hover:border-blue-600 transition-all duration-300"
+          >
+            <div className="flex items-center gap-3 sm:gap-4">
+              <span className="flex-shrink-0 text-3xl sm:text-4xl">🎯</span>
+              <div>
+                <p className="text-base sm:text-lg font-bold leading-tight">
+                  Personalizar Cálculo com o Consumo do Meu Carro
+                </p>
+                <p className="text-xs sm:text-sm text-blue-100 mt-1">
+                  Informe o consumo real do seu veículo e o preço na sua cidade — os {road.toLocaleString('pt-BR')} km já estarão preenchidos
+                </p>
+              </div>
+            </div>
+            <span className="flex-shrink-0 hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors">
+              <svg className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* ================================================================= */}
       {/* CTA CONVERSÃO — Widget de Contexto de Viagem (glassmorphism)       */}
