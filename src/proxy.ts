@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const host = request.headers.get('host') || '';
 
   // Se o host começar com 'www.', faz o redirect 301 para a versão root
@@ -15,6 +15,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Executa o middleware em todas as rotas, exceto ficheiros estáticos, imagens e APIs
+  // Executa o proxy em todas as rotas, exceto ficheiros estáticos, imagens e APIs
   matcher: ['/((?!_next/static|_next/image|assets|favicon.ico|api/).*)'],
 };
