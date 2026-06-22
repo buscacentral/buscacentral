@@ -24,6 +24,7 @@ import fs from 'node:fs';
 /** Caminho para o ficheiro de credenciais da Service Account. */
 const SERVICE_ACCOUNT_PATH = path.resolve(
   process.cwd(),
+  'scripts',
   'service-account.json',
 );
 
@@ -41,68 +42,22 @@ type IndexingType = 'URL_UPDATED' | 'URL_DELETED';
 // ---------------------------------------------------------------------------
 
 /**
- * Lista de paths a submeter para indexação.
- * Edita esta lista com as páginas que queres forçar a indexação.
+ * Lista de URLs estratégicas a submeter para indexação imediata.
  *
- * Dica: para gerar os pares de distância automaticamente, podes importar
- * getCityPairs() de src/lib/distancia-cidades.ts e mapear para URLs.
+ * Lote atual: nova calculadora financeira CLT x PJ + artigo de suporte +
+ * rotas interestaduais que começaram a pontuar no Search Console.
  */
 const URLS_TO_INDEX: string[] = [
-  // Ferramentas principais
-  '/utilidades/calculadora-combustivel',
-  '/utilidades/calculadora-imc',
-  '/utilidades/calculadora-porcentagem',
-  '/utilidades/calculadora-desconto',
-  '/utilidades/conversor-unidades',
-  '/utilidades/gerador-qr-code',
-  '/utilidades/gerador-senha',
-  '/utilidades/cronometro',
-  '/utilidades/dias-uteis',
-  '/utilidades/rastreio',
-  '/utilidades/tabela-calorias',
-  '/utilidades/planejador-viagem',
-
-  // Documentos
-  '/documentos/gerador-cpf',
-  '/documentos/validador-cpf',
-  '/documentos/gerador-cnpj',
-  '/documentos/validador-cnpj',
-  '/documentos/consulta-cnpj',
-  '/documentos/gerador-cartao-credito',
-  '/documentos/gerador-recibos',
-  '/documentos/consulta-processos',
-
-  // Financeiro
-  '/financeiro/tabela-fipe',
-  '/financeiro/cotacao',
-  '/financeiro/criptomoedas',
-  '/financeiro/juros-compostos',
-  '/financeiro/conversor-clt-pj',
-  '/financeiro/financiamento-carro',
-  '/financeiro/salario-liquido',
-  '/financeiro/ferias',
-  '/financeiro/decimo-terceiro',
-  '/financeiro/horas-extras',
-  '/financeiro/rescisao-trabalhista',
-  '/financeiro/simulador-investimentos',
-  '/financeiro/roi-imobiliario',
-
-  // Localização
-  '/localizacao/distancia-cidades',
-  '/localizacao/busca-cep',
-  '/localizacao/clima',
-
-  // Exemplos de rotas de distância (adicione mais conforme necessário)
-  '/localizacao/distancia/sao-paulo-sp/rio-de-janeiro-rj',
-  '/localizacao/distancia/sao-paulo-sp/belo-horizonte-mg',
-  '/localizacao/distancia/sao-paulo-sp/curitiba-pr',
-  '/localizacao/distancia/sao-paulo-sp/brasilia-df',
-  '/localizacao/distancia/rio-de-janeiro-rj/belo-horizonte-mg',
-  '/localizacao/distancia/rio-de-janeiro-rj/salvador-ba',
-  '/localizacao/distancia/curitiba-pr/florianopolis-sc',
-  '/localizacao/distancia/brasilia-df/goiania-go',
-  '/localizacao/distancia/sao-paulo-sp/campinas-sp',
-  '/localizacao/distancia/sao-paulo-sp/santos-sp',
+  // Nova ferramenta financeira
+  'https://buscacentral.com.br/financeiro/calculadora-clt-pj',
+  // Artigo de suporte (interlinking com a calculadora)
+  'https://buscacentral.com.br/artigos/diferenca-clt-e-pj',
+  // Rotas interestaduais em ascensão no Search Console
+  'https://buscacentral.com.br/localizacao/distancia/curitiba-pr/brasilia-df',
+  'https://buscacentral.com.br/localizacao/distancia/cascavel-pr/uberlandia-mg',
+  'https://buscacentral.com.br/localizacao/distancia/piracicaba-sp/sao-luis-ma',
+  'https://buscacentral.com.br/localizacao/distancia/camacari-ba/petrolina-pe',
+  'https://buscacentral.com.br/localizacao/distancia/ribeirao-preto-sp/salvador-ba',
 ];
 
 // ---------------------------------------------------------------------------
