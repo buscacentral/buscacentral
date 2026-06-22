@@ -269,8 +269,36 @@ const articlesData: Record<string, { title: string; content: React.ReactNode; da
         <p>Para um salário CLT se equiparar ao PJ, você não deve comparar o valor mensal, mas sim o seu <strong>Faturamento Anual Líquido</strong>. O cálculo inclui deduzir a tabela progressiva do IRPF e do INSS no caso da CLT, somar o pacote de benefícios, contrapor aos custos do CNPJ (Simples Nacional, DAS, contabilidade e INSS sobre o Pró-labore) para o cenário PJ.</p>
         <p>Geralmente, estima-se que para uma vaga PJ valer a pena, o valor bruto oferecido precisa ser cerca de 40% a 60% maior do que o valor bruto da CLT.</p>
 
+        {/* Callout/Banner interno — meio do artigo */}
+        <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg my-8">
+          <p className="text-amber-900 font-medium mb-3">
+            Tem uma proposta de emprego em mãos e quer saber qual vale mais a pena? Use a nossa <strong>Calculadora Comparativa CLT x PJ</strong> online e descubra o seu salário líquido real em segundos.
+          </p>
+          <Link
+            href="/financeiro/calculadora-clt-pj"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 transition-colors shadow-sm"
+          >
+            Simular CLT x PJ agora
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </Link>
+        </div>
+
         <h2>Ferramenta de Cálculo de Paridade</h2>
         <p>Fazer essas contas no papel usando tabelas tributárias de 2024 é doloroso. É exatamente por isso que desenvolvemos nosso simulador de paridade. Use a nossa <Link href="/financeiro/conversor-clt-pj" className="text-blue-600 underline">Calculadora de Conversão CLT para PJ</Link>. Você insere quanto quer receber como PJ e a ferramenta diz na hora o exato salário CLT equivalente, descontando o imposto atualizado do Governo Federal.</p>
+
+        {/* Callout/Banner interno — fim do artigo */}
+        <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg my-8">
+          <p className="text-amber-900 font-medium mb-3">
+            Tem uma proposta de emprego em mãos e quer saber qual vale mais a pena? Use a nossa <strong>Calculadora Comparativa CLT x PJ</strong> online e descubra o seu salário líquido real em segundos.
+          </p>
+          <Link
+            href="/financeiro/calculadora-clt-pj"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 transition-colors shadow-sm"
+          >
+            Simular CLT x PJ agora
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </Link>
+        </div>
       </>
     )
   },
