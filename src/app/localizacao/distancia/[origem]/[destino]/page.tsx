@@ -8,6 +8,24 @@ import {
   pairUrl,
 } from '@/lib/distancia-cidades';
 
+/**
+ * Converte um slug de cidade (ex: "florianopolis-sc") em nome próprio legível
+ * (ex: "Florianópolis"). Usado apenas como fallback seguro quando resolvePair
+ * não consegue encontrar a cidade na base de dados.
+ *
+ * Estratégia: remove o sufixo "-uf" de duas letras, substitui hifens por
+ * espaços e aplica title-case simples. Nomes já acentuados (vindos de
+ * CityResolved.n) NÃO passam por aqui — este helper é defensivo.
+ */
+function slugToProperName(slug: string): string {
+  // Remove o sufixo de UF ("-sp", "-rj", etc.) — sempre 3 chars: "-xx"
+  const withoutUf = slug.replace(/-[a-z]{2}$/, '');
+  return withoutUf
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 // Pré-renderiza no build apenas os pares de capitais; os demais pares são
 // gerados sob demanda na primeira visita e ficam em cache (ISR).
 export const dynamicParams = true;
@@ -33,20 +51,31 @@ function formatHoras(km: number, velocidade: number): string {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { origem, destino } = await params;
   const result = resolvePair(origem, destino);
-  if (!result) return { title: 'Distância entre cidades' };
 
-  const { origin, dest, road, straightLine } = result;
+  // Fallback defensivo: usa slugToProperName quando a cidade não existe na base
+  if (!result) {
+    const originName = slugToProperName(origem);
+    const destName = slugToProperName(destino);
+    return {
+      title: `Distância de ${originName} a ${destName}: Quantos km e Gasto`,
+      description: `Descubra a distância exata em km entre ${originName} e ${destName}. Veja o tempo estimado de viagem e calcule o gasto real de combustível para esta rota agora.`,
+    };
+  }
 
-  const consumoPadrao = 10; // km/l
-  const precoPadrao = 6.0; // R$/litro
-  const custo = Math.round((road / consumoPadrao) * precoPadrao);
-  const tempo = formatHoras(road, 80);
+  const { origin, dest, road } = result;
 
-  // Title: responde 3 intenções de busca numa SERP
-  const title = `${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km, ${tempo} e R$ ${custo}`;
+  // ─── Title ────────────────────────────────────────────────────────────────
+  // Formato alinhado com as queries do Search Console:
+  //   "distancia de [A] a [B]", "quantos km de [A] a [B]"
+  // Mantém-se abaixo de 60 caracteres para cidades com nomes curtos a médios;
+  // cidades com nomes longos (ex: "Campos dos Goytacazes") podem ultrapassar
+  // levemente — o Google trunca com elegância e o padrão semântico prevalece.
+  const title = `Distância de ${origin.n} a ${dest.n}: Quantos km e Gasto`;
 
-  // Description: 140-155 chars, responde à dor + CTA implícito
-  const description = `Distância de ${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km por estrada (${straightLine.toLocaleString('pt-BR')} km em linha reta). Tempo de carro: ${tempo}. Calcule o gasto de combustível da viagem.`;
+  // ─── Description ──────────────────────────────────────────────────────────
+  // Copy validado com Search Console: responde às 3 intenções (km, tempo,
+  // custo) e inclui CTA implícito. ~155 chars na média.
+  const description = `Descubra a distância exata em km entre ${origin.n} e ${dest.n}. Veja o tempo estimado de viagem e calcule o gasto real de combustível para esta rota agora.`;
 
   const canonical = `https://buscacentral.com.br${pairUrl(origin.slug, dest.slug)}`;
 
@@ -55,7 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical },
     openGraph: {
-      title: `Distância de ${origin.n} a ${dest.n}: ${road.toLocaleString('pt-BR')} km | BuscaCentral`,
+      title: `Distância de ${origin.n} a ${dest.n}: Quantos km e Gasto | BuscaCentral`,
       description,
       url: canonical,
       siteName: 'BuscaCentral',
@@ -64,7 +93,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${origin.n} → ${dest.n}: ${road.toLocaleString('pt-BR')} km`,
+      title: `Distância de ${origin.n} a ${dest.n}: Quantos km e Gasto`,
       description,
     },
   };
@@ -122,10 +151,18 @@ export default async function DistanciaParPage({ params }: Props) {
   // STRUCTURED DATA — FAQ Schema (5 perguntas dinâmicas)
   // -------------------------------------------------------------------------
   const faqItems = [
+    // ── Q1/Q2: espelham exatamente as queries do Search Console ──────────────
+    // "Qual a distância de [A] a [B]?" · "distancia de [A] a [B]"
     {
-      name: `Qual a distância entre ${origin.n} e ${dest.n}?`,
-      text: `A distância entre ${origin.n} (${origin.u}) e ${dest.n} (${dest.u}) é de aproximadamente ${road.toLocaleString('pt-BR')} km por estrada e ${straightLine.toLocaleString('pt-BR')} km em linha reta.`,
+      name: `Qual a distância de ${origin.n} a ${dest.n}?`,
+      text: `A distância total rodoviária entre ${origin.n} e ${dest.n} é de ${road.toLocaleString('pt-BR')} km.`,
     },
+    // "Quantos km de [A] a [B] de carro?" · "quantos km de [A] a [B]"
+    {
+      name: `Quantos km de ${origin.n} a ${dest.n} de carro?`,
+      text: `São aproximadamente ${road.toLocaleString('pt-BR')} km de estrada. Você pode simular o consumo e o custo exato do combustível para esta viagem na nossa calculadora de combustível integrada.`,
+    },
+    // ── Perguntas complementares (tempo, custo, pedágios, rota) ───────────────
     {
       name: `Quanto tempo de carro de ${origin.n} a ${dest.n}?`,
       text: `De carro, a uma velocidade média de 80 km/h, a viagem de ${origin.n} a ${dest.n} leva aproximadamente ${formatHoras(road, 80)}. De ônibus (~60 km/h), leva cerca de ${formatHoras(road, 60)}.`,
