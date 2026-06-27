@@ -24,6 +24,7 @@ import fs from 'node:fs';
 /** Caminho para o ficheiro de credenciais da Service Account. */
 const SERVICE_ACCOUNT_PATH = path.resolve(
   process.cwd(),
+  'scripts',
   'service-account.json',
 );
 
@@ -31,7 +32,7 @@ const SERVICE_ACCOUNT_PATH = path.resolve(
 const BASE_URL = 'https://buscacentral.com.br';
 
 /** Delay entre requisições (ms) para respeitar rate limits (~200 req/dia). */
-const DELAY_MS = 500;
+const DELAY_MS = 2000;
 
 /** Tipo de notificação: URL_UPDATED (nova/atualizada) ou URL_DELETED. */
 type IndexingType = 'URL_UPDATED' | 'URL_DELETED';
@@ -117,12 +118,13 @@ async function getAuthClient() {
     );
   }
 
-  const auth = new google.auth.GoogleAuth({
+  const auth = new google.auth.JWT({
     keyFile: SERVICE_ACCOUNT_PATH,
     scopes: ['https://www.googleapis.com/auth/indexing'],
   });
 
-  return auth.getClient();
+  await auth.authorize();
+  return auth;
 }
 
 // ---------------------------------------------------------------------------
